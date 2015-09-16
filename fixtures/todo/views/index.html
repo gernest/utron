@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Utron Todo MVC</title>
+	<link href="/static/todo.css" rel="stylesheet">
+</head>
+<body>
+<form method="post" action="/create">
+    <table>
+        <tr>
+           <th>
+               Create A TODO
+           </th>
+        </tr>
+        <tr>
+            <td>
+                <input name="body">
+            </td>
+            <td>
+                <button type="submit">create</button>
+            </td>
+        </tr>
+    </table>
+</form>
+<table>
+    <tr>
+        <th>
+            My TODO LIST
+        </th>
+    </tr>
+    {{range $k,$v:=.List}}
+    <tr>
+        <td>
+            {{$v.ID}}
+        </td>
+        <td>
+            {{$v.Body}}
+        </td>
+        <td>
+            <a href="/delete/{{$v.ID}}">
+                <button>Delete</button>
+            </a>
+        </td>
+    </tr>
+    {{end}}
+</table>
+</body>
+</html>

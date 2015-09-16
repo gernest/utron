@@ -1,0 +1,8 @@
+app_name: utron web app
+base_url: http://localhost:8090
+port: 8090
+verbose: false
+static_dir: static
+view_dir: views
+database: "postgres"
+database_conn: "postgres://postgres:postgres@localhost/todo"
