@@ -346,7 +346,7 @@ In case you want to run the app we just created, it is included in this reposito
 
 * Prerequistite
  - a working database connection(postres, mysql or foundation)
- - golang toolchain installed( and the `go` command is in your system PATH)
+ - golang toolchain installed and the `go` command is in your system PATH.
 
 step 1 Install utron which will also include the todo app
 
@@ -371,7 +371,7 @@ If you see something like this
 	$ 2015/09/15 18:27:24 >>INFO>> staring server at http://localhost:8090
 
 Then everything is okay, open ` http://localhost:8090` on your browser to start writing your todos.
-If you experience anything different better open an issue.
+If you experience anything different, better open an issue.
 
 ## Screenshot
 ![todo app with utron](fixtures/todo.png)
@@ -394,9 +394,9 @@ I have 2 years experience working with golang and 5 years doing web developement
 
 And if you are a recruiter, any tips on where I'm doing it wrong will be highly appreciated, because I have my full trust that code will get me out of this abysmal poverty.
 
-# Aknowledgement
-These are amzaing projects that made `utron` possible
-gorilla
+# Acknowledgement
+These are amazing projects that made `utron` possible.
+
 * [gorilla mux](https://github.com/gorilla/mux)
 * [ita](https://github.com/gernest/ita)
 * [gorm](https://github.com/jinzhu/gorm)
