@@ -1,4 +1,4 @@
-# utron
+# utron [![GoDoc](https://godoc.org/github.com/gernest/utron?status.svg)](https://godoc.org/github.com/gernest/utron) [![Coverage Status](https://coveralls.io/repos/gernest/utron/badge.svg?branch=master&service=github)](https://coveralls.io/github/gernest/utron?branch=master) [![Build Status](https://travis-ci.org/gernest/utron.svg)](https://travis-ci.org/gernest/utron)
 `utron` is a lightweight MVC framework in Go(Golang) for building fast, scallable and robust database driven web applications.
 
 # Features
