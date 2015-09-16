@@ -2,28 +2,28 @@
 `utron` is a lightweight MVC framework in Go(Golang) for building fast, scallable and robust database driven web applications.
 
 # Features
-* [x] postgesql ,mysql and foundation database support
-* [x] modular (you can choose which component to use)
-* [x] middlewares support.  All alice compatible Middlewares works out of the box
-* [x] gopher spirit (write golang, use all the golang libraries you like)
-* [x] lightweight. only MVC nothing more
-* [x] multiple configuration files support( currently json,yaml and toml)
+* [x] Postgres, MySQL and Foundation database support.
+* [x] Modular (you can choose which component to use)
+* [x] Middleware support. All alice compatible Middlewares works out of the box.
+* [x] Gopher spirit (write golang, use all the golang libraries you like)
+* [x] Lightweight. Only MVC.
+* [x] Multiple configuration files support (currently json, yaml and toml)
 
 
 
 # Overview
-`utron` is a lightweight MVC framework. It is based on the premise of simplisity, relevance and elegancy.
+`utron` is a lightweight MVC framework. It is based on the premise of simplicity, relevance and elegancy.
 
-* simplisity. The design is simple, easy to understand and less layers from the standard library. It is in the spirit of the project that, users should understand the whole framework in a single day.
+* Simplicity. The design is simple, easy to understand and less layers from the standard library. It is in the spirit of the project that, users should understand the whole framework in a single day.
 
-* relevance. `utron` doesn;t assume anything. We focus on things that matter, this way, we are able to achieve good maintanance and keeping the system well organized, well planned and sweet like.
+* Relevance. `utron` doesn't assume anything. We focus on things that matter, this way, we are able to achieve good maintenance and keeping the system well organized, well planned and sweet like.
 
-* elegancy. `utron` uses the best practises used in golang. We are not afraid of heights, its just we need a parachute in our backpack. The source code is heavily documented, any trick should be well explained and well tested.
+* Elegancy. `utron` uses golang best practises. We are not afraid of heights, its just that we need a parachute in our backpack. The source code is heavily documented, any trick should be well explained and well tested.
 
 ## Motivation
-After ywo years of playing with golang. I have looked on some of my projects and asked myself, how golang is that?
+After two years of playing with golang. I have looked on some of my projects and asked myself, how golang is that?
 
-So, `utron` is my reimagination of lightweight MVC, that maintains the golang spirit. and works seamlessly with the current libraries.
+So, `utron` is my reimagination of lightweight MVC, that maintains the golang spirit, and works seamlessly with the current libraries.
 
 
 ## Installation
@@ -33,13 +33,13 @@ So, `utron` is my reimagination of lightweight MVC, that maintains the golang sp
 ## The MVC
 There is nothing revolutionary about MVC that `utron` brings on the table.
 
-* M is for models, it is the data structures that helps in data persistance, utron uses an already established Object Relational Mapper for golang [gorm](https://github.com/jinzhu/gorm). So if you are familiar with gorm then you good on the M part.
+* M is for models, it is the data structures that helps in data persistance, utron uses an already established Object Relational Mapper for golang [gorm](https://github.com/jinzhu/gorm). So if you are familiar with gorm then you are good on the M part.
 
 * V is for Views. Views are templates, that renders the final output. `utron` uses golang standard templates. so you don't have to learn anything new, just the text/template package to master views.
 
-* C is for controllers.This is where the aplication logic stands,  in order to achieve modularity, there are some facts that utron enforces to controllers. This subject is explained in more details below.
+* C is for controllers. This is where the aplication logic stands, in order to achieve modularity, there are some facts that utron enforces to controllers. This subject is explained in more details below.
 
-With the power of composition and inheriance, `utron` achieves a beautiful MVC workflow. I recomend you read the source code, it is well documented so as to demistify any magical unicorns.
+With the power of composition and inheriance, `utron` achieves a beautiful MVC workflow. I recommend you read the source code, it is well documented so as to demistify any magical unicorns.
 
 
 We will create a TODO List application in `utron` to explore all components that makes `utron` MVC tick the source code of the final application is included in this repository and can be found here [utron todoMVC](fixtures/todo)
@@ -72,7 +72,7 @@ todo
 I have included three configuration files for clarity, but you are better off with just one.
 
 ## Configurations
-utron support yaml,json and toml configurations. In our todo app, we put the configuration files in the config directory. I have included all three formats for clarity, you can be just fine with either one of them.
+utron support yaml, json and toml configurations files. In our todo app, we put the configuration files in the config directory. I have included all three formats for clarity, you can be just fine with either one of them.
 
 `utron` searches for a file named `app.json`, or `app.yml` or `app.toml` in the config directory. The first to be found is the one to be used.
 
@@ -96,15 +96,15 @@ app_name     | application name
 base_url     | the base url to use in your views
 port         | port number where the server will be listening to
 verbose      | true value will make every state information logged to stdout
-static_dir   | directory to serve static files e.g images,js or css
+static_dir   | directory to serve static files e.g images, js or css
 view_dir     | directory to look for views
-database     | the name of the database you use, e.g postgres,mysql,foundation
+database     | the name of the database you use, e.g postgres, mysql, foundation
 database_conn| connection string to your database
 
-If you havent specified explicity the location of the configuration directory, then it defaults to the directory named `config` in the current working directory.
+If you haven't specified explicitly the location of the configuration directory, then it defaults to the directory named `config` in the current working directory.
 
 ## Models
-`utron` uses [gorm](https://github.com/jinzhu/gorm) library as its Object Relational Mapper. So, you wont need to learn anything fancy. In our todo app, we need to define `Todo` model that will be used to store our todo details.
+`utron` uses [gorm](https://github.com/jinzhu/gorm) library as its Object Relational Mapper. So, you won't need to learn anything fancy. In our todo app, we need to define `Todo` model that will be used to store our todo details.
 
 In the file `models/todo.go` we define our todo model like this
 
@@ -129,16 +129,16 @@ func init() {
 }
 ```
 
-Notice that, we need to register our model, by calling `utron.RegisterModels(&Todo{})` in the `init` function otherwise `utron` wont be aware of the model.
+Notice that, we need to register our model, by calling `utron.RegisterModels(&Todo{})` in the `init` function otherwise `utron` won't be aware of the model.
 
-`utron` will automatically create the table `todos` if it doesnt exist yet.
+`utron` will automatically create the table `todos` if it doesn't exist yet.
 
-Dont be confused by the `schema` tag, I just added them since we will use [schema](https://github.com/gorilla/schema) package to decode form values(this has nothing to do with `utron`, you can use whatever form library you fancy)
+Don't be confused by the `schema` tag, I just added them since we will use [schema](https://github.com/gorilla/schema) package to decode form values(this has nothing to do with `utron`, you can use whatever form library you fancy)
 
 
 
 ## Controllers
-`utron` controllers are structs that implement `Controller` interface. To help make `utron` usable, `utron` provides `BaseController` which implements `Cntroller` interface and offers additional conveniences to help in composing reusable code.
+`utron` controllers are structs that implement the `Controller` interface. To help make `utron` usable, `utron` provides a  `BaseController` which implements the `Controller` interface and offers additional conveniences to help in composing reusable code.
 
 You get all the benefits of `BaseController` by embeding it in your struct. our `TODO` Controller is in the `controller/todo.go`
 
@@ -211,13 +211,13 @@ func init() {
 }
 ```
 
-Note we regisster our controller by calling `utron.RegisterController(NewTDDO())` in the `init` function
+Note we registered our controller by calling `utron.RegisterController(NewTDDO())` in the `init` function
 so as to make `utron` aware of our controller. See Routing section below for more explanation of what the controller is doing.
 
 
 ## Routing
 
-By regisstering a controller, there are two ways of assigning routes.
+By registering a controller, there are two ways of assigning routes.
 
 ### case 1- vanilla routing
 By registering a Controller, routes are autogenerated for the controller methods. The format is `/:controler/:method` where `:controller` is the lowercase name of the Controller, and `:method` is its method in lowercase
@@ -345,7 +345,7 @@ func main() {
 In case you want to run the app we just created, it is included in this repository in [fixtures/todo](fixtures/todo)
 
 * Prerequistite
- - a working database connection(postresql,mysql or foundation)
+ - a working database connection(postres, mysql or foundation)
  - golang toolchain installed( and the `go` command is in your system PATH)
 
 step 1 Install utron which will also include the todo app
@@ -373,7 +373,7 @@ If you see something like this
 Then everything is okay, open ` http://localhost:8090` on your browser to start writing your todos.
 If you experience anything different better open an issue.
 
-## screenshot
+## Screenshot
 ![todo app with utron](fixtures/todo.png)
 
 # Contributing
@@ -385,7 +385,7 @@ Or Open an issue for any questions.
 # Author
 Geofrey Ernest <geofreyernest@live.com>
 
-twitter  : [@gernesti](https://twitter.com/gernesti)
+Twitter  : [@gernesti](https://twitter.com/gernesti)
 
 Facebook : [Geofrey Ernest](https://www.facebook.com/geofrey.ernest.35)
 
@@ -396,8 +396,8 @@ And if you are a recruiter, any tips on where I'm doing it wrong will be highly 
 
 # Aknowledgement
 These are amzaing projects that made `utron` possible
-
-* [goriila mux](https://github.com/gorilla/mux)
+gorilla
+* [gorilla mux](https://github.com/gorilla/mux)
 * [ita](https://github.com/gernest/ita)
 * [gorm](https://github.com/jinzhu/gorm)
 * [alice](https://github.com/justinas/alice)
@@ -407,7 +407,7 @@ These are amzaing projects that made `utron` possible
 
 # Roadmap
 
-*  Fix a lot of typos( didnt tell you thet English is my third language).
+*  Fix a lot of typos(English is my third language).
 
 # Licence
 This project is released under MIT licence see [LICENCE](LICENCE) for more details.
