@@ -51,7 +51,7 @@ func (t *TODO) Delete() {
 	t.Ctx.Redirect("/", http.StatusFound)
 }
 
-func NewTDDO() *TODO {
+func NewTODO() *TODO {
 	return &TODO{
 		Routes: []string{
 			"get;/;Home",
@@ -62,5 +62,5 @@ func NewTDDO() *TODO {
 }
 
 func init() {
-	utron.RegisterController(NewTDDO())
+	utron.RegisterController(NewTODO())
 }
