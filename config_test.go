@@ -27,7 +27,7 @@ func TestConfig(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if nCfg.AppName != nCfg.AppName {
+		if nCfg.AppName != cfg.AppName {
 			t.Errorf("expecetd %s got %s", cfg.AppName, nCfg.AppName)
 		}
 	}
