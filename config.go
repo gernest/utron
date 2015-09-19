@@ -7,9 +7,11 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/BurntSushi/toml"
 	"gopkg.in/yaml.v2"
+	"reflect"
 )
 
 // Config stores configurations values
@@ -72,7 +74,50 @@ func NewConfig(path string) (*Config, error) {
 	default:
 		return nil, errors.New("utron: config file not supported")
 	}
+
+
+
 	return cfg, nil
+}
+
+// This function overrides some values on the config with environement variables
+// The idea is to provide a way to use utron in different environents.
+//
+// - PORT
+// - BASE_URL
+// - DATABASE
+// - DATABASE_CONN
+
+func (configuration *Config) ApplyEnvironmentVariables() {
+	stringVariableNames := map[string]string{
+		"BASE_URL": "BaseURL",
+		"APP_NAME":	"AppName",
+		"VERBOSE":	"Verbose",
+		"STATIC_DIR":	"StaticDir",
+		"VIEW_DIR":	"ViewsDir",
+		"DATABASE": "Database",
+		"DATABASE_CONN" : "DatabaseConn",
+	}
+
+	environmentValue := os.Getenv("PORT")
+	if environmentValue != "" {
+		configuration.Port, _ = strconv.Atoi(environmentValue)
+	}
+
+	for envVariableName, fieldName := range stringVariableNames {
+		environmentValue = os.Getenv(envVariableName)
+		if environmentValue != "" {
+			configuration.setStringFieldValue(fieldName, environmentValue)
+		}
+	}
+}
+
+func (configuration *Config) setStringFieldValue(fieldName string, value string){
+	ps := reflect.ValueOf(configuration)
+	s := ps.Elem()
+
+	field := s.FieldByName(fieldName)
+	field.SetString(value)
 }
 
 // saveToFile saves the Config in the file named path. This is a helper method

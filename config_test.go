@@ -1,6 +1,9 @@
 package utron
 
-import "testing"
+import (
+	"testing"
+	"os"
+)
 
 func TestConfig(t *testing.T) {
 	cfgFiles := []string{
@@ -32,4 +35,25 @@ func TestConfig(t *testing.T) {
 		}
 	}
 
+}
+
+func TestEnvironmentOverride(t *testing.T){
+	err := os.Setenv("PORT", "8888")
+	err = os.Setenv("DATABASE_CONN", "myDatabase://hey:cool@databse.com/my_database")
+	err = os.Setenv("DATABASE", "myDatabase")
+
+	if err == nil {
+
+		cfg := DefaultConfig()
+		cfg,  err = NewConfig("fixtures/config/app.json")
+		cfg.ApplyEnvironmentVariables()
+
+		if cfg.Port != 8888 {
+			t.Errorf("expecetd %s got %s", 8888, cfg.Port)
+		}
+
+		if cfg.Database != "myDatabase" {
+			t.Errorf("expecetd %s got %s", "myDatabase", cfg.Database)
+		}
+	}
 }
