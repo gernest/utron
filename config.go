@@ -106,11 +106,17 @@ func (configuration *Config) ApplyEnvironmentVariables() {
 		if  fieldKind == reflect.String {
 			field.SetString(environmentValue)
 		} else if fieldKind == reflect.Bool {
-			boolValue, _ := strconv.ParseBool(environmentValue)
-			field.SetBool(boolValue)
+			boolValue, err := strconv.ParseBool(environmentValue)
+
+			if err == nil {
+				field.SetBool(boolValue)
+			}
 		} else if fieldKind == reflect.Int {
-			intValue, _:= strconv.ParseInt(environmentValue, 10, 32)
-			field.SetInt(intValue)
+			intValue, err := strconv.ParseInt(environmentValue, 10, 32)
+
+			if err == nil {
+				field.SetInt(intValue)
+			}
 		}
   }
 }

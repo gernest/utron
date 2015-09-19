@@ -57,3 +57,23 @@ func TestEnvironmentOverride(t *testing.T){
 		}
 	}
 }
+
+func TestEnvironmentOverrideWithInvalidValues(t *testing.T){
+	err := os.Setenv("PORT", "aaa")
+	err = os.Setenv("VERBOSE", "NON-BOOL")
+
+	if err == nil {
+
+		cfg := DefaultConfig()
+		cfg,  err = NewConfig("fixtures/config/app.json")
+		cfg.ApplyEnvironmentVariables()
+
+		if cfg.Port != 8090 {
+			t.Errorf("expecetd %s got %s", 8090, cfg.Port)
+		}
+
+		if cfg.Verbose != false {
+			t.Errorf("expecetd %s got %s", false, cfg.Verbose)
+		}
+	}
+}
