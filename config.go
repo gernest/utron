@@ -12,6 +12,8 @@ import (
 	"github.com/BurntSushi/toml"
 	"gopkg.in/yaml.v2"
 	"reflect"
+	"strings"
+	// "fmt"
 )
 
 // Config stores configurations values
@@ -89,35 +91,28 @@ func NewConfig(path string) (*Config, error) {
 // - DATABASE_CONN
 
 func (configuration *Config) ApplyEnvironmentVariables() {
-	stringVariableNames := map[string]string{
-		"BASE_URL": "BaseURL",
-		"APP_NAME":	"AppName",
-		"VERBOSE":	"Verbose",
-		"STATIC_DIR":	"StaticDir",
-		"VIEW_DIR":	"ViewsDir",
-		"DATABASE": "Database",
-		"DATABASE_CONN" : "DatabaseConn",
-	}
+	refectedConfiguration := reflect.Indirect(reflect.ValueOf(configuration))
+	editableReflectedConfiguration := reflect.ValueOf(configuration)
 
-	environmentValue := os.Getenv("PORT")
-	if environmentValue != "" {
-		configuration.Port, _ = strconv.Atoi(environmentValue)
-	}
+	for i := 0; i < refectedConfiguration.NumField(); i++ {
+   	fieldName := refectedConfiguration.Type().Field(i).Name
+		environmentVariableName := strings.ToUpper(fieldName)
+		environmentValue := os.Getenv(environmentVariableName)
 
-	for envVariableName, fieldName := range stringVariableNames {
-		environmentValue = os.Getenv(envVariableName)
-		if environmentValue != "" {
-			configuration.setStringFieldValue(fieldName, environmentValue)
+		fieldKind := refectedConfiguration.Type().Field(i).Type.Kind()
+		field 		:= editableReflectedConfiguration.Elem().FieldByName(refectedConfiguration.Type().Field(i).Name)
+
+		// switch
+		if  fieldKind == reflect.String {
+			field.SetString(environmentValue)
+		} else if fieldKind == reflect.Bool {
+			boolValue, _ := strconv.ParseBool(environmentValue)
+			field.SetBool(boolValue)
+		} else if fieldKind == reflect.Int {
+			intValue, _:= strconv.ParseInt(environmentValue, 10, 32)
+			field.SetInt(intValue)
 		}
-	}
-}
-
-func (configuration *Config) setStringFieldValue(fieldName string, value string){
-	ps := reflect.ValueOf(configuration)
-	s := ps.Elem()
-
-	field := s.FieldByName(fieldName)
-	field.SetString(value)
+  }
 }
 
 // saveToFile saves the Config in the file named path. This is a helper method
