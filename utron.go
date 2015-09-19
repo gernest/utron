@@ -87,7 +87,7 @@ func (a *App) init() error {
 		a.Set(model)
 	}
 
-	appConfig.ApplyEnvironmentVariables()
+	appConfig.SyncEnv()
 	a.Set(appConfig)
 	a.Set(views)
 	a.isInit = true

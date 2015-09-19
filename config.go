@@ -89,18 +89,17 @@ func NewConfig(path string) (*Config, error) {
 // - BASE_URL
 // - DATABASE
 // - DATABASE_CONN
+func (c *Config) SyncEnv() {
+	cfg := reflect.Indirect(reflect.ValueOf(c))
+	editableCfg := reflect.ValueOf(c)
 
-func (configuration *Config) ApplyEnvironmentVariables() {
-	refectedConfiguration := reflect.Indirect(reflect.ValueOf(configuration))
-	editableReflectedConfiguration := reflect.ValueOf(configuration)
-
-	for i := 0; i < refectedConfiguration.NumField(); i++ {
-   	fieldName := refectedConfiguration.Type().Field(i).Name
+	for i := 0; i < cfg.NumField(); i++ {
+   	fieldName := cfg.Type().Field(i).Name
 		environmentVariableName := strings.ToUpper(fieldName)
 		environmentValue := os.Getenv(environmentVariableName)
 
-		fieldKind := refectedConfiguration.Type().Field(i).Type.Kind()
-		field 		:= editableReflectedConfiguration.Elem().FieldByName(refectedConfiguration.Type().Field(i).Name)
+		fieldKind := cfg.Type().Field(i).Type.Kind()
+		field 		:= editableCfg.Elem().FieldByName(cfg.Type().Field(i).Name)
 
 		// switch
 		if  fieldKind == reflect.String {

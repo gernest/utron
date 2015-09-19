@@ -46,7 +46,7 @@ func TestEnvironmentOverride(t *testing.T){
 
 		cfg := DefaultConfig()
 		cfg,  err = NewConfig("fixtures/config/app.json")
-		cfg.ApplyEnvironmentVariables()
+		cfg.SyncEnv()
 
 		if cfg.Port != 8888 {
 			t.Errorf("expecetd %s got %s", 8888, cfg.Port)
@@ -66,7 +66,7 @@ func TestEnvironmentOverrideWithInvalidValues(t *testing.T){
 
 		cfg := DefaultConfig()
 		cfg,  err = NewConfig("fixtures/config/app.json")
-		cfg.ApplyEnvironmentVariables()
+		cfg.SyncEnv()
 
 		if cfg.Port != 8090 {
 			t.Errorf("expecetd %s got %s", 8090, cfg.Port)
