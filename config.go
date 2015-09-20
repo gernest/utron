@@ -82,36 +82,29 @@ func NewConfig(path string) (*Config, error) {
 	return cfg, nil
 }
 
-// This function overrides some values on the config with environement variables
-// The idea is to provide a way to use utron in different environents.
-//
-// - PORT
-// - BASE_URL
-// - DATABASE
-// - DATABASE_CONN
+// This function overrides Config values based on ENV variables with corresponding name.
 func (c *Config) SyncEnv() {
-	cfg := reflect.Indirect(reflect.ValueOf(c))
-	editableCfg := reflect.ValueOf(c)
+	cfg := reflect.ValueOf(c).Elem()
 
 	for i := 0; i < cfg.NumField(); i++ {
    	fieldName := cfg.Type().Field(i).Name
-		environmentVariableName := strings.ToUpper(fieldName)
-		environmentValue := os.Getenv(environmentVariableName)
+		env 			:= strings.ToUpper(fieldName)
+		value 		:= os.Getenv(env)
 
 		fieldKind := cfg.Type().Field(i).Type.Kind()
-		field 		:= editableCfg.Elem().FieldByName(cfg.Type().Field(i).Name)
+		field 		:= cfg.FieldByName(cfg.Type().Field(i).Name)
 
 		// switch
 		if  fieldKind == reflect.String {
-			field.SetString(environmentValue)
+			field.SetString(value)
 		} else if fieldKind == reflect.Bool {
-			boolValue, err := strconv.ParseBool(environmentValue)
+			boolValue, err := strconv.ParseBool(value)
 
 			if err == nil {
 				field.SetBool(boolValue)
 			}
 		} else if fieldKind == reflect.Int {
-			intValue, err := strconv.ParseInt(environmentValue, 10, 32)
+			intValue, err := strconv.ParseInt(value, 10, 32)
 
 			if err == nil {
 				field.SetInt(intValue)
