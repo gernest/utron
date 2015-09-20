@@ -7,9 +7,13 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/BurntSushi/toml"
 	"gopkg.in/yaml.v2"
+	"reflect"
+	"strings"
+	// "fmt"
 )
 
 // Config stores configurations values
@@ -72,7 +76,40 @@ func NewConfig(path string) (*Config, error) {
 	default:
 		return nil, errors.New("utron: config file not supported")
 	}
+
+
+
 	return cfg, nil
+}
+
+// This function overrides Config values based on ENV variables with corresponding name.
+func (c *Config) SyncEnv() {
+	cfg := reflect.ValueOf(c).Elem()
+
+	for i := 0; i < cfg.NumField(); i++ {
+   	fieldName := cfg.Type().Field(i).Name
+		env 			:= strings.ToUpper(fieldName)
+		value 		:= os.Getenv(env)
+		field 		:= cfg.FieldByName(cfg.Type().Field(i).Name)
+		fieldKind := cfg.Type().Field(i).Type.Kind()
+
+		switch fieldKind {
+		case reflect.String:
+				field.SetString(value)
+		case reflect.Bool:
+				boolValue, err := strconv.ParseBool(value)
+
+				if err == nil {
+					field.SetBool(boolValue)
+				}
+		case reflect.Int:
+				intValue, err := strconv.ParseInt(value, 10, 32)
+
+				if err == nil {
+					field.SetInt(intValue)
+				}
+		}
+	}
 }
 
 // saveToFile saves the Config in the file named path. This is a helper method
