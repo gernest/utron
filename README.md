@@ -76,6 +76,8 @@ utron support yaml, json and toml configurations files. In our todo app, we put 
 
 `utron` searches for a file named `app.json`, or `app.yml` or `app.toml` in the config directory. The first to be found is the one to be used.
 
+You can overide the values from the config file by setting environment variables, thame of the environment variables are shown below( with their details)
+
 This is the content of `config/app.json` file
 
 ```json
@@ -90,16 +92,19 @@ This is the content of `config/app.json` file
 	"database_conn": "postgres://postgres:postgres@localhost/todo"
 }
 ```
-setting      |details
--------------|---------
-app_name     | application name
-base_url     | the base url to use in your views
-port         | port number where the server will be listening to
-verbose      | true value will make every state information logged to stdout
-static_dir   | directory to serve static files e.g images, js or css
-view_dir     | directory to look for views
-database     | the name of the database you use, e.g postgres, mysql, foundation
-database_conn| connection string to your database
+
+You can overide the values from the config file by setting environment variables, name of the environment variables are shown below( with their details)
+
+setting      | environment name|details
+-------------|-----------------|----------------
+app_name     | APP_NAME        |application name
+base_url     | BASE_URL        |the base url to use in your views
+port         | PORT            |port number where the server will be listening to
+verbose      | VERBOSE         |true value will make every state information logged to stdout
+static_dir   | STATIC_DIR      |directory to serve static files e.g images, js or css
+view_dir     | VIEWS_DIR       |directory to look for views
+database     | DATABASE        |the name of the database you use, e.g postgres, mysql, foundation
+database_conn| DATABASE_CONN   |connection string to your database
 
 If you haven't specified explicitly the location of the configuration directory, then it defaults to the directory named `config` in the current working directory.
 
