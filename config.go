@@ -90,27 +90,26 @@ func (c *Config) SyncEnv() {
    	fieldName := cfg.Type().Field(i).Name
 		env 			:= strings.ToUpper(fieldName)
 		value 		:= os.Getenv(env)
-
-		fieldKind := cfg.Type().Field(i).Type.Kind()
 		field 		:= cfg.FieldByName(cfg.Type().Field(i).Name)
+		fieldKind := cfg.Type().Field(i).Type.Kind()
 
-		// switch
-		if  fieldKind == reflect.String {
-			field.SetString(value)
-		} else if fieldKind == reflect.Bool {
-			boolValue, err := strconv.ParseBool(value)
+		switch fieldKind {
+		case reflect.String:
+				field.SetString(value)
+		case reflect.Bool:
+				boolValue, err := strconv.ParseBool(value)
 
-			if err == nil {
-				field.SetBool(boolValue)
-			}
-		} else if fieldKind == reflect.Int {
-			intValue, err := strconv.ParseInt(value, 10, 32)
+				if err == nil {
+					field.SetBool(boolValue)
+				}
+		case reflect.Int:
+				intValue, err := strconv.ParseInt(value, 10, 32)
 
-			if err == nil {
-				field.SetInt(intValue)
-			}
+				if err == nil {
+					field.SetInt(intValue)
+				}
 		}
-  }
+	}
 }
 
 // saveToFile saves the Config in the file named path. This is a helper method
