@@ -18,7 +18,7 @@
 
 * Relevance. `utron` doesn't assume anything. We focus on things that matter, this way, we are able to achieve good maintenance and keeping the system well organized, well planned and sweet like.
 
-* Elegancy. `utron` uses golang best practises. We are not afraid of heights, its just that we need a parachute in our backpack. The source code is heavily documented, any trick should be well explained and well tested.
+* Elegancy. `utron` uses golang best practises. We are not afraid of heights, its just that we need a parachute in our backpack. The source code is heavily documented, any functionality should be well explained and well tested.
 
 ## Motivation
 After two years of playing with golang. I have looked on some of my projects and asked myself, how golang is that?
@@ -33,16 +33,16 @@ So, `utron` is my reimagination of lightweight MVC, that maintains the golang sp
 ## The MVC
 There is nothing revolutionary about MVC that `utron` brings on the table.
 
-* M is for models, it is the data structures that helps in data persistance, utron uses an already established Object Relational Mapper for golang [gorm](https://github.com/jinzhu/gorm). So if you are familiar with gorm then you are good on the M part.
+* M is for models, it is the data structures that helps in data persistance, utron uses [gorm](https://github.com/jinzhu/gorm) an already established Object Relational Mapper for golang. So if you are familiar with gorm then you are good on the M part.
 
 * V is for Views. Views are templates, that renders the final output. `utron` uses golang standard templates. so you don't have to learn anything new, just the text/template package to master views.
 
 * C is for controllers. This is where the aplication logic stands, in order to achieve modularity, there are some facts that utron enforces to controllers. This subject is explained in more details below.
 
-With the power of composition and inheriance, `utron` achieves a beautiful MVC workflow. I recommend you read the source code, it is well documented so as to demistify any magical unicorns.
+With the power of composition and inheritance, `utron` achieves a beautiful MVC workflow. I recommend you read the source code, it is well documented so as to demystify any magical unicorns.
 
 
-We will create a TODO List application in `utron` to explore all components that makes `utron` MVC tick the source code of the final application is included in this repository and can be found here [utron todoMVC](fixtures/todo)
+We will create a TODO List application in `utron` to explore all components that makes `utron` MVC tick. The source code of the final application is included in this repository and can be found here [utron todoMVC](fixtures/todo)
 
 # TODO list application with `utron`
 
@@ -76,9 +76,7 @@ utron support yaml, json and toml configurations files. In our todo app, we put 
 
 `utron` searches for a file named `app.json`, or `app.yml` or `app.toml` in the config directory. The first to be found is the one to be used.
 
-You can overide the values from the config file by setting environment variables, thame of the environment variables are shown below( with their details)
-
-This is the content of `config/app.json` file
+This is the content of `config/app.json` file:
 
 ```json
 {
@@ -93,18 +91,18 @@ This is the content of `config/app.json` file
 }
 ```
 
-You can overide the values from the config file by setting environment variables, name of the environment variables are shown below( with their details)
+You can overide the values from the config file by setting environment variables. The names of the environment variables are shown below (with their details)
 
-setting      | environment name|details
--------------|-----------------|----------------
-app_name     | APP_NAME        |application name
-base_url     | BASE_URL        |the base url to use in your views
-port         | PORT            |port number where the server will be listening to
-verbose      | VERBOSE         |true value will make every state information logged to stdout
-static_dir   | STATIC_DIR      |directory to serve static files e.g images, js or css
-view_dir     | VIEWS_DIR       |directory to look for views
-database     | DATABASE        |the name of the database you use, e.g postgres, mysql, foundation
-database_conn| DATABASE_CONN   |connection string to your database
+setting       | environment name | details
+--------------|------------------|----------------
+app_name      | APP_NAME         | application name
+base_url      | BASE_URL         | the base url to use in your views
+port          | PORT             | port number where the server will be listening to
+verbose       | VERBOSE          | true value will make every state information logged to stdout
+static_dir    | STATIC_DIR       | directory to serve static files e.g images, js or css
+view_dir      | VIEWS_DIR        | directory to look for views
+database      | DATABASE         | the name of the database you use, e.g postgres, mysql, foundation
+database_conn | DATABASE_CONN    | connection string to your database
 
 If you haven't specified explicitly the location of the configuration directory, then it defaults to the directory named `config` in the current working directory.
 
@@ -138,14 +136,14 @@ Notice that, we need to register our model, by calling `utron.RegisterModels(&To
 
 `utron` will automatically create the table `todos` if it doesn't exist yet.
 
-Don't be confused by the `schema` tag, I just added them since we will use [schema](https://github.com/gorilla/schema) package to decode form values(this has nothing to do with `utron`, you can use whatever form library you fancy)
+Don't be confused by the `schema` tag, I just added them since we will use the [schema](https://github.com/gorilla/schema) package to decode form values(this has nothing to do with `utron`, you can use whatever form library you fancy)
 
 
 
 ## Controllers
 `utron` controllers are structs that implement the `Controller` interface. To help make `utron` usable, `utron` provides a  `BaseController` which implements the `Controller` interface and offers additional conveniences to help in composing reusable code.
 
-You get all the benefits of `BaseController` by embeding it in your struct. our `TODO` Controller is in the `controller/todo.go`
+You get all the benefits of `BaseController` by embeding it in your struct. Our `TODO` Controller is in the `controller/todo.go`
 
 ```go
 package controllers
@@ -201,7 +199,7 @@ func (t *TODO) Delete() {
 	t.Ctx.Redirect("/", http.StatusFound)
 }
 
-func NewTDDO() *TODO {
+func NewTODO() *TODO {
 	return &TODO{
 		Routes: []string{
 			"get;/;Home",
@@ -212,11 +210,11 @@ func NewTDDO() *TODO {
 }
 
 func init() {
-	utron.RegisterController(NewTDDO())
+	utron.RegisterController(NewTODO())
 }
 ```
 
-Note we registered our controller by calling `utron.RegisterController(NewTDDO())` in the `init` function
+Note we registered our controller by calling `utron.RegisterController(NewTODO())` in the `init` function
 so as to make `utron` aware of our controller. See Routing section below for more explanation of what the controller is doing.
 
 
@@ -225,9 +223,9 @@ so as to make `utron` aware of our controller. See Routing section below for mor
 By registering a controller, there are two ways of assigning routes.
 
 ### case 1- vanilla routing
-By registering a Controller, routes are autogenerated for the controller methods. The format is `/:controler/:method` where `:controller` is the lowercase name of the Controller, and `:method` is its method in lowercase
+By registering a Controller, routes are autogenerated for the controller methods. The format is `/:controler/:method` where `:controller` is the lowercase name of the Controller, and `:method` is its method in lowercase.
 
-so `(*TODO)Hello()` will map to `/todo/hello`
+so `(*TODO) Hello()` will map to `/todo/hello`
 
 ### case 2- Specifying Routes field
 The user controller can define a field named `Routes` it should be of type `[]string`, then you can assign routes by appending route string to the Routes field.
@@ -259,7 +257,7 @@ This is a better explation from comments on the `router.go` file.
 So, that explains much the following lines in our `todo` app in `controllers/todo.go`
 
 ```go
-func NewTDDO() *TODO {
+func NewTODO() *TODO {
 	return &TODO{
 		Routes: []string{
 			"get;/;Home",
@@ -350,7 +348,7 @@ func main() {
 In case you want to run the app we just created, it is included in this repository in [fixtures/todo](fixtures/todo)
 
 * Prerequistite
- - a working database connection(postres, mysql or foundation)
+ - a working database connection (postres, mysql or foundation)
  - golang toolchain installed and the `go` command is in your system PATH.
 
 step 1 Install utron which will also include the todo app
