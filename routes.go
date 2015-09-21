@@ -1,15 +1,21 @@
 package utron
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 
+	"github.com/BurntSushi/toml"
 	"github.com/gernest/ita"
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
+	"gopkg.in/yaml.v2"
 )
 
 var (
@@ -21,7 +27,8 @@ var (
 // Router registers routes and handlers. It embeds gorilla mux Router.
 type Router struct {
 	*mux.Router
-	app *App
+	app    *App
+	routes []*route
 }
 
 // NewRouter returns a new Router, if app is passed then it is used
@@ -40,6 +47,7 @@ func NewRouter(app ...*App) *Router {
 type route struct {
 	pattern string   // url pattern e.g /home
 	methods []string // http methds e.g GET, POST etc
+	ctrl    string   // the name of the controller
 	fn      string   // the name of the controller's method to be executed
 }
 
@@ -76,6 +84,8 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 
 	numCtr := cTyp.NumMethod()
 
+	ctrlName := getTypName(cTyp) // The name of the controller
+
 	for v := range make([]struct{}, numCtr) {
 		method := cTyp.Method(v)
 
@@ -91,10 +101,11 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 		// is to use the Routes field instead
 		//
 		// TDDO: figure out the way of passing parameters to the method arguments?
-		patt := "/" + strings.ToLower(getTypName(cTyp)) + "/" + strings.ToLower(method.Name)
+		patt := "/" + strings.ToLower(ctrlName) + "/" + strings.ToLower(method.Name)
 
 		r := &route{
 			pattern: patt,
+			ctrl:    ctrlName,
 			fn:      method.Name,
 		}
 		routes = append(routes, r)
@@ -180,6 +191,15 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 	}
 
 	for _, v := range routes {
+
+		// use routes from the configuration file first
+		for _, rFile := range r.routes {
+			if rFile.ctrl == v.ctrl && rFile.fn == v.fn {
+				if err := r.add(rFile, ctrl, middlewares...); err != nil {
+					return err
+				}
+			}
+		}
 		if err := r.add(v, ctrl, middlewares...); err != nil {
 			return err
 		}
@@ -230,7 +250,17 @@ func splitRoutes(routeStr string) (*route, error) {
 			return nil, ErrRouteStringFormat
 		}
 		activeRoute.pattern = p
-		activeRoute.fn = s[2]
+
+		fn := strings.Split(s[2], ".")
+		switch len(fn) {
+		case 1:
+			activeRoute.fn = fn[0]
+		case 2:
+			activeRoute.ctrl = fn[0]
+			activeRoute.fn = fn[1]
+		default:
+			return nil, ErrRouteStringFormat
+		}
 		return activeRoute, nil
 
 	}
@@ -332,5 +362,77 @@ func (r *Router) handleController(w http.ResponseWriter, req *http.Request, fn s
 func (r *Router) wrapController(fn string, ctrl Controller) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		r.handleController(w, req, fn, ctrl)
+	}
+}
+
+type routeFile struct {
+	Routes []string `json:"routes" toml:"routes" yaml:"routes"`
+}
+
+// LoadRoutesFile loads routes from a json file. Example of the routes file.
+//	{
+//		"routes": [
+//			"get,post;/hello;Sample.Hello",
+//			"get,post;/about;Hello.About"
+//		]
+//	}
+//
+// supported formats are json,toml and yaml with extension .json,.toml and .yml respectively.
+//
+//TODO refactor the deconting part to a separate function? This part shares the same logic as the
+// one found in NewConfig()
+func (r *Router) LoadRoutesFile(file string) error {
+	rFile := &routeFile{}
+	data, err := ioutil.ReadFile(file)
+	if err != nil {
+		return err
+	}
+	switch filepath.Ext(file) {
+	case ".json":
+		err = json.Unmarshal(data, rFile)
+		if err != nil {
+			return err
+		}
+	case ".toml":
+		_, err = toml.Decode(string(data), rFile)
+		if err != nil {
+			return err
+		}
+	case ".yml":
+		err = yaml.Unmarshal(data, rFile)
+		if err != nil {
+			return err
+		}
+	default:
+		return errors.New("utron: usupported file format")
+	}
+
+	for _, v := range rFile.Routes {
+		parsedRoute, perr := splitRoutes(v)
+		if perr != nil {
+			logThis.Errors(fmt.Sprintf("utron: parsing route %s %v", v, perr))
+			continue
+		}
+		r.routes = append(r.routes, parsedRoute)
+	}
+	return nil
+}
+
+// loadRoutes searces for the route file i the cfgPath. The order of file lookup is
+// as follows.
+//	* routes.json
+//	* routes.toml
+//	* routes.yml
+func (r *Router) loadRoutes(cfgPath string) {
+	exts := []string{".json", ".toml", ".yml"}
+	rFile := "routes"
+	for _, ext := range exts {
+		file := filepath.Join(cfgPath, rFile+ext)
+		_, err := os.Stat(file)
+		if os.IsNotExist(err) {
+			continue
+		}
+		r.LoadRoutesFile(file)
+		break
 	}
 }

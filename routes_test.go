@@ -95,3 +95,57 @@ func TestMiddleware(t *testing.T) {
 		t.Errorf("expected %s got %s", blockMsg, w.Body.String())
 	}
 }
+
+func TestRoutesFile(t *testing.T) {
+	file := "fixtures/config/routes.json"
+	r := NewRouter()
+
+	err := r.LoadRoutesFile(file)
+	if err != nil {
+		t.Error(err)
+	}
+	if len(r.routes) != 2 {
+		t.Errorf("expcted 2 got %d", len(r.routes))
+	}
+	r.Add(NewSample())
+
+	req, err := http.NewRequest("GET", "/hello", nil)
+	if err != nil {
+		t.Error(err)
+	}
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("expected %d got %d", http.StatusOK, w.Code)
+	}
+	if w.Body.String() != msg {
+		t.Errorf("expected %s got %s", msg, w.Body.String())
+	}
+}
+
+func TestSplitRoutes(t *testing.T) {
+	data := []struct {
+		routeStr, ctrl, fn string
+	}{
+		{
+			"get,post;/;Hello.Home", "Hello", "Home",
+		},
+		{
+			"get,post;/;Home", "", "Home",
+		},
+	}
+
+	for _, v := range data {
+		r, err := splitRoutes(v.routeStr)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if r.ctrl != v.ctrl {
+			t.Errorf("expected %s got %s", v.ctrl, r.ctrl)
+		}
+		if r.fn != v.fn {
+			t.Errorf("extected %s got %s", v.fn, r.fn)
+		}
+	}
+}
