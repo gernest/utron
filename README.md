@@ -268,7 +268,17 @@ func NewTDDO() *TODO {
 		},
 	}
 }
-``` 
+```
+### case 3: using routes file.
+You can define routes in a file, the supported formats are json,toml and yaml. The routes file should be in the `config` directory.
+
+`utron` will look for file named `routes.json`,or `routes.toml` or `routes.yml` in that order, the first to be found is the one to be used.
+
+I have included a sample routes file in [fixtures/config/routes.json](fixtures/config/routes.json)
+
+The difference with case 2 above is you will need to specify the name of the controller explictly. That is for `TODO` controler, we can define the home route string in routes file like `get;/;TDODO.Home`
+
+We won't use this in our TODO list app, but you can find it useful in your use case.'
 
 ## Views
 `utron` views are golang templates. This is the content of `views/index.html``

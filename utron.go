@@ -86,10 +86,11 @@ func (a *App) init() error {
 		}
 		a.Set(model)
 	}
+	a.router.loadRoutes(a.configPath) // load routes file if any
 	a.Set(appConfig)
 	a.Set(views)
 	a.isInit = true
-	
+
 	// Case the StaticDir is specified in the Config fille, register
 	// a handler servving contents of the directory under the PathPrefix /static/
 	if appConfig.StaticDir != "" {
@@ -115,7 +116,7 @@ func getAbsolutePath(dir string) (string, error) {
 	if !info.IsDir() {
 		return "", fmt.Errorf("untron: %s is not a directory", dir)
 	}
-	
+
 	if path.IsAbs(dir) { // dir is already absolute, return it
 		return dir, nil
 	}
