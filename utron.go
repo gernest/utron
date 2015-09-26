@@ -15,7 +15,7 @@ func init() {
 	baseApp = NewApp()
 }
 
-// App is the main utron application.
+// App is the main utron application
 type App struct {
 	router     *Router
 	cfg        *Config
@@ -26,7 +26,7 @@ type App struct {
 	isInit     bool
 }
 
-// NewApp creates a new barebone utron application. To use MVC components, you should call
+// NewApp creates a new bare-bone utron application. To use MVC components, you should call
 // Init method before serving requests.
 func NewApp() *App {
 	app := &App{}
@@ -37,7 +37,7 @@ func NewApp() *App {
 	return app
 }
 
-// NewMVC creates a new MVC utron app, if cfg is pased, it should be a directory to look for
+// NewMVC creates a new MVC utron app, if cfg is passed, it should be a directory to look for
 // configuration file. The App returned is initialized.
 func NewMVC(cfg ...string) (*App, error) {
 	app := NewApp()
@@ -92,7 +92,7 @@ func (a *App) init() error {
 	a.isInit = true
 
 	// Case the StaticDir is specified in the Config fille, register
-	// a handler servving contents of the directory under the PathPrefix /static/
+	// a handler serving contents of the directory under the PathPrefix /static/
 	if appConfig.StaticDir != "" {
 		static, err := getAbsolutePath(appConfig.StaticDir)
 		if err != nil {
@@ -106,7 +106,7 @@ func (a *App) init() error {
 	return nil
 }
 
-//getAbsolutePath returns absolute path to dir, if dir is relative then we add current workig directory.
+//getAbsolutePath returns absolute path to dir, if dir is relative then we add current working directory.
 // Checks are made to ensure the directory exist.In case of any error, and empty string is returned.
 func getAbsolutePath(dir string) (string, error) {
 	info, err := os.Stat(dir)
@@ -149,7 +149,7 @@ func loadConfig(cfg ...string) (*Config, error) {
 	return NewConfig(cfgFile)
 }
 
-//findConfigFile finds the configuration file name, in the directory dir.
+//findConfigFile finds the configuration file name, in the directory dir
 func findConfigFile(dir string, name string) (file string, err error) {
 	extensions := []string{".json", ".toml", ".yml"}
 

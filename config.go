@@ -29,7 +29,7 @@ type Config struct {
 	DatabaseConn string `json:"database_conn" yaml:"database_conn" toml:"database_conn"`
 }
 
-// DefaultConfig returns the default configuation settings.
+// DefaultConfig returns the default configuration settings.
 func DefaultConfig() *Config {
 	return &Config{
 		AppName:   "utron web app",
@@ -41,7 +41,7 @@ func DefaultConfig() *Config {
 	}
 }
 
-// NewConfig reads configuration from path. The format is deductted from file extension
+// NewConfig reads configuration from path. The format is deduced from the file extension
 //	* .json    - is decoded as json
 //	* .yml     - is decoded as yaml
 //	* .toml    - is decoded as toml
@@ -75,7 +75,7 @@ func NewConfig(path string) (*Config, error) {
 		}
 
 	default:
-		return nil, errors.New("utron: config file not supported")
+		return nil, errors.New("utron: config file format not supported")
 	}
 	return cfg, nil
 }
@@ -109,10 +109,10 @@ func (c *Config) saveToFile(path string) error {
 	return ioutil.WriteFile(path, data, 0600)
 }
 
-// SyncEnv overides c field's values that are set in the environment.
+// SyncEnv overrides c field's values that are set in the environment.
 //
-// The environment variable names are derived from config fields by underscoring, and upper
-// cassing the name. e.g AppName will have a corresponding environment variable APP_NAME
+// The environment variable names are derived from config fields by underscoring, and uppercasing 
+// the name. E.g. AppName will have a corresponding environment variable APP_NAME
 //
 // NOTE only int, string and bool fields are supported and the corresponding values are set.
 // when the field value is not supported it is ignored.
@@ -153,7 +153,7 @@ func (c *Config) SyncEnv() error {
 // field is a camel case string.
 //
 // example
-//	AppName wrill chage to APP_NAME
+//	AppName will change to APP_NAME
 func getEnvName(field string) string {
 	camSplit := camelcase.Split(field)
 	var rst string

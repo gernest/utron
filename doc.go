@@ -1,5 +1,5 @@
 /*
-Package utron is a lighweight MVC framework for building fast, scallable and robust web applications
+Package utron is a lighweight MVC framework for building fast, scalable and robust web applications
 
 example hello world in utron
 
