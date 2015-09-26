@@ -20,11 +20,11 @@ import (
 
 var (
 
-	//ErrRouteStringFormat is returned when the route string is of wrong format
+// ErrRouteStringFormat is returned when the route string is of the wrong format
 	ErrRouteStringFormat = errors.New("wrong route string, example is\" get,post;/hello/world;Hello\"")
 )
 
-// Router registers routes and handlers. It embeds gorilla mux Router.
+// Router registers routes and handlers. It embeds gorilla mux Router
 type Router struct {
 	*mux.Router
 	app    *App
@@ -43,22 +43,22 @@ func NewRouter(app ...*App) *Router {
 	}
 }
 
-// route tracks information about  http route.
+// route tracks information about http route
 type route struct {
 	pattern string   // url pattern e.g /home
-	methods []string // http methds e.g GET, POST etc
+	methods []string // http methods e.g GET, POST etc
 	ctrl    string   // the name of the controller
 	fn      string   // the name of the controller's method to be executed
 }
 
-// Add registers ctrl. It takes additional coma separated list of middlewares. middlewaes
+// Add registers ctrl. It takes additional comma separated list of middleware. middlewares
 // are of type
 //	func(http.Handler)http.Handler
 // 	or
 // 	func(*Context)error
 //
-// utron uses alice package to chain middlewares, this means all alice compatible middlewares
-// works out of the box.
+// utron uses the alice package to chain middlewares, this means all alice compatible middleware
+// works out of the box
 func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 	var (
 
@@ -67,12 +67,12 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 		routes []*route
 
 		// baseController is the name of the Struct BaseController
-		// when users embed the BaseController, an annonymous field
+		// when users embed the BaseController, an anonymous field
 		// BaseController is added, and here we are refering to the name of the
-		// annonymous field
+		// anonymous field
 		baseController = "BaseController"
 
-		// routePaths is  the name of the field that allows uses to add Routes infromation
+		// routePaths is the name of the field that allows uses to add Routes information
 		routePaths = "Routes"
 	)
 
@@ -96,7 +96,7 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 
 		// patt composes pattern. This can be overidden by routes defined in the Routes
 		// field of the controller.
-		// By default the path is in the form /:contoller/:method. All http methods will be ristered
+		// By default the path is of the form /:contoller/:method. All http methods will be registered
 		// for this pattern, meaning it is up to the user to filter out what he/she wants, the easier way
 		// is to use the Routes field instead
 		//
@@ -112,8 +112,8 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 	}
 
 	// ultimate returns the actual value stored in rVals this means if rVals is a pointer,
-	// the we return the value that is ponted to, we are dealing with structs, so the returned
-	// value is of kind reflect.Struct.
+	// then we return the value that is ponted to. We are dealing with structs, so the returned
+	// value is of kind reflect.Struct
 	ultimate := func(rVals reflect.Value) reflect.Value {
 		val := rVals
 		switch val.Kind() {
@@ -123,18 +123,18 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 		return val
 	}
 
-	uCtr := ultimate(ctrlVal) // actual value after dereferencing the pointer.
+	uCtr := ultimate(ctrlVal) // actual value after dereferencing the pointer
 
-	uCtrTyp := uCtr.Type() // we store the type, so we can use in the next iterations.
+	uCtrTyp := uCtr.Type() // we store the type, so we can use in the next iterations
 
 	for k := range make([]struct{}, uCtr.NumField()) {
 		// We iterate in all fields, to filter out the user defined methods. We are aware
-		// of methods inherited fron the BaseController( Since we recommend user Controllers
-		// should embed BaseController).
+		// of methods inherited from the BaseController. Since we recommend user Controllers
+		// should embed BaseController
 
 		field := uCtrTyp.Field(k)
 
-		// if we find any field matching BaseController
+		// If we find any field matching BaseController
 		// we initialize its value.
 		if field.Name == baseController {
 			fieldVal := uCtr.Field(k)
@@ -142,22 +142,22 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 			continue
 		}
 
-		// if there is any field named Routes, and it is of signature []string
-		// then  the field's value is used to overide the patterns  defined earlier.
+		// If there is any field named Routes, and it is of signature []string
+		// then the field's value is used to override the patterns defined earlier.
 		//
 		// It is not necessary for every user implementation to define method named Routes
-		// If we cant find it then we just ignore its use( fallback to defaults).
+		// If we can't find it then we just ignore its use and fall-back to defaults.
 		//
 		// Route strings, are of the form "httpMethods;path;method"
-		// where httMethod: is a coma separated http method strings
+		// where httMethod: is a comma separated http method strings
 		//                  e.g GET,POST,PUT.
-		//                  The case does not matter, you can use lower case or upper case charaters
+		//                  The case does not matter, you can use lower case or upper case characters
 		//                  or even mixed case, that is get,GET,gET and GeT will all be treated as GET
 		//
 		//        path:     Is a url path or pattern, utron uses gorilla mux package. So, everything you can do
 		//                  with gorilla mux url path then you can do here.
 		//                  e.g /hello/{world}
-		//                  Don't worry about the params, they will be accessibe via .Ctx.Params field in your
+		//                  Don't worry about the params, they will be accessible via .Ctx.Params field in your
 		//                  controller.
 		//
 		//        method:   The name of the user Controller method to execute for this route.
@@ -208,10 +208,10 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 }
 
 // getTypName returns a string representing the name of the object typ.
-// if the name is defined then  it is used, otherwise, the  name is derived from the
+// if the name is defined then it is used, otherwise, the name is derived from the
 // Stringer interface.
 //
-// the stringer retuns something like *somepkg.MyStruct, so skip
+// the stringer returns something like *somepkg.MyStruct, so skip
 // the *somepkg and return MyStruct
 func getTypName(typ reflect.Type) string {
 	if typ.Name() != "" {
@@ -221,7 +221,7 @@ func getTypName(typ reflect.Type) string {
 	return split[len(split)-1]
 }
 
-// splitRoutes harvest the route components from srouteStr.
+// splitRoutes harvest the route components from routeStr.
 func splitRoutes(routeStr string) (*route, error) {
 
 	// supported contains supported http methods
@@ -281,7 +281,7 @@ func (r *Router) add(activeRoute *route, ctrl Controller, middlewares ...interfa
 
 				// wrap func(*Context)error to a func(http.Handler)http.Handler
 				//
-				//TODO put this into a separate funcion?
+				//TODO put this into a separate function?
 				ctxMiddleware := func(h http.Handler) http.Handler {
 					return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 						ctx := NewContext(w, req)
@@ -377,9 +377,9 @@ type routeFile struct {
 //		]
 //	}
 //
-// supported formats are json,toml and yaml with extension .json,.toml and .yml respectively.
+// supported formats are json,toml and yaml with extension .json, .toml and .yml respectively.
 //
-//TODO refactor the deconting part to a separate function? This part shares the same logic as the
+//TODO refactor the decoding part to a separate function? This part shares the same logic as the
 // one found in NewConfig()
 func (r *Router) LoadRoutesFile(file string) error {
 	rFile := &routeFile{}
@@ -418,7 +418,7 @@ func (r *Router) LoadRoutesFile(file string) error {
 	return nil
 }
 
-// loadRoutes searces for the route file i the cfgPath. The order of file lookup is
+// loadRoutes searches for the route file i the cfgPath. The order of file lookup is
 // as follows.
 //	* routes.json
 //	* routes.toml

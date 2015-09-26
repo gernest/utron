@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-//Content holds http response content type strings
+// Content holds http response content type strings
 var Content = struct {
 	Type        string
 	TextPlain   string
@@ -29,16 +29,16 @@ var Content = struct {
 	},
 }
 
-// Context wraps request and response. It provides methods for handling respones
+// Context wraps request and response. It provides methods for handling responses
 type Context struct {
 
 	// Params are the parameters specified in the url patterns
 	// utron uses gorilla mux for routing. So basically Params stores results
 	// after calling mux.Vars function .
 	//
-	// e.g if you have route /hello/{world}
+	// e.g. if you have route /hello/{world}
 	// when you make request to /hello/gernest , then
-	// in the Params, key named world will have value gernest. meaning Params["world"]=="gernest
+	// in the Params, key named world will have value gernest. meaning Params["world"]=="gernest"
 	Params map[string]string
 
 	// Data keeps values that are going to be passed to the view as context
@@ -50,7 +50,7 @@ type Context struct {
 	// Cfg is the application configuration
 	Cfg *Config
 
-	//DB is the database stuffs, with all models registered
+	//DB is the database stuff, with all models registered
 	DB *Model
 
 	request    *http.Request
@@ -60,7 +60,7 @@ type Context struct {
 	view       View
 }
 
-// NewContext creates new context for he given w and r.
+// NewContext creates new context for the given w and r
 func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 	ctx := &Context{
 		Params:   make(map[string]string),
@@ -73,7 +73,7 @@ func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 	return ctx
 }
 
-// Init initializes the context.
+// Init initializes the context
 func (c *Context) Init() {
 	switch {
 	case c.Params == nil:
@@ -89,7 +89,7 @@ func (c *Context) Init() {
 // Write writes the data to the context, data is written to the http.ResponseWriter
 // upon calling Commit().
 //
-// data will only be used when Template is not specified and there is no any View set. You can use
+// data will only be used when Template is not specified and there is no View set. You can use
 // this for creating API's (which does not depend on views like JSON API's)
 func (c *Context) Write(data []byte) (int, error) {
 	return c.out.Write(data)
@@ -120,7 +120,7 @@ func (c *Context) Response() http.ResponseWriter {
 	return c.response
 }
 
-// GetData retrievess any data strored in the request using
+// GetData retrievess any data stored in the request using
 // gorilla.Context package
 func (c *Context) GetData(key interface{}) interface{} {
 	return context.Get(c.Request(), key)
@@ -131,7 +131,7 @@ func (c *Context) GetData(key interface{}) interface{} {
 //	 * Request by passing *http.Request
 //	 * ResponseWriter by passing http.ResponseVritter
 //	 * view by passing View
-//	 * response status code  by passing an int
+//	 * response status code by passing an int
 func (c *Context) Set(value interface{}) {
 	switch value.(type) {
 	case View:

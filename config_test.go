@@ -14,8 +14,8 @@ func TestConfig(t *testing.T) {
 
 	cfg := DefaultConfig()
 
-	//	//	 Uncomment the this to generate the sample
-	//	//	  config files in fixures/config directory
+	//	//	 Uncomment this to generate the sample
+	//	//	 config files in the fixures/config directory
 	//	cfg.ViewsDir = "fixtures/view"
 	//	cfg.StaticDir = "fixtures/static"
 	//	for _, f := range cfgFiles {
@@ -54,7 +54,7 @@ func TestConfigEnv(t *testing.T) {
 		// check out env name maker
 		cm := getEnvName(f.name)
 		if cm != f.env {
-			t.Errorf("expected %s gott %s", f.env, cm)
+			t.Errorf("expected %s got %s", f.env, cm)
 		}
 	}
 

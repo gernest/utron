@@ -44,7 +44,7 @@ func (d *DefaultLogger) Warn(v ...interface{}) {
 	d.Println(fmt.Sprintf(">>WARN>> %s", fmt.Sprint(v...)))
 }
 
-// Success logs sucess messages
+// Success logs success messages
 func (d *DefaultLogger) Success(v ...interface{}) {
 	d.Println(fmt.Sprintf(">>SUCC>> %s", fmt.Sprint(v...)))
 }

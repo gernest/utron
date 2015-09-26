@@ -54,8 +54,8 @@ func (m *Model) OpenWithConfig(cfg *Config) error {
 // Register adds the values to the models registry
 func (m *Model) Register(values ...interface{}) error {
 
-	//do not work on them.models first, this is like an insurance policy
-	// wnhenever we ecounter any error in the values nothings goes into the registry
+	// do not work on them.models first, this is like an insurance policy
+	// whenever we encounter any error in the values nothing goes into the registry
 	models := make(map[string]reflect.Value)
 	if len(values) > 0 {
 		for _, val := range values {

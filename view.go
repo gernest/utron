@@ -44,7 +44,7 @@ func NewSimpleView(viewDir string) (View, error) {
 // foo/bar.tpl, instead just use bar.tpl
 func (s *SimpleView) load(dir string) (View, error) {
 
-	// suppoted is the list of file extensions that will be parsed as templates
+	// supported is the list of file extensions that will be parsed as templates
 	supported := []string{".tpl", ".html", ".tmpl"}
 
 	werr := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
@@ -77,7 +77,7 @@ func (s *SimpleView) load(dir string) (View, error) {
 		// full path for bar file foo/bar.tpl
 		// we trim the foo part and remain with /bar.tpl
 		//
-		// NOTE we dont account for the opening slash, when dir ends with /.
+		// NOTE we don't account for the opening slash, when dir ends with /.
 		name := strings.TrimPrefix(path, dir)
 
 		name = strings.TrimPrefix(name, "/") // case  we missed the opening slash
@@ -99,7 +99,7 @@ func (s *SimpleView) load(dir string) (View, error) {
 	return s, nil
 }
 
-// Render executes template named name, passind data as context, the output is written to out.
+// Render executes template named name, passing data as context, the output is written to out.
 func (s *SimpleView) Render(out io.Writer, name string, data interface{}) error {
 	return s.tmpl.ExecuteTemplate(out, name, data)
 }
