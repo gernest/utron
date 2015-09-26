@@ -239,6 +239,6 @@ func Run() {
 	}
 	Migrate()
 	port := baseApp.cfg.Port
-	logThis.Info("staring server at ", baseApp.cfg.BaseURL)
+	logThis.Info("starting server at ", baseApp.cfg.BaseURL)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), baseApp))
 }
