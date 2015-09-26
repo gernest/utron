@@ -3,7 +3,6 @@ go:
  - 1.2
  - 1.3
  - release
- - tip
 before_install:
  - go get -t -v
  - go get github.com/axw/gocov/gocov
