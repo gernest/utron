@@ -154,11 +154,11 @@ func (c *Context) SetHeader(key, value string) {
 // This should be called only once, subsequent calls to this will result in an error.
 //
 // If there is a view, and the template is specified the the view is rendered and its
-// output is writen to the respose, otherwise any data written to the context is written to the
+// output is writen to the response, otherwise any data written to the context is written to the
 // ResponseWriter.
 func (c *Context) Commit() error {
 	if c.isCommited {
-		return errors.New("already commited")
+		return errors.New("already committed")
 	}
 	if c.Template != "" && c.view != nil {
 		out := &bytes.Buffer{}

@@ -68,7 +68,7 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 
 		// baseController is the name of the Struct BaseController
 		// when users embed the BaseController, an anonymous field
-		// BaseController is added, and here we are refering to the name of the
+		// BaseController is added, and here we are referring to the name of the
 		// anonymous field
 		baseController = "BaseController"
 
@@ -94,13 +94,13 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 			continue
 		}
 
-		// patt composes pattern. This can be overidden by routes defined in the Routes
+		// patt composes pattern. This can be overridden by routes defined in the Routes
 		// field of the controller.
-		// By default the path is of the form /:contoller/:method. All http methods will be registered
+		// By default the path is of the form /:controller/:method. All http methods will be registered
 		// for this pattern, meaning it is up to the user to filter out what he/she wants, the easier way
 		// is to use the Routes field instead
 		//
-		// TDDO: figure out the way of passing parameters to the method arguments?
+		// TODD: figure out the way of passing parameters to the method arguments?
 		patt := "/" + strings.ToLower(ctrlName) + "/" + strings.ToLower(method.Name)
 
 		r := &route{
@@ -112,7 +112,7 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 	}
 
 	// ultimate returns the actual value stored in rVals this means if rVals is a pointer,
-	// then we return the value that is ponted to. We are dealing with structs, so the returned
+	// then we return the value that is pointed to. We are dealing with structs, so the returned
 	// value is of kind reflect.Struct
 	ultimate := func(rVals reflect.Value) reflect.Value {
 		val := rVals
@@ -337,14 +337,14 @@ func (r *Router) prepareContext(ctx *Context) {
 	}
 }
 
-// executes the method fn on Controller ctrl, it sets conext.
+// executes the method fn on Controller ctrl, it sets context.
 func (r *Router) handleController(w http.ResponseWriter, req *http.Request, fn string, ctrl Controller) {
 	ctx := NewContext(w, req)
 	r.prepareContext(ctx)
 	ctrl.New(ctx)
 
 	// execute the method
-	// TDOO: better error handling?
+	// TODO: better error handling?
 	if x := ita.New(ctrl).Call(fn); x.Error() != nil {
 		ctx.Set(http.StatusInternalServerError)
 		ctx.Write([]byte(x.Error().Error()))
@@ -404,7 +404,7 @@ func (r *Router) LoadRoutesFile(file string) error {
 			return err
 		}
 	default:
-		return errors.New("utron: usupported file format")
+		return errors.New("utron: unsupported file format")
 	}
 
 	for _, v := range rFile.Routes {
