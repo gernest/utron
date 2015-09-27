@@ -6,8 +6,8 @@ type Controller interface {
 	Render() error
 }
 
-// BaseController implements the Controlller interface, It is recommended all
-// user defined Contollers should embed *BaseController.
+// BaseController implements the Controller interface, It is recommended all
+// user defined Controllers should embed *BaseController.
 type BaseController struct {
 	Ctx *Context
 }

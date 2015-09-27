@@ -34,7 +34,7 @@ func NewModel() *Model {
 	}
 }
 
-// IsOpen returns true if the Model has alredy established connecntion
+// IsOpen returns true if the Model has alredy established connection
 // to the database
 func (m *Model) IsOpen() bool {
 	return m.isOpen
