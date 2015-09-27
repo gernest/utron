@@ -239,7 +239,7 @@ This is a better explanation from comments on the `router.go` file.
 		// If we cant find it then we just ignore its use( fallback to defaults).
 		//
 		// Route strings, are of the form "httpMethods;path;method"
-		// where httMethod: is a comma separated list of http method strings
+		// where httpMethods: is a comma separated list of http method strings
 		//                  e.g GET,POST,PUT.
 		//                  The case does not matter, you can use lower case or upper case characters
 		//                  or even mixed case, that is get,GET,gET and GeT will all be treated as GET
