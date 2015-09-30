@@ -111,7 +111,7 @@ func (c *Config) saveToFile(path string) error {
 
 // SyncEnv overrides c field's values that are set in the environment.
 //
-// The environment variable names are derived from config fields by underscoring, and uppercasing 
+// The environment variable names are derived from config fields by underscoring, and uppercasing
 // the name. E.g. AppName will have a corresponding environment variable APP_NAME
 //
 // NOTE only int, string and bool fields are supported and the corresponding values are set.
