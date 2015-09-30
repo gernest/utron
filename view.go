@@ -40,7 +40,7 @@ func NewSimpleView(viewDir string) (View, error) {
 // load loads templates from dir. The templates should be valid golang templates
 //
 // Only files with extension .html, .tpl, .tmpl will be loaded. references to these templates
-// should be relative to the dir. That is, if  dir is foo, you dont have to refer to
+// should be relative to the dir. That is, if  dir is foo, you don't have to refer to
 // foo/bar.tpl, instead just use bar.tpl
 func (s *SimpleView) load(dir string) (View, error) {
 

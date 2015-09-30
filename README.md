@@ -357,7 +357,7 @@ func main() {
 In case you want to run the app we just created, it is included in this repository in [fixtures/todo](fixtures/todo)
 
 * Prerequisite
- - a working database connection (postres, mysql or foundation)
+ - a working database connection (postgres, mysql or foundation)
  - golang toolchain installed and the `go` command in your system $PATH.
 
 step 1 Install `utron` which will also include the todo app

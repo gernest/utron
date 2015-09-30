@@ -165,7 +165,7 @@ func findConfigFile(dir string, name string) (file string, err error) {
 	return "", fmt.Errorf("utron: can't find configuration file %s in %s", name, dir)
 }
 
-// AddController registers ctrl, and middlwares if provided
+// AddController registers ctrl, and middlewares if provided
 func (a *App) AddController(ctrl Controller, middlewares ...interface{}) {
 	a.router.Add(ctrl, middlewares...)
 }

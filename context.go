@@ -90,7 +90,7 @@ func (c *Context) Init() {
 // upon calling Commit().
 //
 // data will only be used when Template is not specified and there is no View set. You can use
-// this for creating API's (which does not depend on views like JSON API's)
+// this for creating APIs (which does not depend on views like JSON APIs)
 func (c *Context) Write(data []byte) (int, error) {
 	return c.out.Write(data)
 }
@@ -126,7 +126,7 @@ func (c *Context) GetData(key interface{}) interface{} {
 	return context.Get(c.Request(), key)
 }
 
-// Set sets value in the cotext object. You can use this to change the following
+// Set sets value in the context object. You can use this to change the following
 //
 //	 * Request by passing *http.Request
 //	 * ResponseWriter by passing http.ResponseVritter
@@ -150,11 +150,11 @@ func (c *Context) SetHeader(key, value string) {
 	c.response.Header().Set(key, value)
 }
 
-// Commit writes the results on the underlying http.Responsewriter and commits the changes.
+// Commit writes the results on the underlying http.ResponseWriter and commits the changes.
 // This should be called only once, subsequent calls to this will result in an error.
 //
 // If there is a view, and the template is specified the the view is rendered and its
-// output is writen to the response, otherwise any data written to the context is written to the
+// output is written to the response, otherwise any data written to the context is written to the
 // ResponseWriter.
 func (c *Context) Commit() error {
 	if c.isCommited {
