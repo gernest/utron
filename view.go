@@ -78,7 +78,9 @@ func (s *SimpleView) load(dir string) (View, error) {
 		// we trim the foo part and remain with /bar.tpl
 		//
 		// NOTE we don't account for the opening slash, when dir ends with /.
-		name := strings.TrimPrefix(path, dir)
+		name := path[len(dir):]
+
+		name = filepath.ToSlash(name)
 
 		name = strings.TrimPrefix(name, "/") // case  we missed the opening slash
 
