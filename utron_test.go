@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -54,7 +54,7 @@ func TestGetAbsPath(t *testing.T) {
 		t.Errorf("expcetd not exist got %v", err)
 	}
 
-	absPath := path.Join(wd, "fixtures")
+	absPath := filepath.Join(wd, "fixtures")
 
 	// Relqtive
 	dir, err := getAbsolutePath("fixtures")
