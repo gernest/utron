@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path"
 	"path/filepath"
 )
 
@@ -117,14 +116,14 @@ func getAbsolutePath(dir string) (string, error) {
 		return "", fmt.Errorf("untron: %s is not a directory", dir)
 	}
 
-	if path.IsAbs(dir) { // dir is already absolute, return it
+	if filepath.IsAbs(dir) { // dir is already absolute, return it
 		return dir, nil
 	}
 	wd, err := os.Getwd()
 	if err != nil {
 		return "", err
 	}
-	absDir := path.Join(wd, dir)
+	absDir := filepath.Join(wd, dir)
 	_, err = os.Stat(absDir)
 	if err != nil {
 		return "", err

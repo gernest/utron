@@ -20,7 +20,7 @@ import (
 
 var (
 
-// ErrRouteStringFormat is returned when the route string is of the wrong format
+	// ErrRouteStringFormat is returned when the route string is of the wrong format
 	ErrRouteStringFormat = errors.New("wrong route string, example is\" get,post;/hello/world;Hello\"")
 )
 
