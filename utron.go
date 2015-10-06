@@ -149,7 +149,7 @@ func loadConfig(cfg ...string) (*Config, error) {
 	return NewConfig(cfgFile)
 }
 
-// findConfigFile finds the configuration file name in the directory specified.
+// findConfigFile finds the configuration file name in the directory dir.
 func findConfigFile(dir string, name string) (file string, err error) {
 	extensions := []string{".json", ".toml", ".yml"}
 
@@ -197,7 +197,7 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	a.router.ServeHTTP(w, r)
 }
 
-// SetConfigPath sets the path to look for the configuration file in the
+// SetConfigPath sets the path to look for the configuration files in the
 // global utron App.
 func SetConfigPath(path string) {
 	baseApp.SetConfigPath(path)
