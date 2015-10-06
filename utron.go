@@ -14,7 +14,7 @@ func init() {
 	baseApp = NewApp()
 }
 
-// App is the main utron application
+// App is the main utron application.
 type App struct {
 	router     *Router
 	cfg        *Config
@@ -25,8 +25,8 @@ type App struct {
 	isInit     bool
 }
 
-// NewApp creates a new bare-bone utron application. To use MVC components, you should call
-// Init method before serving requests.
+// NewApp creates a new bare-bone utron application. To use the MVC components, you should call
+// the Init method before serving requests.
 func NewApp() *App {
 	app := &App{}
 	app.Set(logThis)
@@ -36,8 +36,8 @@ func NewApp() *App {
 	return app
 }
 
-// NewMVC creates a new MVC utron app, if cfg is passed, it should be a directory to look for
-// configuration file. The App returned is initialized.
+// NewMVC creates a new MVC utron app. If cfg is passed, it should be a directory to look for
+// the configuration files. The App returned is initialized.
 func NewMVC(cfg ...string) (*App, error) {
 	app := NewApp()
 	if len(cfg) > 0 {
@@ -49,7 +49,7 @@ func NewMVC(cfg ...string) (*App, error) {
 	return app, nil
 }
 
-// Init initializes MVC App
+// Init initializes the MVC App.
 func (a *App) Init() error {
 	if a.configPath == "" {
 		a.SetConfigPath("config")
@@ -57,7 +57,7 @@ func (a *App) Init() error {
 	return a.init()
 }
 
-// SetConfigPath sets dir as a path to search for config files
+// SetConfigPath sets the directory path to search for the config files.
 func (a *App) SetConfigPath(dir string) {
 	a.configPath = dir
 }
@@ -85,13 +85,13 @@ func (a *App) init() error {
 		}
 		a.Set(model)
 	}
-	a.router.loadRoutes(a.configPath) // load routes file if any
+	a.router.loadRoutes(a.configPath) // Load a routes file if available.
 	a.Set(appConfig)
 	a.Set(views)
 	a.isInit = true
 
-	// Case the StaticDir is specified in the Config fille, register
-	// a handler serving contents of the directory under the PathPrefix /static/
+	// In case the StaticDir is specified in the Config file, register
+	// a handler serving contents of that directory under the PathPrefix /static/.
 	if appConfig.StaticDir != "" {
 		static, err := getAbsolutePath(appConfig.StaticDir)
 		if err != nil {
@@ -105,8 +105,9 @@ func (a *App) init() error {
 	return nil
 }
 
-//getAbsolutePath returns absolute path to dir, if dir is relative then we add current working directory.
-// Checks are made to ensure the directory exist.In case of any error, and empty string is returned.
+// getAbsolutePath returns the absolute path to dir. If the dir is relative, then we add 
+// the current working directory. Checks are made to ensure the directory exist. 
+// In case of any error, an empty string is returned.
 func getAbsolutePath(dir string) (string, error) {
 	info, err := os.Stat(dir)
 	if err != nil {
@@ -116,7 +117,7 @@ func getAbsolutePath(dir string) (string, error) {
 		return "", fmt.Errorf("untron: %s is not a directory", dir)
 	}
 
-	if filepath.IsAbs(dir) { // dir is already absolute, return it
+	if filepath.IsAbs(dir) { // If dir is already absolute, return it.
 		return dir, nil
 	}
 	wd, err := os.Getwd()
@@ -131,8 +132,8 @@ func getAbsolutePath(dir string) (string, error) {
 	return absDir, nil
 }
 
-// loadConfig loads configuration file, if cfg is provided then it is used as the directory
-// for searching configuration file else defaults to directory named config in the current
+// loadConfig loads the configuration file. If cfg is provided, then it is used as the directory
+// for searching the configuration files. It defaults to the directory named config in the current
 // working directory.
 func loadConfig(cfg ...string) (*Config, error) {
 	cfgDir := "config"
@@ -140,7 +141,7 @@ func loadConfig(cfg ...string) (*Config, error) {
 		cfgDir = cfg[0]
 	}
 
-	// load configurations
+	// Load configurations.
 	cfgFile, err := findConfigFile(cfgDir, "app")
 	if err != nil {
 		return nil, err
@@ -148,7 +149,7 @@ func loadConfig(cfg ...string) (*Config, error) {
 	return NewConfig(cfgFile)
 }
 
-//findConfigFile finds the configuration file name, in the directory dir
+// findConfigFile finds the configuration file name in the directory specified.
 func findConfigFile(dir string, name string) (file string, err error) {
 	extensions := []string{".json", ".toml", ".yml"}
 
@@ -165,12 +166,12 @@ func findConfigFile(dir string, name string) (file string, err error) {
 	return "", fmt.Errorf("utron: can't find configuration file %s in %s", name, dir)
 }
 
-// AddController registers ctrl, and middlewares if provided
+// AddController registers a controller, and middlewares if any is provided.
 func (a *App) AddController(ctrl Controller, middlewares ...interface{}) {
 	a.router.Add(ctrl, middlewares...)
 }
 
-// Set assigns value to *App components. The following can be set
+// Set is for assigning a value to *App components. The following can be set:
 //	Logger by passing Logger
 //	View by passing View
 //	Router by passing *Router
@@ -191,12 +192,12 @@ func (a *App) Set(value interface{}) {
 	}
 }
 
-// ServeHTTP serves http, it can be used with other http.Handler implementations
+// ServeHTTP serves http requests. It can be used with other http.Handler implementations.
 func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	a.router.ServeHTTP(w, r)
 }
 
-// SetConfigPath sets the path to look for configurations files in the
+// SetConfigPath sets the path to look for the configuration file in the
 // global utron App.
 func SetConfigPath(path string) {
 	baseApp.SetConfigPath(path)
@@ -207,12 +208,12 @@ func RegisterModels(models ...interface{}) {
 	baseApp.model.Register(models...)
 }
 
-// RegisterController register ctrl in the global utron App.
+// RegisterController registers a controller in the global utron App.
 func RegisterController(ctrl Controller, middlewares ...interface{}) {
 	baseApp.router.Add(ctrl, middlewares...)
 }
 
-// ServeHTTP serves request using global utron App
+// ServeHTTP serves request using global utron App.
 func ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !baseApp.isInit {
 		if err := baseApp.Init(); err != nil {
@@ -230,7 +231,7 @@ func Migrate() {
 
 // Run runs a http server, serving the global utron App.
 //
-// By using this, you should make sure you followed MVC pattern,
+// By using this, you should make sure you followed the MVC pattern.
 func Run() {
 	if err := baseApp.Init(); err != nil {
 		logThis.Errors(err)
