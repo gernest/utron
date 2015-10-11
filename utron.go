@@ -12,6 +12,9 @@ var baseApp *App
 
 func init() {
 	baseApp = NewApp()
+	if err := baseApp.Init(); err != nil {
+		// TODO log this?
+	}
 }
 
 // App is the main utron application
@@ -232,10 +235,6 @@ func Migrate() {
 //
 // By using this, you should make sure you followed MVC pattern,
 func Run() {
-	if err := baseApp.Init(); err != nil {
-		logThis.Errors(err)
-		os.Exit(1)
-	}
 	Migrate()
 	port := baseApp.cfg.Port
 	logThis.Info("starting server at ", baseApp.cfg.BaseURL)
