@@ -64,7 +64,9 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 
 		// routes is a slice of all routes associated
 		// with ctrl
-		routes []*route
+		routes = struct {
+			inCtrl, standard []*route
+		}{}
 
 		// baseController is the name of the Struct BaseController
 		// when users embed the BaseController, an anonymous field
@@ -108,7 +110,7 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 			ctrl:    ctrlName,
 			fn:      method.Name,
 		}
-		routes = append(routes, r)
+		routes.standard = append(routes.standard, r)
 	}
 
 	// ultimate returns the actual value stored in rVals this means if rVals is a pointer,
@@ -171,17 +173,7 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 						if err != nil {
 							continue
 						}
-						for key := range routes {
-							value := routes[key]
-							if value.fn == rt.fn {
-								if rt.methods != nil {
-									value.methods = rt.methods
-								}
-								if rt.pattern != "" {
-									value.pattern = rt.pattern
-								}
-							}
-						}
+						routes.inCtrl = append(routes.inCtrl, rt)
 					}
 
 				}
@@ -190,7 +182,9 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 
 	}
 
-	for _, v := range routes {
+	for _, v := range routes.standard {
+
+		var found bool
 
 		// use routes from the configuration file first
 		for _, rFile := range r.routes {
@@ -198,11 +192,29 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 				if err := r.add(rFile, ctrl, middlewares...); err != nil {
 					return err
 				}
+				found = true
 			}
 		}
-		if err := r.add(v, ctrl, middlewares...); err != nil {
-			return err
+
+		// if there is no match from the routes file, use the routes defined in the Routes field
+		if !found {
+			for _, rFile := range routes.inCtrl {
+				if rFile.fn == v.fn {
+					if err := r.add(rFile, ctrl, middlewares...); err != nil {
+						return err
+					}
+					found = true
+				}
+			}
 		}
+
+		// resolve to sandard when everything else never matched
+		if !found {
+			if err := r.add(v, ctrl, middlewares...); err != nil {
+				return err
+			}
+		}
+
 	}
 	return nil
 }

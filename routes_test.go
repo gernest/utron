@@ -34,7 +34,7 @@ func NewSample() *Sample {
 
 func TestRouterAdd(t *testing.T) {
 	r := NewRouter()
-	r.Add(NewSample())
+	r.Add(&Sample{})
 
 	req, err := http.NewRequest("GET", "/sample/bang", nil)
 	if err != nil {
@@ -49,8 +49,34 @@ func TestRouterAdd(t *testing.T) {
 	if w.Body.String() != msg {
 		t.Errorf("expected %s got %s", msg, w.Body.String())
 	}
+}
 
-	req, err = http.NewRequest("GET", "/hello/world", nil)
+func TestRouteField(t *testing.T) {
+	r := NewRouter()
+	routes := []string{
+		"get,post;/hello/world;Hello",
+	}
+	s := &Sample{}
+	s.Routes = routes
+	err := r.Add(s)
+	if err != nil {
+		t.Error(err)
+	}
+	req, err := http.NewRequest("GET", "/hello/world", nil)
+	if err != nil {
+		t.Error(err)
+	}
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("expected %d got %d", http.StatusOK, w.Code)
+	}
+	if w.Body.String() != msg {
+		t.Errorf("expected %s got %s", msg, w.Body.String())
+	}
+
+	req, err = http.NewRequest("GET", "/sample/bang", nil)
 	if err != nil {
 		t.Error(err)
 	}
@@ -79,7 +105,7 @@ func TestMiddleware(t *testing.T) {
 	}
 
 	r := NewRouter()
-	r.Add(NewSample(), block)
+	r.Add(&Sample{}, block)
 
 	req, err := http.NewRequest("GET", "/sample/bang", nil)
 	if err != nil {
