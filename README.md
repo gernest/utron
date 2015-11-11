@@ -395,11 +395,10 @@ Start with clicking the star button to make the author and his neighbors happy. 
 If you have any questions, just open an issue.
 
 # Author
-Geofrey Ernest <geofreyernest@live.com>
+Geofrey Ernest
 
 Twitter  : [@gernesti](https://twitter.com/gernesti)
 
-Facebook : [Geofrey Ernest](https://www.facebook.com/geofrey.ernest.35)
 
 # Are you hiring?
 
