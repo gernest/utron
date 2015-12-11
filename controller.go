@@ -1,5 +1,9 @@
 package utron
 
+import (
+	"encoding/json"
+)
+
 // Controller is an interface for utron controllers
 type Controller interface {
 	New(*Context)
@@ -38,4 +42,10 @@ func (b *BaseController) String(code int) {
 func (b *BaseController) JSON(code int) {
 	b.Ctx.Set(code)
 	b.Ctx.JSON()
+}
+
+// RenderJSON encodes value into json and renders the response as JSON
+func (b *BaseController) RenderJSON(value interface{}, code int) {
+	json.NewEncoder(b.Ctx).Encode(value)
+	b.JSON(code)
 }
