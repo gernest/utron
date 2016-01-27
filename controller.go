@@ -28,20 +28,20 @@ func (b *BaseController) Render() error {
 
 // HTML renders text/html with the given code as status code
 func (b *BaseController) HTML(code int) {
-	b.Ctx.Set(code)
 	b.Ctx.HTML()
+	b.Ctx.Set(code)
 }
 
 // String renders text/plain with given code as status code
 func (b *BaseController) String(code int) {
-	b.Ctx.Set(code)
 	b.Ctx.TextPlain()
+	b.Ctx.Set(code)
 }
 
 // JSON renders application/json with the given code
 func (b *BaseController) JSON(code int) {
-	b.Ctx.Set(code)
 	b.Ctx.JSON()
+	b.Ctx.Set(code)
 }
 
 // RenderJSON encodes value into json and renders the response as JSON
