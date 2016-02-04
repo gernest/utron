@@ -402,11 +402,6 @@ Geofrey Ernest
 Twitter  : [@gernesti](https://twitter.com/gernesti)
 
 
-# Are you hiring?
-
-I have 2 years experience working with golang and 5 years of web development experience. I don't have a juicy CV because I'm in Tanzania, and almost everyone I graduated with has no job, has never had one and doubts he/she will ever land one (unless, of course, you are lucky which I'm not.)
-
-If you are a recruiter, please get in touch, because I have my full trust that code will get me out of this abysmal poverty.
 
 # Acknowledgements
 These amazing projects have made `utron` possible:
