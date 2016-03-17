@@ -1,6 +1,6 @@
 language: go
 go: 
- - 1.3
+ - 1.4
  - release
 before_install:
  - go get -t -v
