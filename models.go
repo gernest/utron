@@ -46,7 +46,7 @@ func (m *Model) OpenWithConfig(cfg *Config) error {
 	if err != nil {
 		return err
 	}
-	m.DB = &db
+	m.DB = db
 	m.isOpen = true
 	return nil
 }
