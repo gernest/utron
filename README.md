@@ -30,6 +30,8 @@ So, `utron` is my reimagining of lightweight MVC, that maintains the golang spir
 
 ## Installation
 
+This works for Go 1.4+
+
 	$ go get github.com/gernest/utron
 
 ## The MVC
