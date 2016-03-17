@@ -89,7 +89,8 @@ This is the content of `config/app.json` file:
 	"static_dir": "static",
 	"view_dir": "views",
 	"database": "postgres",
-	"database_conn": "postgres://postgres:postgres@localhost/todo"
+	"database_conn": "postgres://postgres:postgres@localhost/todo",
+  "automigrate": true
 }
 ```
 
@@ -105,6 +106,8 @@ static_dir    | STATIC_DIR       | directory to serve static files e.g. images, 
 view_dir      | VIEWS_DIR        | directory to look for views
 database      | DATABASE         | the name of the database you use, e.g. postgres, mysql, foundation
 database_conn | DATABASE_CONN    | connection string to your database
+automigrate   | AUTOMIGRATE      | creates the tables for models automatically.
+defaults to true
 
 If you haven't specified explicitly the location of the configuration directory, it defaults to the directory named `config` in the current working directory.
 

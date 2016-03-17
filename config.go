@@ -27,17 +27,19 @@ type Config struct {
 	ViewsDir     string `json:"view_dir" yaml:"view_dir" toml:"view_dir"`
 	Database     string `json:"database" yaml:"database" toml:"database"`
 	DatabaseConn string `json:"database_conn" yaml:"database_conn" toml:"database_conn"`
+	Automigrate  bool   `json:"automigate" yaml:"automigare" toml:"automigare"`
 }
 
 // DefaultConfig returns the default configuration settings.
 func DefaultConfig() *Config {
 	return &Config{
-		AppName:   "utron web app",
-		BaseURL:   "http://localhost:8090",
-		Port:      8090,
-		Verbose:   false,
-		StaticDir: "static",
-		ViewsDir:  "views",
+		AppName:     "utron web app",
+		BaseURL:     "http://localhost:8090",
+		Port:        8090,
+		Verbose:     false,
+		StaticDir:   "static",
+		ViewsDir:    "views",
+		Automigrate: true,
 	}
 }
 

@@ -108,8 +108,8 @@ func (a *App) init() error {
 	return nil
 }
 
-// getAbsolutePath returns the absolute path to dir. If the dir is relative, then we add 
-// the current working directory. Checks are made to ensure the directory exist. 
+// getAbsolutePath returns the absolute path to dir. If the dir is relative, then we add
+// the current working directory. Checks are made to ensure the directory exist.
 // In case of any error, an empty string is returned.
 func getAbsolutePath(dir string) (string, error) {
 	info, err := os.Stat(dir)
@@ -236,7 +236,9 @@ func Migrate() {
 //
 // By using this, you should make sure you followed the MVC pattern.
 func Run() {
-	Migrate()
+	if baseApp.cfg.Automigrate {
+		Migrate()
+	}
 	port := baseApp.cfg.Port
 	logThis.Info("starting server at ", baseApp.cfg.BaseURL)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), baseApp))

@@ -6,3 +6,4 @@ static_dir: fixtures/static
 view_dir: fixtures/view
 database: ""
 database_conn: ""
+automigrate: true 
