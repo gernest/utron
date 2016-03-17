@@ -109,7 +109,6 @@ view_dir      | VIEWS_DIR        | directory to look for views
 database      | DATABASE         | the name of the database you use, e.g. postgres, mysql, foundation
 database_conn | DATABASE_CONN    | connection string to your database
 automigrate   | AUTOMIGRATE      | creates the tables for models automatically.
-defaults to true
 
 If you haven't specified explicitly the location of the configuration directory, it defaults to the directory named `config` in the current working directory.
 
