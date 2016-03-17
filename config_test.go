@@ -2,6 +2,7 @@ package utron
 
 import (
 	"os"
+	"reflect"
 	"testing"
 )
 
@@ -74,5 +75,43 @@ func TestConfigEnv(t *testing.T) {
 
 	if cfg.AppName != "utron" {
 		t.Errorf("expected utron got %s", cfg.AppName)
+	}
+}
+
+func TestConfigEnvEmbeds(t *testing.T) {
+	type teststr struct {
+		Field1 struct {
+			FieldInc string
+			Field2   struct {
+				FieldInc2 bool
+			}
+		}
+	}
+
+	str := teststr{}
+	fields := []struct {
+		env, value string
+		expected   interface{}
+	}{
+		{"FIELD_1_FIELD_INC", "fieldv1", "fieldv1"},
+		{"FIELD_1_FIELD_2_FIELD_INC_2", "true", true},
+	}
+
+	// set envvars
+	for _, f := range fields {
+		os.Setenv(f.env, f.value)
+	}
+
+	cfg := reflect.ValueOf(&str).Elem()
+	if err := syncEnv(cfg, ""); err != nil {
+		t.Errorf("syncing embedded env %v", err)
+	}
+
+	if str.Field1.FieldInc != fields[0].expected {
+		t.Errorf("expected %s got %s", fields[0].value, str.Field1.FieldInc)
+	}
+
+	if str.Field1.Field2.FieldInc2 != fields[1].expected {
+		t.Errorf("expected %s got %s", fields[1].value, str.Field1.Field2.FieldInc2)
 	}
 }

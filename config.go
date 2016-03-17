@@ -120,31 +120,54 @@ func (c *Config) saveToFile(path string) error {
 // when the field value is not supported it is ignored.
 func (c *Config) SyncEnv() error {
 	cfg := reflect.ValueOf(c).Elem()
+	return syncEnv(cfg, "")
+}
+
+func syncEnv(cfg reflect.Value, prefix string) error {
 	cTyp := cfg.Type()
 
-	for k := range make([]struct{}, cTyp.NumField()) {
-		field := cTyp.Field(k)
+	for i := 0; i < cTyp.NumField(); i++ {
+		field := cTyp.Field(i)
 
-		cm := getEnvName(field.Name)
-		env := os.Getenv(cm)
-		if env == "" {
+		ename := strings.ToUpper(getEnvName(field.Name))
+		if prefix != "" {
+			ename = strings.ToUpper(prefix) + "_" + ename
+		}
+
+		env := os.Getenv(ename)
+
+		if env == "" && field.Type.Kind() != reflect.Struct {
 			continue
 		}
+
 		switch field.Type.Kind() {
 		case reflect.String:
 			cfg.FieldByName(field.Name).SetString(env)
 		case reflect.Int:
 			v, err := strconv.Atoi(env)
 			if err != nil {
-				return fmt.Errorf("utron: loading config field %s %v", field.Name, err)
+				return fmt.Errorf("utron: loading config field %s %v", ename, err)
 			}
 			cfg.FieldByName(field.Name).Set(reflect.ValueOf(v))
 		case reflect.Bool:
 			b, err := strconv.ParseBool(env)
 			if err != nil {
-				return fmt.Errorf("utron: loading config field %s %v", field.Name, err)
+				return fmt.Errorf("utron: loading config field %s %v", ename, err)
 			}
 			cfg.FieldByName(field.Name).SetBool(b)
+		case reflect.Uint:
+			v, err := strconv.ParseUint(env, 10, 0)
+			if err != nil {
+				return fmt.Errorf("utron: loading config field %s %v", ename, err)
+			}
+			cfg.FieldByName(field.Name).Set(reflect.ValueOf(v))
+		case reflect.Struct:
+			err := syncEnv(cfg.FieldByName(field.Name), ename)
+			if err != nil {
+				return err
+			}
+		default:
+			return errors.New(fmt.Sprintf("utron: unknown config type for field %v (%v)", ename, field.Type.Kind().String()))
 		}
 
 	}
