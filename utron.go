@@ -14,6 +14,7 @@ func init() {
 	baseApp = NewApp()
 	if err := baseApp.Init(); err != nil {
 		// TODO log this?
+		log.Println(err)
 	}
 }
 
