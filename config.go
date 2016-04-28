@@ -27,7 +27,7 @@ type Config struct {
 	ViewsDir     string `json:"view_dir" yaml:"view_dir" toml:"view_dir"`
 	Database     string `json:"database" yaml:"database" toml:"database"`
 	DatabaseConn string `json:"database_conn" yaml:"database_conn" toml:"database_conn"`
-	Automigrate  bool   `json:"automigrate" yaml:"automigrare" toml:"automigrare"`
+	Automigrate  bool   `json:"automigrate" yaml:"automigrate" toml:"automigrate"`
 }
 
 // DefaultConfig returns the default configuration settings.
