@@ -126,6 +126,12 @@ func (c *Context) GetData(key interface{}) interface{} {
 	return context.Get(c.Request(), key)
 }
 
+//SetData stores key value into the request object attached with the context.
+//this is a helper method, wraping gorilla/context
+func (c *Context) SetData(key, value interface{}) {
+	context.Set(c.Request(), key, value)
+}
+
 // Set sets value in the context object. You can use this to change the following
 //
 //	 * Request by passing *http.Request
