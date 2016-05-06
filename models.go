@@ -6,8 +6,9 @@ import (
 
 	"github.com/jinzhu/gorm"
 
-	// support mysql and postgresql
+	// support mysql, sqlite3 and postgresql
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	_ "github.com/lib/pq"
 )
 
