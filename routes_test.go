@@ -91,37 +91,6 @@ func TestRouteField(t *testing.T) {
 	}
 }
 
-func TestMiddleware(t *testing.T) {
-	blockMsg := "blocked"
-
-	var block = func(h http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			if req.Method == "GET" {
-				_, _ = w.Write([]byte(blockMsg))
-				return
-			}
-			h.ServeHTTP(w, req)
-		})
-	}
-
-	r := NewRouter()
-	_ = r.Add(&Sample{}, block)
-
-	req, err := http.NewRequest("GET", "/sample/bang", nil)
-	if err != nil {
-		t.Error(err)
-	}
-	w := httptest.NewRecorder()
-	r.ServeHTTP(w, req)
-
-	if w.Code != http.StatusOK {
-		t.Errorf("expected %d got %d", http.StatusOK, w.Code)
-	}
-	if w.Body.String() != blockMsg {
-		t.Errorf("expected %s got %s", blockMsg, w.Body.String())
-	}
-}
-
 func TestRoutesFile(t *testing.T) {
 	file := "fixtures/config/routes.json"
 	r := NewRouter()
