@@ -4,7 +4,7 @@
 `utron` is a lightweight MVC framework in Go ([Golang](https://golang.org)) for building fast, scalable and robust database-driven web applications.
 
 # Features
-* [x] Postgres, MySQL and Foundation database support
+* [x] Postgres, MySQL, SQLite and Foundation database support
 * [x] Modular (you can choose which components to use)
 * [x] Middleware support. All [alice](https://github.com/justinas/alice) compatible Middleware works out of the box
 * [x] Gopher spirit (write golang, use all the golang libraries you like)
@@ -106,7 +106,7 @@ port          | PORT             | port number the server will listen on
 verbose       | VERBOSE          | if set to true, will make all state information log to stdout
 static_dir    | STATIC_DIR       | directory to serve static files e.g. images, js or css
 view_dir      | VIEWS_DIR        | directory to look for views
-database      | DATABASE         | the name of the database you use, e.g. postgres, mysql, foundation
+database      | DATABASE         | the name of the database you use, e.g. postgres, mysql, sqlite3, foundation
 database_conn | DATABASE_CONN    | connection string to your database
 automigrate   | AUTOMIGRATE      | creates the tables for models automatically.
 
@@ -363,7 +363,7 @@ func main() {
 In case you want to run the app we just created, it is included in this repository in [fixtures/todo](fixtures/todo)
 
 * Prerequisite
- - a working database connection (postgres, mysql or foundation)
+ - a working database connection (postgres, mysql, sqlite3 or foundation)
  - golang toolchain installed and the `go` command in your system $PATH.
 
 step 1 Install `utron` which will also include the todo app
