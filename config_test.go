@@ -60,7 +60,7 @@ func TestConfigEnv(t *testing.T) {
 
 	// set environment values
 	for _, f := range fields {
-		os.Setenv(f.env, f.value)
+		_ = os.Setenv(f.env, f.value)
 	}
 
 	cfg := DefaultConfig()

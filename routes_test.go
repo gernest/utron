@@ -14,12 +14,12 @@ type Sample struct {
 }
 
 func (s *Sample) Bang() {
-	s.Ctx.Write([]byte(msg))
+	_, _ = s.Ctx.Write([]byte(msg))
 	s.JSON(http.StatusOK)
 }
 
 func (s *Sample) Hello() {
-	s.Ctx.Write([]byte(msg))
+	_, _ = s.Ctx.Write([]byte(msg))
 	s.String(http.StatusOK)
 }
 
@@ -34,7 +34,7 @@ func NewSample() *Sample {
 
 func TestRouterAdd(t *testing.T) {
 	r := NewRouter()
-	r.Add(&Sample{})
+	_ = r.Add(&Sample{})
 
 	req, err := http.NewRequest("GET", "/sample/bang", nil)
 	if err != nil {
@@ -97,7 +97,7 @@ func TestMiddleware(t *testing.T) {
 	var block = func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 			if req.Method == "GET" {
-				w.Write([]byte(blockMsg))
+				_, _ = w.Write([]byte(blockMsg))
 				return
 			}
 			h.ServeHTTP(w, req)
@@ -105,7 +105,7 @@ func TestMiddleware(t *testing.T) {
 	}
 
 	r := NewRouter()
-	r.Add(&Sample{}, block)
+	_ = r.Add(&Sample{}, block)
 
 	req, err := http.NewRequest("GET", "/sample/bang", nil)
 	if err != nil {
@@ -133,7 +133,7 @@ func TestRoutesFile(t *testing.T) {
 	if len(r.routes) != 2 {
 		t.Errorf("expcted 2 got %d", len(r.routes))
 	}
-	r.Add(NewSample())
+	_ = r.Add(NewSample())
 
 	req, err := http.NewRequest("GET", "/hello", nil)
 	if err != nil {

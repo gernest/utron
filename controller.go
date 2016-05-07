@@ -46,6 +46,6 @@ func (b *BaseController) JSON(code int) {
 
 // RenderJSON encodes value into json and renders the response as JSON
 func (b *BaseController) RenderJSON(value interface{}, code int) {
-	json.NewEncoder(b.Ctx).Encode(value)
+	_ = json.NewEncoder(b.Ctx).Encode(value)
 	b.JSON(code)
 }

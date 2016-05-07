@@ -172,7 +172,7 @@ func findConfigFile(dir string, name string) (file string, err error) {
 
 // AddController registers a controller, and middlewares if any is provided.
 func (a *App) AddController(ctrl Controller, middlewares ...interface{}) {
-	a.router.Add(ctrl, middlewares...)
+	_ = a.router.Add(ctrl, middlewares...)
 }
 
 // Set is for assigning a value to *App components. The following can be set:
@@ -209,12 +209,12 @@ func SetConfigPath(path string) {
 
 // RegisterModels registers models in the global utron App.
 func RegisterModels(models ...interface{}) {
-	baseApp.model.Register(models...)
+	_ = baseApp.model.Register(models...)
 }
 
 // RegisterController registers a controller in the global utron App.
 func RegisterController(ctrl Controller, middlewares ...interface{}) {
-	baseApp.router.Add(ctrl, middlewares...)
+	_ = baseApp.router.Add(ctrl, middlewares...)
 }
 
 // ServeHTTP serves request using global utron App.

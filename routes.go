@@ -359,9 +359,9 @@ func (r *Router) handleController(w http.ResponseWriter, req *http.Request, fn s
 	// TODO: better error handling?
 	if x := ita.New(ctrl).Call(fn); x.Error() != nil {
 		ctx.Set(http.StatusInternalServerError)
-		ctx.Write([]byte(x.Error().Error()))
+		_, _ = ctx.Write([]byte(x.Error().Error()))
 		ctx.TextPlain()
-		ctx.Commit()
+		_ = ctx.Commit()
 		return
 	}
 	err := ctrl.Render()
@@ -444,7 +444,7 @@ func (r *Router) loadRoutes(cfgPath string) {
 		if os.IsNotExist(err) {
 			continue
 		}
-		r.LoadRoutesFile(file)
+		_ = r.LoadRoutesFile(file)
 		break
 	}
 }

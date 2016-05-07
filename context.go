@@ -176,9 +176,9 @@ func (c *Context) Commit() error {
 		if err != nil {
 			return err
 		}
-		io.Copy(c.response, out)
+		_, _ = io.Copy(c.response, out)
 	} else {
-		io.Copy(c.response, c.out)
+		_, _ = io.Copy(c.response, c.out)
 	}
 	c.isCommited = true
 	return nil
