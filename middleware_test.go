@@ -67,7 +67,6 @@ func TestMiddlewarePlain(t *testing.T) {
 }
 
 func TestMiddlewareContext(t *testing.T) {
-	t.Skip()
 	expect := "3"
 	r := NewRouter()
 	_ = r.Add(&Sample{}, contextMiddleware(0), contextMiddleware(1), contextMiddleware(2))
@@ -88,7 +87,6 @@ func TestMiddlewareContext(t *testing.T) {
 }
 
 func TestMiddlewareMixed(t *testing.T) {
-	t.Skip()
 	expect := "6"
 
 	r := NewRouter()
