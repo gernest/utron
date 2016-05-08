@@ -30,9 +30,15 @@ So, `utron` is my reimagining of lightweight MVC, that maintains the golang spir
 
 ## Installation
 
-This works for Go 1.4+
+`utron` works with Go 1.4+
 
-	$ go get github.com/gernest/utron
+Use this command to obtain latest stable release (currently v.1.x)
+
+	$ go get gopkg.in/gernest/utron.v1
+
+You can also run the following to install `master` branch
+    
+    $ go get github.com/gernest/utron
 
 ## The MVC
 There is nothing revolutionary about MVC that `utron` brings to the table.
