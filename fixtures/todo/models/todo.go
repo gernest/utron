@@ -6,6 +6,7 @@ import (
 	"github.com/gernest/utron"
 )
 
+//Todo represent an item of todo list
 type Todo struct {
 	ID        int       `schema:"-"`
 	Body      string    `schema:"body"`
