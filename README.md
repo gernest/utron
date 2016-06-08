@@ -98,7 +98,7 @@ This is the content of `config/app.json` file:
 	"view_dir": "views",
 	"database": "postgres",
 	"database_conn": "postgres://postgres:postgres@localhost/todo",
-  "automigrate": true
+	"automigrate": true
 }
 ```
 
