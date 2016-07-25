@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 )
 
 var baseApp *App
@@ -240,7 +241,20 @@ func Run() {
 	if baseApp.cfg.Automigrate {
 		Migrate()
 	}
-	port := baseApp.cfg.Port
+
 	logThis.Info("starting server at ", baseApp.cfg.BaseURL)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), baseApp))
+
+	scheme := baseApp.cfg.Scheme
+	host := baseApp.cfg.Host
+	port := baseApp.cfg.Port
+	addr := fmt.Sprintf("%s:%s", host, strconv.Itoa(port))
+
+	switch scheme {
+	case "http":
+		log.Fatal(http.ListenAndServe(addr, baseApp))
+	case "https":
+		log.Fatal("https not yet implemented") // TODO - implement ListenAndServeTLS
+	default:
+		log.Fatalf("%s is not a valid scheme", scheme)
+	}
 }

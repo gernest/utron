@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"net"
+	"net/url"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -21,6 +23,8 @@ import (
 type Config struct {
 	AppName      string `json:"app_name" yaml:"app_name" toml:"app_name"`
 	BaseURL      string `json:"base_url" yaml:"base_url" toml:"base_url"`
+	Scheme       string `json:"scheme" yaml:"scheme" toml:"scheme"`
+	Host         string `json:"host" yaml:"host" toml:"host"`
 	Port         int    `json:"port" yaml:"port" toml:"port"`
 	Verbose      bool   `json:"verbose" yaml:"verbose" toml:"verbose"`
 	StaticDir    string `json:"static_dir" yaml:"static_dir" toml:"static_dir"`
@@ -79,7 +83,87 @@ func NewConfig(path string) (*Config, error) {
 	default:
 		return nil, errors.New("utron: config file format not supported")
 	}
+
+	urlerr := urlSetup(cfg)
+	if urlerr != nil {
+		return nil, urlerr
+	}
+
 	return cfg, nil
+}
+
+// urlSetup() takes a Config and ensures we get a Scheme, Host, and Port
+func urlSetup(cfg *Config) error {
+	if cfg.BaseURL != "" {
+		berr := urlSetupBaseURL(cfg)
+		if berr != nil {
+			return berr
+		}
+	} else {
+		if cfg.Scheme == "" {
+			return errors.New("scheme was not defined")
+		}
+		if cfg.Host == "" {
+			return errors.New("host was not defined")
+		}
+		if cfg.Port == 0 {
+			return errors.New("port was not defined")
+		}
+		cfg.BaseURL = fmt.Sprintf("%s://%s:%s", cfg.Scheme, cfg.Host, strconv.Itoa(cfg.Port))
+	}
+
+	return nil
+}
+
+// urlSetupBaseURL() sets the Scheme, Host, and Port from BaseURL if they are uninitiated
+// and looks for misconfigurations (i.e. BaseURL defines port differently from port)
+func urlSetupBaseURL(cfg *Config) error {
+	u, uerr := url.Parse(cfg.BaseURL)
+	if uerr != nil {
+		return uerr
+	}
+
+	host, port, herr := net.SplitHostPort(u.Host)
+	if herr != nil {
+		return herr
+	}
+
+	portnum, cverr := strconv.Atoi(port)
+	if cverr != nil {
+		return cverr
+	}
+
+	scheme := u.Scheme
+
+	// set unset parameters from BaseURL
+
+	if cfg.Scheme == "" {
+		cfg.Scheme = scheme
+	}
+
+	if cfg.Host == "" {
+		cfg.Host = host
+	}
+
+	if cfg.Port == 0 {
+		cfg.Port = portnum
+	}
+
+	// check for configuration errors and mismatches
+
+	if scheme != cfg.Scheme {
+		return errors.New("BaseURL scheme does not match configured scheme")
+	}
+
+	if host != cfg.Host {
+		return errors.New("BaseURL host does not match configured host")
+	}
+
+	if portnum != cfg.Port {
+		return errors.New("BaseURL port does not match configured port")
+	}
+
+	return nil
 }
 
 // saveToFile saves the Config in the file named path. This is a helper method
