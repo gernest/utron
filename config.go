@@ -79,6 +79,10 @@ func NewConfig(path string) (*Config, error) {
 	default:
 		return nil, errors.New("utron: config file format not supported")
 	}
+	err = cfg.SyncEnv()
+	if err != nil {
+		return nil, err
+	}
 	return cfg, nil
 }
 
