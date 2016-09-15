@@ -30,7 +30,7 @@ After two years of playing with golang, I have looked on some of my projects and
 So, `utron` is my reimagining of lightweight MVC, that maintains the golang spirit, and works seamlessly with the current libraries.
 
 
-__ NOTE_: For a better view of the todo list application [see utron-todo](https://github.com/gernest/utron-todo)
+__ NOTE__: For a better view of the todo list application [see utron-todo](https://github.com/gernest/utron-todo)
 
 ## Installation
 
