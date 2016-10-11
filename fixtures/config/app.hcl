@@ -1,0 +1,9 @@
+app_name = "utron web app"
+base_url = "http://localhost:8090"
+port = 8090
+verbose = false
+static_dir = "fixtures/static"
+view_dir = "fixtures/view"
+database = ""
+database_conn = ""
+automigrate = true

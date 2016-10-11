@@ -14,6 +14,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/gernest/ita"
 	"github.com/gorilla/mux"
+	"github.com/hashicorp/hcl"
 	"github.com/justinas/alice"
 	"gopkg.in/yaml.v2"
 )
@@ -415,7 +416,7 @@ type routeFile struct {
 //		]
 //	}
 //
-// supported formats are json,toml and yaml with extension .json, .toml and .yml respectively.
+// supported formats are json, toml, yaml and hcl with extension .json, .toml, .yml and .hcl respectively.
 //
 //TODO refactor the decoding part to a separate function? This part shares the same logic as the
 // one found in NewConfig()
@@ -441,6 +442,14 @@ func (r *Router) LoadRoutesFile(file string) error {
 		if err != nil {
 			return err
 		}
+	case ".hcl":
+		obj, err := hcl.Parse(string(data))
+		if err != nil {
+			return err
+		}
+		if err = hcl.DecodeObject(&rFile, obj); err != nil {
+			return err
+		}
 	default:
 		return errors.New("utron: unsupported file format")
 	}
@@ -461,8 +470,9 @@ func (r *Router) LoadRoutesFile(file string) error {
 //	* routes.json
 //	* routes.toml
 //	* routes.yml
+// 	* routes.hcl
 func (r *Router) loadRoutes(cfgPath string) {
-	exts := []string{".json", ".toml", ".yml"}
+	exts := []string{".json", ".toml", ".yml", ".hcl"}
 	rFile := "routes"
 	for _, ext := range exts {
 		file := filepath.Join(cfgPath, rFile+ext)

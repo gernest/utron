@@ -11,7 +11,7 @@
 * [x] Middleware support. All [alice](https://github.com/justinas/alice) compatible Middleware works out of the box
 * [x] Gopher spirit (write golang, use all the golang libraries you like)
 * [x] Lightweight. Only MVC
-* [x] Multiple configuration files support (currently json, yaml and toml)
+* [x] Multiple configuration files support (currently json, yaml, toml and hcl)
 
 
 
@@ -88,7 +88,7 @@ I have included three configuration files to show how they work, but you are bet
 ## Configurations
 utron support yaml, json and toml configurations files. In our todo app, we put the configuration files in the config directory. I have included all three formats for clarity, you can be just fine with either one of them.
 
-`utron` searches for a file named `app.json`, or `app.yml` or `app.toml` in the config directory. The first to be found is the one to be used.
+`utron` searches for a file named `app.json`, or `app.yml`, `app.toml`, `app.hcl` in the config directory. The first to be found is the one to be used.
 
 This is the content of `config/app.json` file:
 
