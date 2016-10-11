@@ -10,6 +10,7 @@ func TestConfig(t *testing.T) {
 		"fixtures/config/app.json",
 		"fixtures/config/app.yml",
 		"fixtures/config/app.toml",
+		"fixtures/config/app.hcl",
 	}
 
 	cfg := DefaultConfig()
