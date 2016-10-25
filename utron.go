@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"reflect"
 )
 
 var baseApp *App
@@ -213,8 +214,21 @@ func RegisterModels(models ...interface{}) {
 }
 
 // RegisterController registers a controller in the global utron App.
-func RegisterController(ctrlfn func() Controller, middlewares ...interface{}) {
-	_ = baseApp.router.Add(ctrlfn, middlewares...)
+func RegisterController(ctrl Controller, middlewares ...interface{}) {
+	_ = baseApp.router.Add(GetCtrlFunc(ctrl), middlewares...)
+}
+
+// GetCtrlFunc returns a new copy of the contoller everytime the function is called
+func GetCtrlFunc(ctrl Controller) func() Controller {
+	v := reflect.ValueOf(ctrl)
+	return func() Controller {
+		e := v
+		if e.Kind() == reflect.Ptr {
+			e = e.Elem()
+			return e.Addr().Interface().(Controller)
+		}
+		return e.Interface().(Controller)
+	}
 }
 
 // ServeHTTP serves request using global utron App.

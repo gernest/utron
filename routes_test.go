@@ -34,7 +34,7 @@ func NewSample() *Sample {
 
 func TestRouterAdd(t *testing.T) {
 	r := NewRouter()
-	_ = r.Add(&Sample{})
+	_ = r.Add(GetCtrlFunc(&Sample{}))
 
 	req, err := http.NewRequest("GET", "/sample/bang", nil)
 	if err != nil {
@@ -58,7 +58,7 @@ func TestRouteField(t *testing.T) {
 	}
 	s := &Sample{}
 	s.Routes = routes
-	err := r.Add(s)
+	err := r.Add(GetCtrlFunc(s))
 	if err != nil {
 		t.Error(err)
 	}
@@ -108,7 +108,7 @@ func TestRoutesFile(t *testing.T) {
 		if len(r.routes) != 2 {
 			t.Errorf("expcted 2 got %d", len(r.routes))
 		}
-		_ = r.Add(NewSample())
+		_ = r.Add(GetCtrlFunc(NewSample()))
 
 		req, err := http.NewRequest("GET", "/hello", nil)
 		if err != nil {

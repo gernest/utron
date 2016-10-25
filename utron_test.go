@@ -24,7 +24,7 @@ func TestMVC(t *testing.T) {
 	if err != nil {
 		t.Skip(err)
 	}
-	app.AddController(&SimpleMVC{})
+	app.AddController(GetCtrlFunc(&SimpleMVC{}))
 
 	req, _ := http.NewRequest("GET", "/simplemvc/hello", nil)
 	w := httptest.NewRecorder()
