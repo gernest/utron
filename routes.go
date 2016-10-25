@@ -60,7 +60,7 @@ type route struct {
 //
 // utron uses the alice package to chain middlewares, this means all alice compatible middleware
 // works out of the box
-func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
+func (r *Router) Add(ctrlfn func() Controller, middlewares ...interface{}) error {
 	var (
 
 		// routes is a slice of all routes associated
@@ -80,7 +80,7 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 	)
 
 	baseCtr := reflect.ValueOf(&BaseController{})
-	ctrlVal := reflect.ValueOf(ctrl)
+	ctrlVal := reflect.ValueOf(ctrlfn())
 
 	bTyp := baseCtr.Type()
 	cTyp := ctrlVal.Type()
@@ -190,7 +190,7 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 		// use routes from the configuration file first
 		for _, rFile := range r.routes {
 			if rFile.ctrl == v.ctrl && rFile.fn == v.fn {
-				if err := r.add(rFile, ctrl, middlewares...); err != nil {
+				if err := r.add(rFile, ctrlfn, middlewares...); err != nil {
 					return err
 				}
 				found = true
@@ -201,7 +201,7 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 		if !found {
 			for _, rFile := range routes.inCtrl {
 				if rFile.fn == v.fn {
-					if err := r.add(rFile, ctrl, middlewares...); err != nil {
+					if err := r.add(rFile, ctrlfn, middlewares...); err != nil {
 						return err
 					}
 					found = true
@@ -211,7 +211,7 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 
 		// resolve to sandard when everything else never matched
 		if !found {
-			if err := r.add(v, ctrl, middlewares...); err != nil {
+			if err := r.add(v, ctrlfn, middlewares...); err != nil {
 				return err
 			}
 		}
@@ -310,7 +310,7 @@ func (m *middleware) ToHandler(ctx *Context) func(http.Handler) http.Handler {
 
 // add registers controller ctrl, using activeRoute. If middlewares are provided, utron uses
 // alice package to chain middlewares.
-func (r *Router) add(activeRoute *route, ctrl Controller, middlewares ...interface{}) error {
+func (r *Router) add(activeRoute *route, ctrlfn func() Controller, middlewares ...interface{}) error {
 	var m []*middleware
 	if len(middlewares) > 0 {
 		for _, v := range middlewares {
@@ -337,7 +337,7 @@ func (r *Router) add(activeRoute *route, ctrl Controller, middlewares ...interfa
 			ctx := NewContext(w, req)
 			r.prepareContext(ctx)
 			chain := chainMiddleware(ctx, m...)
-			chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrl)).ServeHTTP(w, req)
+			chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrlfn())).ServeHTTP(w, req)
 		}).Methods(activeRoute.methods...)
 		return nil
 	}
@@ -345,7 +345,7 @@ func (r *Router) add(activeRoute *route, ctrl Controller, middlewares ...interfa
 		ctx := NewContext(w, req)
 		r.prepareContext(ctx)
 		chain := chainMiddleware(ctx, m...)
-		chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrl)).ServeHTTP(w, req)
+		chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrlfn())).ServeHTTP(w, req)
 	})
 
 	return nil
@@ -384,7 +384,7 @@ func (r *Router) handleController(ctx *Context, fn string, ctrl Controller) {
 
 	// execute the method
 	// TODO: better error handling?
-	if x := ita.New(ctrl).Call(fn, ctx); x.Error() != nil {
+	if x := ita.New(ctrl).Call(fn); x.Error() != nil {
 		ctx.Set(http.StatusInternalServerError)
 		_, _ = ctx.Write([]byte(x.Error().Error()))
 		ctx.TextPlain()
