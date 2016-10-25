@@ -34,7 +34,7 @@ func NewSample() *Sample {
 
 func TestRouterAdd(t *testing.T) {
 	r := NewRouter()
-	_ = r.Add(&Sample{})
+	_ = r.Add(GetCtrlFunc(&Sample{}))
 
 	req, err := http.NewRequest("GET", "/sample/bang", nil)
 	if err != nil {
@@ -58,7 +58,7 @@ func TestRouteField(t *testing.T) {
 	}
 	s := &Sample{}
 	s.Routes = routes
-	err := r.Add(s)
+	err := r.Add(GetCtrlFunc(s))
 	if err != nil {
 		t.Error(err)
 	}
@@ -92,31 +92,39 @@ func TestRouteField(t *testing.T) {
 }
 
 func TestRoutesFile(t *testing.T) {
-	file := "fixtures/config/routes.json"
-	r := NewRouter()
 
-	err := r.LoadRoutesFile(file)
-	if err != nil {
-		t.Error(err)
+	routeFiles := []string{
+		"fixtures/config/routes.json",
+		"fixtures/config/routes.hcl",
 	}
-	if len(r.routes) != 2 {
-		t.Errorf("expcted 2 got %d", len(r.routes))
-	}
-	_ = r.Add(NewSample())
 
-	req, err := http.NewRequest("GET", "/hello", nil)
-	if err != nil {
-		t.Error(err)
-	}
-	w := httptest.NewRecorder()
-	r.ServeHTTP(w, req)
+	for _, file := range routeFiles {
+		r := NewRouter()
 
-	if w.Code != http.StatusOK {
-		t.Errorf("expected %d got %d", http.StatusOK, w.Code)
+		err := r.LoadRoutesFile(file)
+		if err != nil {
+			t.Error(err)
+		}
+		if len(r.routes) != 2 {
+			t.Errorf("expcted 2 got %d", len(r.routes))
+		}
+		_ = r.Add(GetCtrlFunc(NewSample()))
+
+		req, err := http.NewRequest("GET", "/hello", nil)
+		if err != nil {
+			t.Error(err)
+		}
+		w := httptest.NewRecorder()
+		r.ServeHTTP(w, req)
+
+		if w.Code != http.StatusOK {
+			t.Errorf("expected %d got %d", http.StatusOK, w.Code)
+		}
+		if w.Body.String() != msg {
+			t.Errorf("expected %s got %s", msg, w.Body.String())
+		}
 	}
-	if w.Body.String() != msg {
-		t.Errorf("expected %s got %s", msg, w.Body.String())
-	}
+
 }
 
 func TestSplitRoutes(t *testing.T) {
