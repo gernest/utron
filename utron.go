@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"reflect"
 )
 
 var baseApp *App
@@ -155,7 +156,7 @@ func loadConfig(cfg ...string) (*Config, error) {
 
 // findConfigFile finds the configuration file name in the directory dir.
 func findConfigFile(dir string, name string) (file string, err error) {
-	extensions := []string{".json", ".toml", ".yml"}
+	extensions := []string{".json", ".toml", ".yml", ".hcl"}
 
 	for _, ext := range extensions {
 		file = filepath.Join(dir, name)
@@ -171,8 +172,8 @@ func findConfigFile(dir string, name string) (file string, err error) {
 }
 
 // AddController registers a controller, and middlewares if any is provided.
-func (a *App) AddController(ctrl Controller, middlewares ...interface{}) {
-	_ = a.router.Add(ctrl, middlewares...)
+func (a *App) AddController(ctrlfn func() Controller, middlewares ...interface{}) {
+	_ = a.router.Add(ctrlfn, middlewares...)
 }
 
 // Set is for assigning a value to *App components. The following can be set:
@@ -214,7 +215,20 @@ func RegisterModels(models ...interface{}) {
 
 // RegisterController registers a controller in the global utron App.
 func RegisterController(ctrl Controller, middlewares ...interface{}) {
-	_ = baseApp.router.Add(ctrl, middlewares...)
+	_ = baseApp.router.Add(GetCtrlFunc(ctrl), middlewares...)
+}
+
+// GetCtrlFunc returns a new copy of the contoller everytime the function is called
+func GetCtrlFunc(ctrl Controller) func() Controller {
+	v := reflect.ValueOf(ctrl)
+	return func() Controller {
+		e := v
+		if e.Kind() == reflect.Ptr {
+			e = e.Elem()
+			return e.Addr().Interface().(Controller)
+		}
+		return e.Interface().(Controller)
+	}
 }
 
 // ServeHTTP serves request using global utron App.

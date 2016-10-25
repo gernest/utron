@@ -14,6 +14,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/gernest/ita"
 	"github.com/gorilla/mux"
+	"github.com/hashicorp/hcl"
 	"github.com/justinas/alice"
 	"gopkg.in/yaml.v2"
 )
@@ -59,7 +60,7 @@ type route struct {
 //
 // utron uses the alice package to chain middlewares, this means all alice compatible middleware
 // works out of the box
-func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
+func (r *Router) Add(ctrlfn func() Controller, middlewares ...interface{}) error {
 	var (
 
 		// routes is a slice of all routes associated
@@ -79,7 +80,7 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 	)
 
 	baseCtr := reflect.ValueOf(&BaseController{})
-	ctrlVal := reflect.ValueOf(ctrl)
+	ctrlVal := reflect.ValueOf(ctrlfn())
 
 	bTyp := baseCtr.Type()
 	cTyp := ctrlVal.Type()
@@ -189,7 +190,7 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 		// use routes from the configuration file first
 		for _, rFile := range r.routes {
 			if rFile.ctrl == v.ctrl && rFile.fn == v.fn {
-				if err := r.add(rFile, ctrl, middlewares...); err != nil {
+				if err := r.add(rFile, ctrlfn, middlewares...); err != nil {
 					return err
 				}
 				found = true
@@ -200,7 +201,7 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 		if !found {
 			for _, rFile := range routes.inCtrl {
 				if rFile.fn == v.fn {
-					if err := r.add(rFile, ctrl, middlewares...); err != nil {
+					if err := r.add(rFile, ctrlfn, middlewares...); err != nil {
 						return err
 					}
 					found = true
@@ -210,7 +211,7 @@ func (r *Router) Add(ctrl Controller, middlewares ...interface{}) error {
 
 		// resolve to sandard when everything else never matched
 		if !found {
-			if err := r.add(v, ctrl, middlewares...); err != nil {
+			if err := r.add(v, ctrlfn, middlewares...); err != nil {
 				return err
 			}
 		}
@@ -309,7 +310,7 @@ func (m *middleware) ToHandler(ctx *Context) func(http.Handler) http.Handler {
 
 // add registers controller ctrl, using activeRoute. If middlewares are provided, utron uses
 // alice package to chain middlewares.
-func (r *Router) add(activeRoute *route, ctrl Controller, middlewares ...interface{}) error {
+func (r *Router) add(activeRoute *route, ctrlfn func() Controller, middlewares ...interface{}) error {
 	var m []*middleware
 	if len(middlewares) > 0 {
 		for _, v := range middlewares {
@@ -336,7 +337,7 @@ func (r *Router) add(activeRoute *route, ctrl Controller, middlewares ...interfa
 			ctx := NewContext(w, req)
 			r.prepareContext(ctx)
 			chain := chainMiddleware(ctx, m...)
-			chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrl)).ServeHTTP(w, req)
+			chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrlfn())).ServeHTTP(w, req)
 		}).Methods(activeRoute.methods...)
 		return nil
 	}
@@ -344,7 +345,7 @@ func (r *Router) add(activeRoute *route, ctrl Controller, middlewares ...interfa
 		ctx := NewContext(w, req)
 		r.prepareContext(ctx)
 		chain := chainMiddleware(ctx, m...)
-		chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrl)).ServeHTTP(w, req)
+		chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrlfn())).ServeHTTP(w, req)
 	})
 
 	return nil
@@ -390,7 +391,7 @@ func (r *Router) handleController(ctx *Context, fn string, ctrl Controller) {
 		_ = ctx.Commit()
 		return
 	}
-	err := ctrl.Render()
+	err := ctx.Commit()
 	if err != nil {
 		logThis.Errors(err)
 	}
@@ -415,7 +416,7 @@ type routeFile struct {
 //		]
 //	}
 //
-// supported formats are json,toml and yaml with extension .json, .toml and .yml respectively.
+// supported formats are json, toml, yaml and hcl with extension .json, .toml, .yml and .hcl respectively.
 //
 //TODO refactor the decoding part to a separate function? This part shares the same logic as the
 // one found in NewConfig()
@@ -441,6 +442,14 @@ func (r *Router) LoadRoutesFile(file string) error {
 		if err != nil {
 			return err
 		}
+	case ".hcl":
+		obj, err := hcl.Parse(string(data))
+		if err != nil {
+			return err
+		}
+		if err = hcl.DecodeObject(&rFile, obj); err != nil {
+			return err
+		}
 	default:
 		return errors.New("utron: unsupported file format")
 	}
@@ -461,8 +470,9 @@ func (r *Router) LoadRoutesFile(file string) error {
 //	* routes.json
 //	* routes.toml
 //	* routes.yml
+// 	* routes.hcl
 func (r *Router) loadRoutes(cfgPath string) {
-	exts := []string{".json", ".toml", ".yml"}
+	exts := []string{".json", ".toml", ".yml", ".hcl"}
 	rFile := "routes"
 	for _, ext := range exts {
 		file := filepath.Join(cfgPath, rFile+ext)

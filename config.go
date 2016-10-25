@@ -14,20 +14,21 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/fatih/camelcase"
+	"github.com/hashicorp/hcl"
 	"gopkg.in/yaml.v2"
 )
 
 // Config stores configurations values
 type Config struct {
-	AppName      string `json:"app_name" yaml:"app_name" toml:"app_name"`
-	BaseURL      string `json:"base_url" yaml:"base_url" toml:"base_url"`
-	Port         int    `json:"port" yaml:"port" toml:"port"`
-	Verbose      bool   `json:"verbose" yaml:"verbose" toml:"verbose"`
-	StaticDir    string `json:"static_dir" yaml:"static_dir" toml:"static_dir"`
-	ViewsDir     string `json:"view_dir" yaml:"view_dir" toml:"view_dir"`
-	Database     string `json:"database" yaml:"database" toml:"database"`
-	DatabaseConn string `json:"database_conn" yaml:"database_conn" toml:"database_conn"`
-	Automigrate  bool   `json:"automigrate" yaml:"automigrate" toml:"automigrate"`
+	AppName      string `json:"app_name" yaml:"app_name" toml:"app_name" hcl:"app_name"`
+	BaseURL      string `json:"base_url" yaml:"base_url" toml:"base_url" hcl:"base_url"`
+	Port         int    `json:"port" yaml:"port" toml:"port" hcl:"port"`
+	Verbose      bool   `json:"verbose" yaml:"verbose" toml:"verbose" hcl:"verbose"`
+	StaticDir    string `json:"static_dir" yaml:"static_dir" toml:"static_dir" hcl:"static_dir"`
+	ViewsDir     string `json:"view_dir" yaml:"view_dir" toml:"view_dir" hcl:"view_dir"`
+	Database     string `json:"database" yaml:"database" toml:"database" hcl:"database"`
+	DatabaseConn string `json:"database_conn" yaml:"database_conn" toml:"database_conn" hcl:"database_conn"`
+	Automigrate  bool   `json:"automigrate" yaml:"automigrate" toml:"automigrate" hcl:"automigrate"`
 }
 
 // DefaultConfig returns the default configuration settings.
@@ -47,6 +48,7 @@ func DefaultConfig() *Config {
 //	* .json    - is decoded as json
 //	* .yml     - is decoded as yaml
 //	* .toml    - is decoded as toml
+//  * .hcl	   - is decoded as hcl
 func NewConfig(path string) (*Config, error) {
 	_, err := os.Stat(path)
 	if err != nil {
@@ -75,7 +77,14 @@ func NewConfig(path string) (*Config, error) {
 		if yerr != nil {
 			return nil, yerr
 		}
-
+	case ".hcl":
+		obj, herr := hcl.Parse(string(data))
+		if herr != nil {
+			return nil, herr
+		}
+		if herr = hcl.DecodeObject(&cfg, obj); herr != nil {
+			return nil, herr
+		}
 	default:
 		return nil, errors.New("utron: config file format not supported")
 	}
@@ -110,7 +119,6 @@ func (c *Config) saveToFile(path string) error {
 			return err
 		}
 		data = b.Bytes()
-
 	}
 	return ioutil.WriteFile(path, data, 0600)
 }
