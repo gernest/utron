@@ -384,14 +384,14 @@ func (r *Router) handleController(ctx *Context, fn string, ctrl Controller) {
 
 	// execute the method
 	// TODO: better error handling?
-	if x := ita.New(ctrl).Call(fn); x.Error() != nil {
+	if x := ita.New(ctrl).Call(fn, ctx); x.Error() != nil {
 		ctx.Set(http.StatusInternalServerError)
 		_, _ = ctx.Write([]byte(x.Error().Error()))
 		ctx.TextPlain()
 		_ = ctx.Commit()
 		return
 	}
-	err := ctrl.Render()
+	err := ctx.Commit()
 	if err != nil {
 		logThis.Errors(err)
 	}
