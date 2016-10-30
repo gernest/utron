@@ -95,6 +95,8 @@ func TestRoutesFile(t *testing.T) {
 
 	routeFiles := []string{
 		"fixtures/config/routes.json",
+		"fixtures/config/routes.yml",
+		"fixtures/config/routes.toml",
 		"fixtures/config/routes.hcl",
 	}
 
