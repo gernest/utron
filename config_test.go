@@ -45,10 +45,10 @@ func TestConfigEnv(t *testing.T) {
 		{"AppName", "APP_NAME", "utron"},
 		{"BaseURL", "BASE_URL", "http://localhost:8090"},
 		{"Port", "PORT", "8091"},
-		{"ViewsDir", "VIEWS_DIR", "viewTest"},
-		{"StaticDir", "STATIC_DIR", "statics"},
-		{"Database", "DATABASE", "utro_db"},
-		{"DatabaseConn", "DATABASE_CONN", "mydb_conn"},
+		{"ViewsDir", "VIEWS_DIR", "fixtures/view"},
+		{"StaticDir", "STATIC_DIR", "fixtures/todo/static"},
+		{"Database", "DATABASE", "postgres"},
+		{"DatabaseConn", "DATABASE_CONN", "postgres://postgres@localhost/utron?sslmode=disable"},
 		{"Automigrate", "AUTOMIGRATE", "true"},
 	}
 	for _, f := range fields {

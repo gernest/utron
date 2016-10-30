@@ -1,6 +1,7 @@
 package utron
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -20,8 +21,9 @@ func (s *SimpleMVC) Hello() {
 }
 
 func TestMVC(t *testing.T) {
-	app, err := NewMVC("fixtures/config")
+	app, err := NewMVC("fixtures/mvc")
 	if err != nil {
+		fmt.Println(err)
 		t.Skip(err)
 	}
 	app.AddController(GetCtrlFunc(&SimpleMVC{}))
