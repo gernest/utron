@@ -75,14 +75,6 @@ func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 
 // Init initializes the context
 func (c *Context) Init() {
-	switch {
-	case c.Params == nil:
-		c.Params = make(map[string]string)
-	case c.Data == nil:
-		c.Data = make(map[string]interface{})
-	case c.out == nil:
-		c.out = &bytes.Buffer{}
-	}
 	c.Params = mux.Vars(c.request)
 }
 
