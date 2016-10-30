@@ -49,6 +49,7 @@ func TestConfigEnv(t *testing.T) {
 		{"StaticDir", "STATIC_DIR", "statics"},
 		{"Database", "DATABASE", "utro_db"},
 		{"DatabaseConn", "DATABASE_CONN", "mydb_conn"},
+		{"Automigrate", "AUTOMIGRATE", "true"},
 	}
 	for _, f := range fields {
 

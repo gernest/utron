@@ -1,7 +1,6 @@
 package utron
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -93,34 +92,6 @@ func NewConfig(path string) (*Config, error) {
 		return nil, err
 	}
 	return cfg, nil
-}
-
-// saveToFile saves the Config in the file named path. This is a helper method
-// for generating sample configuration files.
-func (c *Config) saveToFile(path string) error {
-	var data []byte
-	switch filepath.Ext(path) {
-	case ".json":
-		d, err := json.MarshalIndent(c, "", "\t") // use tab indent to make it human friendly
-		if err != nil {
-			return err
-		}
-		data = d
-	case ".yml":
-		d, err := yaml.Marshal(c)
-		if err != nil {
-			return err
-		}
-		data = d
-	case ".toml":
-		b := &bytes.Buffer{}
-		err := toml.NewEncoder(b).Encode(c)
-		if err != nil {
-			return err
-		}
-		data = b.Bytes()
-	}
-	return ioutil.WriteFile(path, data, 0600)
 }
 
 // SyncEnv overrides c field's values that are set in the environment.
