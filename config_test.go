@@ -25,6 +25,21 @@ func TestConfig(t *testing.T) {
 		}
 	}
 
+	// no file
+	_, err := NewConfig("nothing")
+	if err == nil {
+		t.Error("expected error")
+	}
+
+	//unsupporte file
+	_, err = NewConfig("fixtures/todo.png")
+	if err == nil {
+		t.Error("expected error")
+	}
+	if err != errCfgUnsupported {
+		t.Errorf("expected %v got %v", errCfgUnsupported, err)
+	}
+
 }
 
 func TestConfigEnv(t *testing.T) {

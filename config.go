@@ -17,6 +17,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+var errCfgUnsupported = errors.New("utron: config file format not supported")
+
 // Config stores configurations values
 type Config struct {
 	AppName      string `json:"app_name" yaml:"app_name" toml:"app_name" hcl:"app_name"`
@@ -85,7 +87,7 @@ func NewConfig(path string) (*Config, error) {
 			return nil, herr
 		}
 	default:
-		return nil, errors.New("utron: config file format not supported")
+		return nil, errCfgUnsupported
 	}
 	err = cfg.SyncEnv()
 	if err != nil {
