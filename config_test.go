@@ -81,4 +81,17 @@ func TestConfigEnv(t *testing.T) {
 	if cfg.AppName != "utron" {
 		t.Errorf("expected utron got %s", cfg.AppName)
 	}
+
+	//NOTE: This test should be somewhere els probalby in models_test
+	_, err := NewModelWithConfig(cfg)
+	if err != nil {
+		t.Error(err)
+	}
+
+	cfg.DatabaseConn = "halloween"
+	// bad config
+	_, err = NewModelWithConfig(cfg)
+	if err == nil {
+		t.Error("expected error")
+	}
 }

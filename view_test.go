@@ -32,4 +32,16 @@ func TestSimpleView(t *testing.T) {
 		}
 	}
 
+	// file instead of a directory
+	_, err = NewSimpleView("fixtures/view/index.tpl")
+	if err == nil {
+		t.Error("expected an error")
+	}
+
+	// non existing directory
+	_, err = NewSimpleView("bogus")
+	if err == nil {
+		t.Error("expected an error")
+	}
+
 }
