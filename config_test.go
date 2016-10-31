@@ -12,6 +12,19 @@ func TestConfig(t *testing.T) {
 		"fixtures/config/app.toml",
 		"fixtures/config/app.hcl",
 	}
+	badCfgFiles := []string{
+		"fixtures/badconfig/app.json",
+		"fixtures/badconfig/app.yml",
+		"fixtures/badconfig/app.toml",
+		"fixtures/badconfig/app.hcl",
+	}
+	for _, f := range badCfgFiles {
+		_, err := NewConfig(f)
+		if err == nil {
+			t.Fatal("expected error ", f)
+		}
+
+	}
 
 	cfg := DefaultConfig()
 
