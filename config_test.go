@@ -15,17 +15,6 @@ func TestConfig(t *testing.T) {
 
 	cfg := DefaultConfig()
 
-	//	//	 Uncomment this to generate the sample
-	//	//	 config files in the fixures/config directory
-	//	cfg.ViewsDir = "fixtures/view"
-	//	cfg.StaticDir = "fixtures/static"
-	//	for _, f := range cfgFiles {
-	//		err := cfg.saveToFile(f)
-	//		if err != nil {
-	//			t.Error(err)
-	//		}
-	//	}
-
 	for _, f := range cfgFiles {
 		nCfg, err := NewConfig(f)
 		if err != nil {
