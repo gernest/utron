@@ -1,0 +1,730 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Getting Started with UTRON | GORM Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content=" GoDoc Coverage Status Build Status Join the chat at https://gitter.im/gernest/utron Go Report Card">
+        <meta name="generator" content="GitBook 2.3.2">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-edit-link/plugin.css">
+        
+    
+    
+
+        
+    
+    
+    <link rel="next" href="./configuration.html" />
+    
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book" data-level="0" data-basepath="." data-revision="Tue Nov 01 2016 15:45:22 GMT+0300 (EAT)">
+    
+
+<div class="book-summary">
+    <div class="book-search">
+        <input type="text" placeholder="Type to search" class="form-control" />
+    </div>
+    <ul class="summary">
+        
+        
+        
+        
+
+        
+
+        
+    
+        <li class="chapter active" data-level="0" data-path="index.html">
+            
+                
+                    <a href="./index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Getting Started with UTRON
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="configuration.html">
+            
+                
+                    <a href="./configuration.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Configurations
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1" data-path="database.html">
+            
+            <span><b>1.1.</b> Database Connection</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="database.html">
+            
+            <span><b>1.2.</b> Migration</span>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="models.html">
+            
+                
+                    <a href="./models.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        Models
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="middleware.html">
+            
+                
+                    <a href="./middleware.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Middlewares
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="session.html">
+            
+                
+                    <a href="./session.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        sessions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="controller.html">
+            
+            <span><b>5.</b> Controllers</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="6" data-path="development.html">
+            
+                
+                    <a href="./development.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.</b>
+                        
+                        Development
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="7" data-path="changelog.html">
+            
+                
+                    <a href="./changelog.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>7.</b>
+                        
+                        Changelog
+                    </a>
+            
+            
+        </li>
+    
+
+
+        
+        <li class="divider"></li>
+        <li>
+            <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                Published with GitBook
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header">
+    <!-- Actions Left -->
+    <a href="#" class="btn pull-left toggle-summary" aria-label="Table of Contents"><i class="fa fa-align-justify"></i></a>
+    <a href="#" class="btn pull-left toggle-search" aria-label="Search"><i class="fa fa-search"></i></a>
+    
+    <div id="font-settings-wrapper" class="dropdown pull-left">
+        <a href="#" class="btn toggle-dropdown" aria-label="Font Settings"><i class="fa fa-font"></i>
+        </a>
+        <div class="dropdown-menu font-settings">
+    <div class="dropdown-caret">
+        <span class="caret-outer"></span>
+        <span class="caret-inner"></span>
+    </div>
+
+    <div class="buttons">
+        <button type="button" id="reduce-font-size" class="button size-2">A</button>
+        <button type="button" id="enlarge-font-size" class="button size-2">A</button>
+    </div>
+
+    <div class="buttons font-family-list">
+        <button type="button" data-font="0" class="button">Serif</button>
+        <button type="button" data-font="1" class="button">Sans</button>
+    </div>
+
+    <div class="buttons color-theme-list">
+        <button type="button" id="color-theme-preview-0" class="button size-3" data-theme="0">White</button>
+        <button type="button" id="color-theme-preview-1" class="button size-3" data-theme="1">Sepia</button>
+        <button type="button" id="color-theme-preview-2" class="button size-3" data-theme="2">Night</button>
+    </div>
+</div>
+
+    </div>
+
+    <!-- Actions Right -->
+    
+    <div class="dropdown pull-right">
+        <a href="#" class="btn toggle-dropdown" aria-label="Share"><i class="fa fa-share-alt"></i>
+        </a>
+        <div class="dropdown-menu font-settings dropdown-left">
+            <div class="dropdown-caret">
+                <span class="caret-outer"></span>
+                <span class="caret-inner"></span>
+            </div>
+            <div class="buttons">
+                <button type="button" data-sharing="twitter" class="button">
+                    Share on Twitter
+                </button>
+                <button type="button" data-sharing="google-plus" class="button">
+                    Share on Google
+                </button>
+                <button type="button" data-sharing="facebook" class="button">
+                    Share on Facebook
+                </button>
+                <button type="button" data-sharing="weibo" class="button">
+                    Share on Weibo
+                </button>
+                <button type="button" data-sharing="instapaper" class="button">
+                    Share on Instapaper
+                </button>
+            </div>
+        </div>
+    </div>
+    
+
+    
+    <a href="#" target="_blank" class="btn pull-right google-plus-sharing-link sharing-link" data-sharing="google-plus" aria-label="Google"><i class="fa fa-google-plus"></i></a>
+    
+    
+    <a href="#" target="_blank" class="btn pull-right facebook-sharing-link sharing-link" data-sharing="facebook" aria-label="Facebook"><i class="fa fa-facebook"></i></a>
+    
+    
+    <a href="#" target="_blank" class="btn pull-right twitter-sharing-link sharing-link" data-sharing="twitter" aria-label="Twitter"><i class="fa fa-twitter"></i></a>
+    
+    
+    
+
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="./" >GORM Guide</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <a id="edit-link" href="https://github.com/jinzhu/gorm/edit/gh-pages/documents/README.md" class="btn fa fa-edit pull-left">&nbsp;&nbsp;Edit This Page</a><h1 id="utron">utron</h1>
+<p> <a href="https://godoc.org/github.com/gernest/utron" target="_blank"><img src="https://godoc.org/github.com/gernest/utron?status.svg" alt="GoDoc"></a> <a href="https://coveralls.io/github/gernest/utron?branch=master" target="_blank"><img src="https://coveralls.io/repos/gernest/utron/badge.svg?branch=master&amp;service=github" alt="Coverage Status"></a> <a href="https://travis-ci.org/gernest/utron" target="_blank"><img src="https://travis-ci.org/gernest/utron.svg" alt="Build Status"></a> <a href="https://gitter.im/gernest/utron?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge" target="_blank"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/gernest/utron"></a> <a href="https://goreportcard.com/report/github.com/gernest/utron" target="_blank"><img src="https://goreportcard.com/badge/github.com/gernest/utron" alt="Go Report Card"></a></p>
+<p><code>utron</code> is a lightweight MVC framework in Go (<a href="https://golang.org" target="_blank">Golang</a>) for building fast, scalable and robust database-driven web applications.</p>
+<h1 id="features">Features</h1>
+<ul>
+<li>Postgres, MySQL, SQLite and Foundation database support</li>
+<li>Modular (you can choose which components to use)</li>
+<li>Middleware support. All <a href="https://github.com/justinas/alice" target="_blank">alice</a> compatible Middleware works out of the box</li>
+<li>Gopher spirit (write golang, use all the golang libraries you like)</li>
+<li>Lightweight. Only MVC</li>
+<li>Multiple configuration files support (currently json, yaml, toml and hcl)</li>
+</ul>
+<h1 id="overview">Overview</h1>
+<p><code>utron</code> is a lightweight MVC framework. It is based on the principles of simplicity, relevance and elegance.</p>
+<ul>
+<li><p>Simplicity. The design is simple, easy to understand and doesn&apos;t introduce many layers between you and the standard library. It is a goal of the project that users should be able to understand the whole framework in a single day.</p>
+</li>
+<li><p>Relevance. <code>utron</code> doesn&apos;t assume anything. We focus on things that matter, this way we are able to ensure easy maintenance and keep the system well-organized, well-planned and sweet.</p>
+</li>
+<li><p>Elegance. <code>utron</code> uses golang best practises. We are not afraid of heights, it&apos;s just that we need a parachute in our backpack. The source code is heavily documented, any functionality should be well explained and well tested.</p>
+</li>
+</ul>
+<h2 id="motivation">Motivation</h2>
+<p>After two years of playing with golang, I have looked on some of my projects and asked myself: &quot;How golang is that?&quot;</p>
+<p>So, <code>utron</code> is my reimagining of lightweight MVC, that maintains the golang spirit, and works seamlessly with the current libraries.</p>
+<p><strong> NOTE</strong>: For a better view of the todo list application <a href="https://github.com/gernest/utron-todo" target="_blank">see utron-todo</a></p>
+<h1 id="guides">Guides</h1>
+<p>Guides and dcumentation for utron: <a href="http://gernest.github.io/utron" target="_blank">http://gernest.github.io/utron</a></p>
+<h1 id="getting-started">Getting started</h1>
+<h2 id="installation">Installation</h2>
+<p><code>utron</code> works with Go 1.4+</p>
+<pre><code>$ go get github.com/gernest/utron
+</code></pre><h2 id="the-mvc">The MVC</h2>
+<p>There is nothing revolutionary about MVC that <code>utron</code> brings to the table.</p>
+<ul>
+<li><p>M is for models, they are the data structures that help with data persistence, utron uses <a href="https://github.com/jinzhu/gorm" target="_blank">gorm</a> an existing Object Relational Mapper for golang. So if you are familiar with gorm then you are good on the M part.</p>
+</li>
+<li><p>V is for Views. Views are templates that render the final output. <code>utron</code> uses golang standard templates. You don&apos;t have to learn anything new, just the text/template package to master views.</p>
+</li>
+<li><p>C is for controllers. This is where the application logic lives. In order to achieve modularity, there are some things that utron requires of controllers. This subject is explained in more detail below.</p>
+</li>
+</ul>
+<p>With the power of composition and inheritance, <code>utron</code> achieves a beautiful MVC workflow. I recommend you read the source code, it is well documented so as to demystify any magical unicorns.</p>
+<p>We will create a TODO List application in <code>utron</code> to explore all components that makes <code>utron</code> MVC tick. The source code of the final application is included in this repository and can be found here <a href="fixtures/todo">utron todoMVC</a></p>
+<h1 id="todo-list-application-with-utron">TODO list application with <code>utron</code></h1>
+<h2 id="project-structure">Project structure</h2>
+<p>This is the structure of the <code>todo</code> list application that will showcase how you can build web apps with <code>utron</code>:</p>
+<pre><code class="lang-shell">todo
+&#x251C;&#x2500;&#x2500; config
+&#x2502;   &#x251C;&#x2500;&#x2500; app.json
+&#x2502;   &#x251C;&#x2500;&#x2500; app.toml
+&#x2502;   &#x2514;&#x2500;&#x2500; app.yml
+&#x251C;&#x2500;&#x2500; controllers
+&#x2502;   &#x2514;&#x2500;&#x2500; todo.go
+&#x251C;&#x2500;&#x2500; models
+&#x2502;   &#x2514;&#x2500;&#x2500; todo.go
+&#x251C;&#x2500;&#x2500; static
+&#x2502;   &#x2514;&#x2500;&#x2500; todo.css
+&#x251C;&#x2500;&#x2500; views
+&#x2502;   &#x251C;&#x2500;&#x2500; error.html
+&#x2502;   &#x2514;&#x2500;&#x2500; index.html
+&#x2514;&#x2500;&#x2500; main.go
+
+5 directories, 9 files
+</code></pre>
+<p>I have included three configuration files to show how they work, but you are better off with just one.</p>
+<h2 id="configurations">Configurations</h2>
+<p>utron support yaml, json and toml configurations files. In our todo app, we put the configuration files in the config directory. I have included all three formats for clarity, you can be just fine with either one of them.</p>
+<p><code>utron</code> searches for a file named <code>app.json</code>, or <code>app.yml</code>, <code>app.toml</code>, <code>app.hcl</code> in the config directory. The first to be found is the one to be used.</p>
+<p>This is the content of <code>config/app.json</code> file:</p>
+<pre><code class="lang-json">{
+    <span class="hljs-string">&quot;app_name&quot;</span>: <span class="hljs-string">&quot;utron web app&quot;</span>,
+    <span class="hljs-string">&quot;base_url&quot;</span>: <span class="hljs-string">&quot;http://localhost:8090&quot;</span>,
+    <span class="hljs-string">&quot;port&quot;</span>: <span class="hljs-number">8090</span>,
+    <span class="hljs-string">&quot;verbose&quot;</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-string">&quot;static_dir&quot;</span>: <span class="hljs-string">&quot;static&quot;</span>,
+    <span class="hljs-string">&quot;view_dir&quot;</span>: <span class="hljs-string">&quot;views&quot;</span>,
+    <span class="hljs-string">&quot;database&quot;</span>: <span class="hljs-string">&quot;postgres&quot;</span>,
+    <span class="hljs-string">&quot;database_conn&quot;</span>: <span class="hljs-string">&quot;postgres://postgres:postgres@localhost/todo&quot;</span>,
+    <span class="hljs-string">&quot;automigrate&quot;</span>: <span class="hljs-literal">true</span>
+}
+</code></pre>
+<p>You can override the values from the config file by setting environment variables. The names of the environment variables are shown below (with their details)</p>
+<table>
+<thead>
+<tr>
+<th>setting</th>
+<th>environment name</th>
+<th>details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>app_name</td>
+<td>APP_NAME</td>
+<td>application name</td>
+</tr>
+<tr>
+<td>base_url</td>
+<td>BASE_URL</td>
+<td>the base url to use in your views</td>
+</tr>
+<tr>
+<td>port</td>
+<td>PORT</td>
+<td>port number the server will listen on</td>
+</tr>
+<tr>
+<td>verbose</td>
+<td>VERBOSE</td>
+<td>if set to true, will make all state information log to stdout</td>
+</tr>
+<tr>
+<td>static_dir</td>
+<td>STATIC_DIR</td>
+<td>directory to serve static files e.g. images, js or css</td>
+</tr>
+<tr>
+<td>view_dir</td>
+<td>VIEWS_DIR</td>
+<td>directory to look for views</td>
+</tr>
+<tr>
+<td>database</td>
+<td>DATABASE</td>
+<td>the name of the database you use, e.g. postgres, mysql, sqlite3, foundation</td>
+</tr>
+<tr>
+<td>database_conn</td>
+<td>DATABASE_CONN</td>
+<td>connection string to your database</td>
+</tr>
+<tr>
+<td>automigrate</td>
+<td>AUTOMIGRATE</td>
+<td>creates the tables for models automatically.</td>
+</tr>
+</tbody>
+</table>
+<p>If you haven&apos;t specified explicitly the location of the configuration directory, it defaults to the directory named <code>config</code> in the current working directory.</p>
+<h2 id="models">Models</h2>
+<p><code>utron</code> uses the <a href="https://github.com/jinzhu/gorm" target="_blank">gorm</a> library as its Object Relational Mapper, so you won&apos;t need to learn anything fancy. In our todo app, we need to define a <code>Todo</code> model that will be used to store our todo details.</p>
+<p>In the file <code>models/todo.go</code> we define our todo model like this</p>
+<pre><code class="lang-go"><span class="hljs-keyword">package</span> models
+
+<span class="hljs-keyword">import</span> (
+    <span class="hljs-string">&quot;time&quot;</span>
+
+    <span class="hljs-string">&quot;github.com/gernest/utron&quot;</span>
+)
+
+<span class="hljs-keyword">type</span> Todo <span class="hljs-keyword">struct</span> {
+    ID        <span class="hljs-typename">int</span>       <span class="hljs-string">`schema: &quot;-&quot;`</span>
+    Body      <span class="hljs-typename">string</span>    <span class="hljs-string">`schema:&quot;body&quot;`</span>
+    CreatedAt time.Time <span class="hljs-string">`schema:&quot;-&quot;`</span>
+    UpdatedAt time.Time <span class="hljs-string">`schema:&quot;-&quot;`</span>
+}
+
+<span class="hljs-keyword">func</span> init() {
+    utron.RegisterModels(&amp;Todo{})
+}
+</code></pre>
+<p>Notice that we need to register our model by calling <code>utron.RegisterModels(&amp;Todo{})</code> in the <code>init</code> function otherwise <code>utron</code> won&apos;t be aware of the model.</p>
+<p><code>utron</code> will automatically create the table <code>todos</code> if it doesn&apos;t exist.</p>
+<p>Don&apos;t be confused by the <code>schema</code> tag, I just added them since we will use the <a href="https://github.com/gorilla/schema" target="_blank">schema</a> package to decode form values(this has nothing to do with <code>utron</code>, you can use whatever form library you fancy.)</p>
+<h2 id="controllers">Controllers</h2>
+<p><code>utron</code> controllers are structs that implement the <code>Controller</code> interface. To help make <code>utron</code> usable, <code>utron</code> provides a <code>BaseController</code> which implements the <code>Controller</code> interface and offers additional conveniences to help in composing reusable code.</p>
+<p>You get all the benefits of <code>BaseController</code> by embedding it in your struct. Our <code>TODO</code> Controller is in the <code>controller/todo.go</code></p>
+<pre><code class="lang-go"><span class="hljs-keyword">package</span> controllers
+
+<span class="hljs-keyword">import</span> (
+    <span class="hljs-string">&quot;net/http&quot;</span>
+    <span class="hljs-string">&quot;strconv&quot;</span>
+
+    <span class="hljs-string">&quot;github.com/gernest/utron&quot;</span>
+    <span class="hljs-string">&quot;github.com/gernest/utron/fixtures/todo/models&quot;</span>
+    <span class="hljs-string">&quot;github.com/gorilla/schema&quot;</span>
+)
+
+<span class="hljs-keyword">var</span> decoder = schema.NewDecoder()
+
+<span class="hljs-keyword">type</span> TODO <span class="hljs-keyword">struct</span> {
+    *utron.BaseController
+    Routes []<span class="hljs-typename">string</span>
+}
+
+<span class="hljs-keyword">func</span> (t *TODO) Home() {
+    todos := []*models.Todo{}
+    t.Ctx.DB.Order(<span class="hljs-string">&quot;created_at desc&quot;</span>).Find(&amp;todos)
+    t.Ctx.Data[<span class="hljs-string">&quot;List&quot;</span>] = todos
+    t.Ctx.Template = <span class="hljs-string">&quot;index&quot;</span>
+    t.HTML(http.StatusOK)
+}
+<span class="hljs-keyword">func</span> (t *TODO) Create() {
+    todo := &amp;models.Todo{}
+    req := t.Ctx.Request()
+    req.ParseForm()
+    <span class="hljs-keyword">if</span> err := decoder.Decode(todo, req.PostForm); err != <span class="hljs-constant">nil</span> {
+        t.Ctx.Data[<span class="hljs-string">&quot;Message&quot;</span>] = err.Error()
+        t.Ctx.Template = <span class="hljs-string">&quot;error&quot;</span>
+        t.HTML(http.StatusInternalServerError)
+        <span class="hljs-keyword">return</span>
+    }
+
+    t.Ctx.DB.Create(todo)
+    t.Ctx.Redirect(<span class="hljs-string">&quot;/&quot;</span>, http.StatusFound)
+}
+
+<span class="hljs-keyword">func</span> (t *TODO) Delete() {
+    todoID := t.Ctx.Params[<span class="hljs-string">&quot;id&quot;</span>]
+    ID, err := strconv.Atoi(todoID)
+    <span class="hljs-keyword">if</span> err != <span class="hljs-constant">nil</span> {
+        t.Ctx.Data[<span class="hljs-string">&quot;Message&quot;</span>] = err.Error()
+        t.Ctx.Template = <span class="hljs-string">&quot;error&quot;</span>
+        t.HTML(http.StatusInternalServerError)
+        <span class="hljs-keyword">return</span>
+    }
+    t.Ctx.DB.Delete(&amp;models.Todo{ID: ID})
+    t.Ctx.Redirect(<span class="hljs-string">&quot;/&quot;</span>, http.StatusFound)
+}
+
+<span class="hljs-keyword">func</span> NewTODO() *TODO {
+    <span class="hljs-keyword">return</span> &amp;TODO{
+        Routes: []<span class="hljs-typename">string</span>{
+            <span class="hljs-string">&quot;get;/;Home&quot;</span>,
+            <span class="hljs-string">&quot;post;/create;Create&quot;</span>,
+            <span class="hljs-string">&quot;get;/delete/{id};Delete&quot;</span>,
+        },
+    }
+}
+
+<span class="hljs-keyword">func</span> init() {
+    utron.RegisterController(NewTODO())
+}
+</code></pre>
+<p>Note that we registered our controller by calling <code>utron.RegisterController(NewTODO())</code> in the <code>init</code> function
+so as to make <code>utron</code> aware of our controller. See Routing section below for more explanation of what the controller is doing.</p>
+<h2 id="routing">Routing</h2>
+<p>By registering a controller, there are two ways of assigning routes.</p>
+<h3 id="case-1-vanilla-routing">case 1- vanilla routing</h3>
+<p>By registering a Controller, routes are auto-generated for the controller methods. The format is <code>/:controller/:method</code> where <code>:controller</code> is the lowercase name of the Controller, and <code>:method</code> is its method in lowercase.</p>
+<p>so <code>(*TODO) Hello()</code> will map to <code>/todo/hello</code></p>
+<h3 id="case-2-specifying-routes-field">case 2- Specifying Routes field</h3>
+<p>The user controller can define a field named <code>Routes</code> it should be of type <code>[]string</code>, then you can assign routes by appending route string to the Routes field.</p>
+<p>This is a better explanation from comments on the <code>router.go</code> file.</p>
+<pre><code class="lang-go">        <span class="hljs-comment">// if there is any field named Routes, and it is of signature []string</span>
+        <span class="hljs-comment">// then the field&apos;s value is used to overide the patterns defined earlier.</span>
+        <span class="hljs-comment">//</span>
+        <span class="hljs-comment">// It is not necessary for every user implementation to define method named Routes</span>
+        <span class="hljs-comment">// If we cant find it then we just ignore its use( fallback to defaults).</span>
+        <span class="hljs-comment">//</span>
+        <span class="hljs-comment">// Route strings, are of the form &quot;httpMethods;path;method&quot;</span>
+        <span class="hljs-comment">// where httpMethods: is a comma separated list of http method strings</span>
+        <span class="hljs-comment">//                  e.g GET,POST,PUT.</span>
+        <span class="hljs-comment">//                  The case does not matter, you can use lower case or upper case characters</span>
+        <span class="hljs-comment">//                  or even mixed case, that is get,GET,gET and GeT will all be treated as GET</span>
+        <span class="hljs-comment">//</span>
+        <span class="hljs-comment">//        path:     Is a url path or pattern, utron uses the gorilla mux package. So, everything you can do</span>
+        <span class="hljs-comment">//                  with gorilla mux url path then you can do here.</span>
+        <span class="hljs-comment">//                  e.g /hello/{world}</span>
+        <span class="hljs-comment">//                  Don&apos;t worry about the params, they will be accessible via .Ctx.Params field in your</span>
+        <span class="hljs-comment">//                  controller.</span>
+        <span class="hljs-comment">//</span>
+        <span class="hljs-comment">//        method:   The name of the user Controller method to execute for this route.</span>
+</code></pre>
+<p>So, that explains the following lines in our <code>todo</code> app in <code>controllers/todo.go</code></p>
+<pre><code class="lang-go"><span class="hljs-keyword">func</span> NewTODO() *TODO {
+    <span class="hljs-keyword">return</span> &amp;TODO{
+        Routes: []<span class="hljs-typename">string</span>{
+            <span class="hljs-string">&quot;get;/;Home&quot;</span>,
+            <span class="hljs-string">&quot;post;/create;Create&quot;</span>,
+            <span class="hljs-string">&quot;get;/delete/{id};Delete&quot;</span>,
+        },
+    }
+}
+</code></pre>
+<h3 id="case-3-using-routes-file">case 3: using routes file</h3>
+<p>You can define routes in a file in the <code>config</code> directory. The supported formats are json, toml and yaml.</p>
+<p><code>utron</code> will look for file named <code>routes.json</code>, <code>routes.toml</code> or <code>routes.yml</code> in that order, the first to be found is the one to be used.</p>
+<p>I have included a sample routes file in <a href="fixtures/config/routes.json">fixtures/config/routes.json</a>.</p>
+<p>The difference with case 2 above is you will need to specify the name of the controller explicitly. That is for <code>TODO</code> controller, we can define the home route string in routes file like <code>get;/;TODO.Home</code>.</p>
+<p>We won&apos;t use this in our TODO list app, but you can find it useful in your use case.&apos;</p>
+<h2 id="views">Views</h2>
+<p><code>utron</code> views are golang templates. This is the content of <code>views/index.html</code>:</p>
+<pre><code class="lang-html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">head</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">&quot;en&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">&quot;UTF-8&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Utron Todo MVC<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">link</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;/static/todo.css&quot;</span> <span class="hljs-attribute">rel</span>=<span class="hljs-value">&quot;stylesheet&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">method</span>=<span class="hljs-value">&quot;post&quot;</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">&quot;/create&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">table</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">tr</span>&gt;</span>
+           <span class="hljs-tag">&lt;<span class="hljs-title">th</span>&gt;</span>
+               Create A TODO
+           <span class="hljs-tag">&lt;/<span class="hljs-title">th</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">tr</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">tr</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">td</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;body&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">td</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">td</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;submit&quot;</span>&gt;</span>create<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">td</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">tr</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">table</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">table</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">tr</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">th</span>&gt;</span>
+            My TODO LIST
+        <span class="hljs-tag">&lt;/<span class="hljs-title">th</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">tr</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- this is a work around for gitbook
+    {% raw %}
+    --&gt;</span>
+
+    {{range $k,$v:=.List}}
+    <span class="hljs-comment">&lt;!-- this is a work around for gitbook
+    {% endraw %}
+    --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">tr</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">td</span>&gt;</span>
+            {{$v.ID}}
+        <span class="hljs-tag">&lt;/<span class="hljs-title">td</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">td</span>&gt;</span>
+            {{$v.Body}}
+        <span class="hljs-tag">&lt;/<span class="hljs-title">td</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">td</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;/delete/{{$v.ID}}&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">button</span>&gt;</span>Delete<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">td</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">tr</span>&gt;</span>
+    {{end}}
+<span class="hljs-tag">&lt;/<span class="hljs-title">table</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span>
+</code></pre>
+<p>Note that we have access to <code>.List</code> in our view. This is set in the controller, additionally you can access the application configuration via <code>.Config</code> context.</p>
+<p>Above is a simple golang template to render our <code>todo</code> list application.</p>
+<h2 id="the-main-go-file">The main.go file</h2>
+<pre><code class="lang-go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+    <span class="hljs-string">&quot;github.com/gernest/utron&quot;</span>
+    _ <span class="hljs-string">&quot;github.com/gernest/utron/fixtures/todo/controllers&quot;</span>
+    _ <span class="hljs-string">&quot;github.com/gernest/utron/fixtures/todo/models&quot;</span>
+)
+
+<span class="hljs-keyword">func</span> main() {
+    utron.Run()
+}
+</code></pre>
+<h2 id="running-the-todo-app">Running the TODO app</h2>
+<p>In case you want to run the app we just created, it is included in this repository in <a href="fixtures/todo">fixtures/todo</a></p>
+<ul>
+<li>Prerequisite<ul>
+<li>a working database connection (postgres, mysql, sqlite3 or foundation)</li>
+<li>golang toolchain installed and the <code>go</code> command in your system $PATH.</li>
+</ul>
+</li>
+</ul>
+<p>step 1 Install <code>utron</code> which will also include the todo app</p>
+<pre><code>$ go get github.com/gernest/utron
+</code></pre><p>step 2 cd into the todo app directory</p>
+<pre><code>$ cd $GOPATH/src/github.com/gernest/utron/fixtures/todo
+</code></pre><p>step 3 install dependency</p>
+<pre><code>$ go get github.com/gorilla/schema
+</code></pre><p>step 4 edit <code>config/app.json</code> by setting database and database_conn to your values</p>
+<p>step 5 run the app</p>
+<pre><code>go run main.go
+</code></pre><p>If you see something like this</p>
+<pre><code>$ 2015/09/15 18:27:24 &gt;&gt;INFO&gt;&gt; starting server at http://localhost:8090
+</code></pre><p>Then everything is okay, open <code>http://localhost:8090</code> in your browser to start writing your todos.
+If you experience anything different, redo the steps and make sure you did them in order and with no errors. If so, and it still doesn&apos;t work, open an <a href="https://github.com/gernest/utron/issues" target="_blank">issue</a>.</p>
+<h1 id="contributing">Contributing</h1>
+<p>Start with clicking the star button to make the author and his neighbors happy. Then fork the repository and submit a pull request for whatever change you want to be added to this project.</p>
+<p>If you have any questions, just open an issue.</p>
+<h1 id="author">Author</h1>
+<p>Geofrey Ernest</p>
+<p>Twitter  : <a href="https://twitter.com/gernesti" target="_blank">@gernesti</a></p>
+<h1 id="acknowledgements">Acknowledgements</h1>
+<p>These amazing projects have made <code>utron</code> possible:</p>
+<ul>
+<li><a href="https://github.com/gorilla/mux" target="_blank">gorilla mux</a></li>
+<li><a href="https://github.com/gernest/ita" target="_blank">ita</a></li>
+<li><a href="https://github.com/jinzhu/gorm" target="_blank">gorm</a> , this documntation is based on
+gh-pages branch of this project.</li>
+<li><a href="https://github.com/justinas/alice" target="_blank">alice</a></li>
+<li><a href="http://golang.org" target="_blank">golang</a></li>
+</ul>
+<h1 id="roadmap">Roadmap</h1>
+<ul>
+<li>Fix a lot of typos (English is my third language).</li>
+</ul>
+<h1 id="licence">Licence</h1>
+<p>This project is released under the MIT licence. See <a href="LICENCE">LICENCE</a> for more details.</p>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        
+        <a href="./configuration.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Configurations"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="gitbook/app.js"></script>
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-github/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"fontSettings":{"theme":null,"family":"sans","size":2},"fontsettings":{"theme":"night","size":2},"toc":{"addClass":true,"className":"toc"},"github":{"url":"https://github.com/jinzhu/gorm"},"edit-link":{"base":"https://github.com/jinzhu/gorm/edit/gh-pages/documents/","label":"Edit This Page"}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>
