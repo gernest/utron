@@ -1,5 +1,5 @@
 {
-  "title": "GORM Guide",
+  "title": "Utron Guide",
   "plugins": [
     "toc", "github", "edit-link"
   ],
@@ -13,10 +13,10 @@
       "className": "toc"
     },
     "github": {
-      "url": "https://github.com/jinzhu/gorm"
+      "url": "https://github.com/gernest/utron"
     },
     "edit-link": {
-      "base": "https://github.com/jinzhu/gorm/edit/gh-pages/documents/",
+      "base": "https://github.com/gernest/utron/edit/gh-pages/documents/",
       "label": "Edit This Page"
     }
   }
