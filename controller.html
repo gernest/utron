@@ -5,7 +5,7 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Middlewares | Utron Guide</title>
+        <title>Controllers | Utron Guide</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.3.2">
@@ -29,10 +29,10 @@
         
     
     
-    <link rel="next" href="./session.html" />
+    <link rel="next" href="./development.html" />
     
     
-    <link rel="prev" href="./models.html" />
+    <link rel="prev" href="./session.html" />
     
 
         
@@ -40,7 +40,7 @@
     <body>
         
         
-    <div class="book" data-level="3" data-basepath="." data-revision="Sat Nov 05 2016 00:42:20 GMT+0300 (EAT)">
+    <div class="book" data-level="5" data-basepath="." data-revision="Sat Nov 05 2016 00:42:20 GMT+0300 (EAT)">
     
 
 <div class="book-summary">
@@ -100,7 +100,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="3" data-path="middleware.html">
+        <li class="chapter " data-level="3" data-path="middleware.html">
             
                 
                     <a href="./middleware.html">
@@ -130,7 +130,7 @@
             
         </li>
     
-        <li class="chapter " data-level="5" data-path="controller.html">
+        <li class="chapter active" data-level="5" data-path="controller.html">
             
                 
                     <a href="./controller.html">
@@ -280,7 +280,78 @@
                 
                     <section class="normal" id="section-">
                     
-                        <a id="edit-link" href="https://github.com/gernest/utron/edit/gh-pages/documents/middleware.md" class="btn fa fa-edit pull-left">&nbsp;&nbsp;Edit This Page</a><h1 id="middleware">middleware</h1>
+                        <a id="edit-link" href="https://github.com/gernest/utron/edit/gh-pages/documents/controller.md" class="btn fa fa-edit pull-left">&nbsp;&nbsp;Edit This Page</a><h1 id="controller">controller</h1>
+<p><code>utron</code> controllers are structs that implement the <code>Controller</code> interface. To help make <code>utron</code> usable, <code>utron</code> provides a <code>BaseController</code> which implements the <code>Controller</code> interface and offers additional conveniences to help in composing reusable code.</p>
+<p>You get all the benefits of <code>BaseController</code> by embedding it in your struct. Our <code>TODO</code> Controller is in the <code>controller/todo.go</code></p>
+<pre><code class="lang-go"><span class="hljs-keyword">package</span> controllers
+
+<span class="hljs-keyword">import</span> (
+    <span class="hljs-string">&quot;net/http&quot;</span>
+    <span class="hljs-string">&quot;strconv&quot;</span>
+
+    <span class="hljs-string">&quot;github.com/gernest/utron&quot;</span>
+    <span class="hljs-string">&quot;github.com/gernest/utron/fixtures/todo/models&quot;</span>
+    <span class="hljs-string">&quot;github.com/gorilla/schema&quot;</span>
+)
+
+<span class="hljs-keyword">var</span> decoder = schema.NewDecoder()
+
+<span class="hljs-keyword">type</span> TODO <span class="hljs-keyword">struct</span> {
+    *utron.BaseController
+    Routes []<span class="hljs-typename">string</span>
+}
+
+<span class="hljs-keyword">func</span> (t *TODO) Home() {
+    todos := []*models.Todo{}
+    t.Ctx.DB.Order(<span class="hljs-string">&quot;created_at desc&quot;</span>).Find(&amp;todos)
+    t.Ctx.Data[<span class="hljs-string">&quot;List&quot;</span>] = todos
+    t.Ctx.Template = <span class="hljs-string">&quot;index&quot;</span>
+    t.HTML(http.StatusOK)
+}
+<span class="hljs-keyword">func</span> (t *TODO) Create() {
+    todo := &amp;models.Todo{}
+    req := t.Ctx.Request()
+    req.ParseForm()
+    <span class="hljs-keyword">if</span> err := decoder.Decode(todo, req.PostForm); err != <span class="hljs-constant">nil</span> {
+        t.Ctx.Data[<span class="hljs-string">&quot;Message&quot;</span>] = err.Error()
+        t.Ctx.Template = <span class="hljs-string">&quot;error&quot;</span>
+        t.HTML(http.StatusInternalServerError)
+        <span class="hljs-keyword">return</span>
+    }
+
+    t.Ctx.DB.Create(todo)
+    t.Ctx.Redirect(<span class="hljs-string">&quot;/&quot;</span>, http.StatusFound)
+}
+
+<span class="hljs-keyword">func</span> (t *TODO) Delete() {
+    todoID := t.Ctx.Params[<span class="hljs-string">&quot;id&quot;</span>]
+    ID, err := strconv.Atoi(todoID)
+    <span class="hljs-keyword">if</span> err != <span class="hljs-constant">nil</span> {
+        t.Ctx.Data[<span class="hljs-string">&quot;Message&quot;</span>] = err.Error()
+        t.Ctx.Template = <span class="hljs-string">&quot;error&quot;</span>
+        t.HTML(http.StatusInternalServerError)
+        <span class="hljs-keyword">return</span>
+    }
+    t.Ctx.DB.Delete(&amp;models.Todo{ID: ID})
+    t.Ctx.Redirect(<span class="hljs-string">&quot;/&quot;</span>, http.StatusFound)
+}
+
+<span class="hljs-keyword">func</span> NewTODO() *TODO {
+    <span class="hljs-keyword">return</span> &amp;TODO{
+        Routes: []<span class="hljs-typename">string</span>{
+            <span class="hljs-string">&quot;get;/;Home&quot;</span>,
+            <span class="hljs-string">&quot;post;/create;Create&quot;</span>,
+            <span class="hljs-string">&quot;get;/delete/{id};Delete&quot;</span>,
+        },
+    }
+}
+
+<span class="hljs-keyword">func</span> init() {
+    utron.RegisterController(NewTODO())
+}
+</code></pre>
+<p>Note that we registered our controller by calling <code>utron.RegisterController(NewTODO())</code> in the <code>init</code> function
+so as to make <code>utron</code> aware of our controller. See Routing section below for more explanation of what the controller is doing.</p>
 
                     
                     </section>
@@ -291,10 +362,10 @@
         </div>
 
         
-        <a href="./models.html" class="navigation navigation-prev " aria-label="Previous page: Models"><i class="fa fa-angle-left"></i></a>
+        <a href="./session.html" class="navigation navigation-prev " aria-label="Previous page: sessions"><i class="fa fa-angle-left"></i></a>
         
         
-        <a href="./session.html" class="navigation navigation-next " aria-label="Next page: sessions"><i class="fa fa-angle-right"></i></a>
+        <a href="./development.html" class="navigation navigation-next " aria-label="Next page: Development"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

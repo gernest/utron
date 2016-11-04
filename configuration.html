@@ -40,7 +40,7 @@
     <body>
         
         
-    <div class="book" data-level="1" data-basepath="." data-revision="Tue Nov 01 2016 16:06:07 GMT+0300 (EAT)">
+    <div class="book" data-level="1" data-basepath="." data-revision="Sat Nov 05 2016 00:42:20 GMT+0300 (EAT)">
     
 
 <div class="book-summary">
@@ -82,26 +82,6 @@
                         Configurations
                     </a>
             
-            
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.1" data-path="database.html">
-            
-            <span><b>1.1.</b> Database Connection</span>
-            
-            
-        </li>
-    
-        <li class="chapter " data-level="1.2" data-path="database.html">
-            
-            <span><b>1.2.</b> Migration</span>
-            
-            
-        </li>
-    
-
-            </ul>
             
         </li>
     
@@ -152,7 +132,15 @@
     
         <li class="chapter " data-level="5" data-path="controller.html">
             
-            <span><b>5.</b> Controllers</span>
+                
+                    <a href="./controller.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Controllers
+                    </a>
             
             
         </li>
@@ -293,6 +281,79 @@
                     <section class="normal" id="section-">
                     
                         <a id="edit-link" href="https://github.com/gernest/utron/edit/gh-pages/documents/configuration.md" class="btn fa fa-edit pull-left">&nbsp;&nbsp;Edit This Page</a><h1 id="configuration">configuration</h1>
+<p>utron support yaml, json and toml configurations files. In our todo app, we put the configuration files in the config directory. I have included all three formats for clarity, you can be just fine with either one of them.</p>
+<p><code>utron</code> searches for a file named <code>app.json</code>, or <code>app.yml</code>, <code>app.toml</code>, <code>app.hcl</code> in the config directory. The first to be found is the one to be used.</p>
+<p>This is the content of <code>config/app.json</code> file:</p>
+<pre><code class="lang-json">{
+    <span class="hljs-string">&quot;app_name&quot;</span>: <span class="hljs-string">&quot;utron web app&quot;</span>,
+    <span class="hljs-string">&quot;base_url&quot;</span>: <span class="hljs-string">&quot;http://localhost:8090&quot;</span>,
+    <span class="hljs-string">&quot;port&quot;</span>: <span class="hljs-number">8090</span>,
+    <span class="hljs-string">&quot;verbose&quot;</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-string">&quot;static_dir&quot;</span>: <span class="hljs-string">&quot;static&quot;</span>,
+    <span class="hljs-string">&quot;view_dir&quot;</span>: <span class="hljs-string">&quot;views&quot;</span>,
+    <span class="hljs-string">&quot;database&quot;</span>: <span class="hljs-string">&quot;postgres&quot;</span>,
+    <span class="hljs-string">&quot;database_conn&quot;</span>: <span class="hljs-string">&quot;postgres://postgres:postgres@localhost/todo&quot;</span>,
+    <span class="hljs-string">&quot;automigrate&quot;</span>: <span class="hljs-literal">true</span>
+}
+</code></pre>
+<p>You can override the values from the config file by setting environment variables. The names of the environment variables are shown below (with their details)</p>
+<table>
+<thead>
+<tr>
+<th>setting</th>
+<th>environment name</th>
+<th>details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>app_name</td>
+<td>APP_NAME</td>
+<td>application name</td>
+</tr>
+<tr>
+<td>base_url</td>
+<td>BASE_URL</td>
+<td>the base url to use in your views</td>
+</tr>
+<tr>
+<td>port</td>
+<td>PORT</td>
+<td>port number the server will listen on</td>
+</tr>
+<tr>
+<td>verbose</td>
+<td>VERBOSE</td>
+<td>if set to true, will make all state information log to stdout</td>
+</tr>
+<tr>
+<td>static_dir</td>
+<td>STATIC_DIR</td>
+<td>directory to serve static files e.g. images, js or css</td>
+</tr>
+<tr>
+<td>view_dir</td>
+<td>VIEWS_DIR</td>
+<td>directory to look for views</td>
+</tr>
+<tr>
+<td>database</td>
+<td>DATABASE</td>
+<td>the name of the database you use, e.g. postgres, mysql, sqlite3, foundation</td>
+</tr>
+<tr>
+<td>database_conn</td>
+<td>DATABASE_CONN</td>
+<td>connection string to your database</td>
+</tr>
+<tr>
+<td>automigrate</td>
+<td>AUTOMIGRATE</td>
+<td>creates the tables for models automatically.</td>
+</tr>
+</tbody>
+</table>
+<p>If you haven&apos;t specified explicitly the location of the configuration directory, it defaults to the directory named <code>config</code> in the current working directory.</p>
 
                     
                     </section>
