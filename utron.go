@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+
+	"github.com/gernest/utron/config"
 )
 
 var baseApp *App
@@ -22,7 +24,7 @@ func init() {
 // App is the main utron application.
 type App struct {
 	router     *Router
-	cfg        *Config
+	cfg        *config.Config
 	view       View
 	log        Logger
 	model      *Model
@@ -140,7 +142,7 @@ func getAbsolutePath(dir string) (string, error) {
 // loadConfig loads the configuration file. If cfg is provided, then it is used as the directory
 // for searching the configuration files. It defaults to the directory named config in the current
 // working directory.
-func loadConfig(cfg ...string) (*Config, error) {
+func loadConfig(cfg ...string) (*config.Config, error) {
 	cfgDir := "config"
 	if len(cfg) > 0 {
 		cfgDir = cfg[0]
@@ -151,7 +153,7 @@ func loadConfig(cfg ...string) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	return NewConfig(cfgFile)
+	return config.NewConfig(cfgFile)
 }
 
 // findConfigFile finds the configuration file name in the directory dir.
@@ -190,8 +192,8 @@ func (a *App) Set(value interface{}) {
 		a.router = value.(*Router)
 	case View:
 		a.view = value.(View)
-	case *Config:
-		a.cfg = value.(*Config)
+	case *config.Config:
+		a.cfg = value.(*config.Config)
 	case *Model:
 		a.model = value.(*Model)
 	}

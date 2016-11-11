@@ -1,4 +1,4 @@
-package utron
+package config
 
 import (
 	"os"
@@ -7,16 +7,16 @@ import (
 
 func TestConfig(t *testing.T) {
 	cfgFiles := []string{
-		"fixtures/config/app.json",
-		"fixtures/config/app.yml",
-		"fixtures/config/app.toml",
-		"fixtures/config/app.hcl",
+		"../fixtures/config/app.json",
+		"../fixtures/config/app.yml",
+		"../fixtures/config/app.toml",
+		"../fixtures/config/app.hcl",
 	}
 	badCfgFiles := []string{
-		"fixtures/badconfig/app.json",
-		"fixtures/badconfig/app.yml",
-		"fixtures/badconfig/app.toml",
-		"fixtures/badconfig/app.hcl",
+		"../fixtures/badconfig/app.json",
+		"../fixtures/badconfig/app.yml",
+		"../fixtures/badconfig/app.toml",
+		"../fixtures/badconfig/app.hcl",
 	}
 	for _, f := range badCfgFiles {
 		_, err := NewConfig(f)
@@ -45,7 +45,7 @@ func TestConfig(t *testing.T) {
 	}
 
 	//unsupporte file
-	_, err = NewConfig("fixtures/todo.png")
+	_, err = NewConfig("../fixtures/todo.png")
 	if err == nil {
 		t.Error("expected error")
 	}
@@ -93,18 +93,5 @@ func TestConfigEnv(t *testing.T) {
 
 	if cfg.AppName != "utron" {
 		t.Errorf("expected utron got %s", cfg.AppName)
-	}
-
-	//NOTE: This test should be somewhere els probalby in models_test
-	_, err := NewModelWithConfig(cfg)
-	if err != nil {
-		t.Error(err)
-	}
-
-	cfg.DatabaseConn = "halloween"
-	// bad config
-	_, err = NewModelWithConfig(cfg)
-	if err == nil {
-		t.Error("expected error")
 	}
 }

@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/gernest/utron/config"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 )
@@ -48,7 +49,7 @@ type Context struct {
 	Template string
 
 	// Cfg is the application configuration
-	Cfg *Config
+	Cfg *config.Config
 
 	//DB is the database stuff, with all models registered
 	DB *Model

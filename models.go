@@ -4,6 +4,7 @@ import (
 	"errors"
 	"reflect"
 
+	"github.com/gernest/utron/config"
 	"github.com/jinzhu/gorm"
 
 	// support mysql, sqlite3 and postgresql
@@ -20,7 +21,7 @@ type Model struct {
 }
 
 // NewModelWithConfig creates a new model, and opens database connection based on cfg settings
-func NewModelWithConfig(cfg *Config) (*Model, error) {
+func NewModelWithConfig(cfg *config.Config) (*Model, error) {
 	m := NewModel()
 	if err := m.OpenWithConfig(cfg); err != nil {
 		return nil, err
@@ -42,7 +43,7 @@ func (m *Model) IsOpen() bool {
 }
 
 // OpenWithConfig opens database connection with the settings found in cfg
-func (m *Model) OpenWithConfig(cfg *Config) error {
+func (m *Model) OpenWithConfig(cfg *config.Config) error {
 	db, err := gorm.Open(cfg.Database, cfg.DatabaseConn)
 	if err != nil {
 		return err
