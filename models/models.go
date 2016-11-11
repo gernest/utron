@@ -1,8 +1,9 @@
-package utron
+package models
 
 import (
 	"errors"
 	"reflect"
+	"strings"
 
 	"github.com/gernest/utron/config"
 	"github.com/jinzhu/gorm"
@@ -84,4 +85,11 @@ func (m *Model) AutoMigrateAll() {
 	for _, v := range m.models {
 		m.AutoMigrate(v.Interface())
 	}
+}
+func getTypName(typ reflect.Type) string {
+	if typ.Name() != "" {
+		return typ.Name()
+	}
+	split := strings.Split(typ.String(), ".")
+	return split[len(split)-1]
 }

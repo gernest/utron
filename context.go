@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gernest/utron/config"
+	"github.com/gernest/utron/models"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 )
@@ -52,7 +53,7 @@ type Context struct {
 	Cfg *config.Config
 
 	//DB is the database stuff, with all models registered
-	DB *Model
+	DB *models.Model
 
 	request    *http.Request
 	response   http.ResponseWriter

@@ -9,6 +9,7 @@ import (
 	"reflect"
 
 	"github.com/gernest/utron/config"
+	"github.com/gernest/utron/models"
 )
 
 var baseApp *App
@@ -27,7 +28,7 @@ type App struct {
 	cfg        *config.Config
 	view       View
 	log        Logger
-	model      *Model
+	model      *models.Model
 	configPath string
 	isInit     bool
 }
@@ -39,7 +40,7 @@ func NewApp() *App {
 	app.Set(logThis)
 	r := NewRouter(app)
 	app.Set(r)
-	app.Set(NewModel())
+	app.Set(models.NewModel())
 	return app
 }
 
@@ -86,7 +87,7 @@ func (a *App) init() error {
 			return oerr
 		}
 	} else {
-		model, err := NewModelWithConfig(appConfig)
+		model, err := models.NewModelWithConfig(appConfig)
 		if err != nil {
 			return err
 		}
@@ -194,8 +195,8 @@ func (a *App) Set(value interface{}) {
 		a.view = value.(View)
 	case *config.Config:
 		a.cfg = value.(*config.Config)
-	case *Model:
-		a.model = value.(*Model)
+	case *models.Model:
+		a.model = value.(*models.Model)
 	}
 }
 
