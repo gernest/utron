@@ -9,6 +9,7 @@ import (
 	"reflect"
 
 	"github.com/gernest/utron/config"
+	"github.com/gernest/utron/controller"
 	"github.com/gernest/utron/models"
 	"github.com/gernest/utron/view"
 )
@@ -176,7 +177,7 @@ func findConfigFile(dir string, name string) (file string, err error) {
 }
 
 // AddController registers a controller, and middlewares if any is provided.
-func (a *App) AddController(ctrlfn func() Controller, middlewares ...interface{}) {
+func (a *App) AddController(ctrlfn func() controller.Controller, middlewares ...interface{}) {
 	_ = a.router.Add(ctrlfn, middlewares...)
 }
 
@@ -218,20 +219,20 @@ func RegisterModels(models ...interface{}) {
 }
 
 // RegisterController registers a controller in the global utron App.
-func RegisterController(ctrl Controller, middlewares ...interface{}) {
+func RegisterController(ctrl controller.Controller, middlewares ...interface{}) {
 	_ = baseApp.router.Add(GetCtrlFunc(ctrl), middlewares...)
 }
 
 // GetCtrlFunc returns a new copy of the contoller everytime the function is called
-func GetCtrlFunc(ctrl Controller) func() Controller {
+func GetCtrlFunc(ctrl controller.Controller) func() controller.Controller {
 	v := reflect.ValueOf(ctrl)
-	return func() Controller {
+	return func() controller.Controller {
 		e := v
 		if e.Kind() == reflect.Ptr {
 			e = e.Elem()
-			return e.Addr().Interface().(Controller)
+			return e.Addr().Interface().(controller.Controller)
 		}
-		return e.Interface().(Controller)
+		return e.Interface().(controller.Controller)
 	}
 }
 

@@ -8,10 +8,12 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/gernest/utron/controller"
 )
 
 type SimpleMVC struct {
-	*BaseController
+	*controller.BaseController
 }
 
 func (s *SimpleMVC) Hello() {

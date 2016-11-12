@@ -14,6 +14,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/gernest/ita"
 	"github.com/gernest/utron/base"
+	"github.com/gernest/utron/controller"
 	"github.com/gorilla/mux"
 	"github.com/hashicorp/hcl"
 	"github.com/justinas/alice"
@@ -61,7 +62,7 @@ type route struct {
 //
 // utron uses the alice package to chain middlewares, this means all alice compatible middleware
 // works out of the box
-func (r *Router) Add(ctrlfn func() Controller, middlewares ...interface{}) error {
+func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interface{}) error {
 	var (
 
 		// routes is a slice of all routes associated
@@ -80,7 +81,7 @@ func (r *Router) Add(ctrlfn func() Controller, middlewares ...interface{}) error
 		routePaths = "Routes"
 	)
 
-	baseCtr := reflect.ValueOf(&BaseController{})
+	baseCtr := reflect.ValueOf(&controller.BaseController{})
 	ctrlVal := reflect.ValueOf(ctrlfn())
 
 	bTyp := baseCtr.Type()
@@ -142,7 +143,7 @@ func (r *Router) Add(ctrlfn func() Controller, middlewares ...interface{}) error
 		// we initialize its value.
 		if field.Name == baseController {
 			fieldVal := uCtr.Field(k)
-			fieldVal.Set(reflect.ValueOf(new(BaseController)))
+			fieldVal.Set(reflect.ValueOf(new(controller.BaseController)))
 			continue
 		}
 
@@ -311,7 +312,7 @@ func (m *middleware) ToHandler(ctx *base.Context) func(http.Handler) http.Handle
 
 // add registers controller ctrl, using activeRoute. If middlewares are provided, utron uses
 // alice package to chain middlewares.
-func (r *Router) add(activeRoute *route, ctrlfn func() Controller, middlewares ...interface{}) error {
+func (r *Router) add(activeRoute *route, ctrlfn func() controller.Controller, middlewares ...interface{}) error {
 	var m []*middleware
 	if len(middlewares) > 0 {
 		for _, v := range middlewares {
@@ -380,7 +381,7 @@ func (r *Router) prepareContext(ctx *base.Context) {
 }
 
 // executes the method fn on Controller ctrl, it sets context.
-func (r *Router) handleController(ctx *base.Context, fn string, ctrl Controller) {
+func (r *Router) handleController(ctx *base.Context, fn string, ctrl controller.Controller) {
 	ctrl.New(ctx)
 
 	// execute the method
@@ -399,7 +400,7 @@ func (r *Router) handleController(ctx *base.Context, fn string, ctrl Controller)
 }
 
 // wrapController wraps a controller ctrl with method fn, and returns http.HandleFunc
-func (r *Router) wrapController(ctx *base.Context, fn string, ctrl Controller) func(http.ResponseWriter, *http.Request) {
+func (r *Router) wrapController(ctx *base.Context, fn string, ctrl controller.Controller) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		r.handleController(ctx, fn, ctrl)
 	}

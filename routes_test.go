@@ -4,12 +4,14 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/gernest/utron/controller"
 )
 
 var msg = "gernest"
 
 type Sample struct {
-	*BaseController
+	*controller.BaseController
 	Routes []string
 }
 
