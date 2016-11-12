@@ -13,6 +13,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/gernest/ita"
+	"github.com/gernest/utron/base"
 	"github.com/gorilla/mux"
 	"github.com/hashicorp/hcl"
 	"github.com/justinas/alice"
@@ -56,7 +57,7 @@ type route struct {
 // are of type
 //	func(http.Handler)http.Handler
 // 	or
-// 	func(*Context)error
+// 	func(*base.Context)error
 //
 // utron uses the alice package to chain middlewares, this means all alice compatible middleware
 // works out of the box
@@ -292,11 +293,11 @@ type middleware struct {
 	value interface{}
 }
 
-func (m *middleware) ToHandler(ctx *Context) func(http.Handler) http.Handler {
+func (m *middleware) ToHandler(ctx *base.Context) func(http.Handler) http.Handler {
 	if m.typ == plainMiddleware {
 		return m.value.(func(http.Handler) http.Handler)
 	}
-	fn := m.value.(func(*Context) error)
+	fn := m.value.(func(*base.Context) error)
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			err := fn(ctx)
@@ -320,7 +321,7 @@ func (r *Router) add(activeRoute *route, ctrlfn func() Controller, middlewares .
 					typ:   plainMiddleware,
 					value: v,
 				})
-			case func(*Context) error:
+			case func(*base.Context) error:
 				m = append(m, &middleware{
 					typ:   ctxMiddleware,
 					value: v,
@@ -334,7 +335,7 @@ func (r *Router) add(activeRoute *route, ctrlfn func() Controller, middlewares .
 	// register methods if any
 	if len(activeRoute.methods) > 0 {
 		r.HandleFunc(activeRoute.pattern, func(w http.ResponseWriter, req *http.Request) {
-			ctx := NewContext(w, req)
+			ctx := base.NewContext(w, req)
 			r.prepareContext(ctx)
 			chain := chainMiddleware(ctx, m...)
 			chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrlfn())).ServeHTTP(w, req)
@@ -342,7 +343,7 @@ func (r *Router) add(activeRoute *route, ctrlfn func() Controller, middlewares .
 		return nil
 	}
 	r.HandleFunc(activeRoute.pattern, func(w http.ResponseWriter, req *http.Request) {
-		ctx := NewContext(w, req)
+		ctx := base.NewContext(w, req)
 		r.prepareContext(ctx)
 		chain := chainMiddleware(ctx, m...)
 		chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrlfn())).ServeHTTP(w, req)
@@ -351,7 +352,7 @@ func (r *Router) add(activeRoute *route, ctrlfn func() Controller, middlewares .
 	return nil
 }
 
-func chainMiddleware(ctx *Context, wares ...*middleware) alice.Chain {
+func chainMiddleware(ctx *base.Context, wares ...*middleware) alice.Chain {
 	if len(wares) > 0 {
 		var m []alice.Constructor
 		for _, v := range wares {
@@ -363,8 +364,8 @@ func chainMiddleware(ctx *Context, wares ...*middleware) alice.Chain {
 
 }
 
-// prepareContext sets view,config and model on the ctx.
-func (r *Router) prepareContext(ctx *Context) {
+// preparebase.Context sets view,config and model on the ctx.
+func (r *Router) prepareContext(ctx *base.Context) {
 	if r.app != nil {
 		if r.app.view != nil {
 			ctx.Set(r.app.view)
@@ -379,7 +380,7 @@ func (r *Router) prepareContext(ctx *Context) {
 }
 
 // executes the method fn on Controller ctrl, it sets context.
-func (r *Router) handleController(ctx *Context, fn string, ctrl Controller) {
+func (r *Router) handleController(ctx *base.Context, fn string, ctrl Controller) {
 	ctrl.New(ctx)
 
 	// execute the method
@@ -398,7 +399,7 @@ func (r *Router) handleController(ctx *Context, fn string, ctrl Controller) {
 }
 
 // wrapController wraps a controller ctrl with method fn, and returns http.HandleFunc
-func (r *Router) wrapController(ctx *Context, fn string, ctrl Controller) func(http.ResponseWriter, *http.Request) {
+func (r *Router) wrapController(ctx *base.Context, fn string, ctrl Controller) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		r.handleController(ctx, fn, ctrl)
 	}

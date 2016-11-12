@@ -6,6 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gernest/utron/base"
 	"github.com/gorilla/context"
 )
 
@@ -32,8 +33,8 @@ func plainIncrement(n int) func(http.Handler) http.Handler {
 	}
 }
 
-func contextMiddleware(n int) func(*Context) error {
-	return func(ctx *Context) error {
+func contextMiddleware(n int) func(*base.Context) error {
+	return func(ctx *base.Context) error {
 		key := ctx.GetData(incrementKey)
 		if key != nil {
 			ikey := key.(int)

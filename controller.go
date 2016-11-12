@@ -2,22 +2,24 @@ package utron
 
 import (
 	"encoding/json"
+
+	"github.com/gernest/utron/base"
 )
 
 // Controller is an interface for utron controllers
 type Controller interface {
-	New(*Context)
+	New(*base.Context)
 	Render() error
 }
 
 // BaseController implements the Controller interface, It is recommended all
 // user defined Controllers should embed *BaseController.
 type BaseController struct {
-	Ctx *Context
+	Ctx *base.Context
 }
 
 // New sets ctx as the active context
-func (b *BaseController) New(ctx *Context) {
+func (b *BaseController) New(ctx *base.Context) {
 	b.Ctx = ctx
 }
 
