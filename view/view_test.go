@@ -1,4 +1,4 @@
-package utron
+package view
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 )
 
 func TestSimpleView(t *testing.T) {
-	v, err := NewSimpleView("fixtures/view")
+	v, err := NewSimpleView("../fixtures/view")
 	if err != nil {
 		t.Error(err)
 	}

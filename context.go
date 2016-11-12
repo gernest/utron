@@ -8,6 +8,7 @@ import (
 
 	"github.com/gernest/utron/config"
 	"github.com/gernest/utron/models"
+	"github.com/gernest/utron/view"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 )
@@ -59,7 +60,7 @@ type Context struct {
 	response   http.ResponseWriter
 	out        io.ReadWriter
 	isCommited bool
-	view       View
+	view       view.View
 }
 
 // NewContext creates new context for the given w and r
@@ -134,8 +135,8 @@ func (c *Context) SetData(key, value interface{}) {
 //	 * response status code by passing an int
 func (c *Context) Set(value interface{}) {
 	switch value.(type) {
-	case View:
-		c.view = value.(View)
+	case view.View:
+		c.view = value.(view.View)
 	case *http.Request:
 		c.request = value.(*http.Request)
 	case http.ResponseWriter:

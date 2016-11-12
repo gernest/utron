@@ -10,6 +10,7 @@ import (
 
 	"github.com/gernest/utron/config"
 	"github.com/gernest/utron/models"
+	"github.com/gernest/utron/view"
 )
 
 var baseApp *App
@@ -26,7 +27,7 @@ func init() {
 type App struct {
 	router     *Router
 	cfg        *config.Config
-	view       View
+	view       view.View
 	log        Logger
 	model      *models.Model
 	configPath string
@@ -77,7 +78,7 @@ func (a *App) init() error {
 		return err
 	}
 
-	views, err := NewSimpleView(appConfig.ViewsDir)
+	views, err := view.NewSimpleView(appConfig.ViewsDir)
 	if err != nil {
 		return err
 	}
@@ -191,8 +192,8 @@ func (a *App) Set(value interface{}) {
 		a.log = value.(Logger)
 	case *Router:
 		a.router = value.(*Router)
-	case View:
-		a.view = value.(View)
+	case view.View:
+		a.view = value.(view.View)
 	case *config.Config:
 		a.cfg = value.(*config.Config)
 	case *models.Model:
