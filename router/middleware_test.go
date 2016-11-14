@@ -1,4 +1,4 @@
-package utron
+package router
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/gernest/utron/base"
+	"github.com/gernest/utron/controller"
 	"github.com/gorilla/context"
 )
 
@@ -50,7 +51,7 @@ func contextMiddleware(n int) func(*base.Context) error {
 func TestMiddlewarePlain(t *testing.T) {
 	expect := "3"
 	r := NewRouter()
-	_ = r.Add(GetCtrlFunc(&Sample{}), plainIncrement(0), plainIncrement(1), plainIncrement(2))
+	_ = r.Add(controller.GetCtrlFunc(&Sample{}), plainIncrement(0), plainIncrement(1), plainIncrement(2))
 
 	req, err := http.NewRequest("GET", "/sample/increment", nil)
 	if err != nil {
@@ -70,7 +71,7 @@ func TestMiddlewarePlain(t *testing.T) {
 func TestMiddlewareContext(t *testing.T) {
 	expect := "3"
 	r := NewRouter()
-	_ = r.Add(GetCtrlFunc(&Sample{}), contextMiddleware(0), contextMiddleware(1), contextMiddleware(2))
+	_ = r.Add(controller.GetCtrlFunc(&Sample{}), contextMiddleware(0), contextMiddleware(1), contextMiddleware(2))
 
 	req, err := http.NewRequest("GET", "/sample/increment", nil)
 	if err != nil {
@@ -91,7 +92,7 @@ func TestMiddlewareMixed(t *testing.T) {
 	expect := "6"
 
 	r := NewRouter()
-	_ = r.Add(GetCtrlFunc(&Sample{}), plainIncrement(0), contextMiddleware(1), plainIncrement(2), contextMiddleware(3))
+	_ = r.Add(controller.GetCtrlFunc(&Sample{}), plainIncrement(0), contextMiddleware(1), plainIncrement(2), contextMiddleware(3))
 
 	req, err := http.NewRequest("GET", "/sample/increment", nil)
 	if err != nil {

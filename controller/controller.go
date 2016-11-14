@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"reflect"
 
 	"github.com/gernest/utron/base"
 )
@@ -50,4 +51,17 @@ func (b *BaseController) JSON(code int) {
 func (b *BaseController) RenderJSON(value interface{}, code int) {
 	_ = json.NewEncoder(b.Ctx).Encode(value)
 	b.JSON(code)
+}
+
+// GetCtrlFunc returns a new copy of the contoller everytime the function is called
+func GetCtrlFunc(ctrl Controller) func() Controller {
+	v := reflect.ValueOf(ctrl)
+	return func() Controller {
+		e := v
+		if e.Kind() == reflect.Ptr {
+			e = e.Elem()
+			return e.Addr().Interface().(Controller)
+		}
+		return e.Interface().(Controller)
+	}
 }

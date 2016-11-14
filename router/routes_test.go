@@ -1,4 +1,4 @@
-package utron
+package router
 
 import (
 	"net/http"
@@ -36,7 +36,7 @@ func NewSample() *Sample {
 
 func TestRouterAdd(t *testing.T) {
 	r := NewRouter()
-	_ = r.Add(GetCtrlFunc(&Sample{}))
+	_ = r.Add(controller.GetCtrlFunc(&Sample{}))
 
 	req, err := http.NewRequest("GET", "/sample/bang", nil)
 	if err != nil {
@@ -60,7 +60,7 @@ func TestRouteField(t *testing.T) {
 	}
 	s := &Sample{}
 	s.Routes = routes
-	err := r.Add(GetCtrlFunc(s))
+	err := r.Add(controller.GetCtrlFunc(s))
 	if err != nil {
 		t.Error(err)
 	}
@@ -96,10 +96,10 @@ func TestRouteField(t *testing.T) {
 func TestRoutesFile(t *testing.T) {
 
 	routeFiles := []string{
-		"fixtures/config/routes.json",
-		"fixtures/config/routes.yml",
-		"fixtures/config/routes.toml",
-		"fixtures/config/routes.hcl",
+		"../fixtures/config/routes.json",
+		"../fixtures/config/routes.yml",
+		"../fixtures/config/routes.toml",
+		"../fixtures/config/routes.hcl",
 	}
 
 	for _, file := range routeFiles {
@@ -112,7 +112,7 @@ func TestRoutesFile(t *testing.T) {
 		if len(r.routes) != 2 {
 			t.Errorf("expcted 2 got %d", len(r.routes))
 		}
-		_ = r.Add(GetCtrlFunc(NewSample()))
+		_ = r.Add(controller.GetCtrlFunc(NewSample()))
 
 		req, err := http.NewRequest("GET", "/hello", nil)
 		if err != nil {

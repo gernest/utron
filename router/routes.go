@@ -1,4 +1,4 @@
-package utron
+package router
 
 import (
 	"encoding/json"
@@ -14,7 +14,10 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/gernest/ita"
 	"github.com/gernest/utron/base"
+	"github.com/gernest/utron/config"
 	"github.com/gernest/utron/controller"
+	"github.com/gernest/utron/models"
+	"github.com/gernest/utron/view"
 	"github.com/gorilla/mux"
 	"github.com/hashicorp/hcl"
 	"github.com/justinas/alice"
@@ -30,20 +33,30 @@ var (
 // Router registers routes and handlers. It embeds gorilla mux Router
 type Router struct {
 	*mux.Router
-	app    *App
-	routes []*route
+	config  *config.Config
+	view    view.View
+	model   *models.Model
+	routes  []*route
+	Options *Options
+}
+
+//Options additional settings for the router.
+type Options struct {
+	Model  *models.Model
+	View   view.View
+	Config *config.Config
 }
 
 // NewRouter returns a new Router, if app is passed then it is used
-func NewRouter(app ...*App) *Router {
-	var dApp *App
-	if len(app) > 0 {
-		dApp = app[0]
-	}
-	return &Router{
+func NewRouter(app ...*Options) *Router {
+	r := &Router{
 		Router: mux.NewRouter(),
-		app:    dApp,
 	}
+	if len(app) > 0 {
+		o := app[0]
+		r.Options = o
+	}
+	return r
 }
 
 // route tracks information about http route
@@ -367,17 +380,18 @@ func chainMiddleware(ctx *base.Context, wares ...*middleware) alice.Chain {
 
 // preparebase.Context sets view,config and model on the ctx.
 func (r *Router) prepareContext(ctx *base.Context) {
-	if r.app != nil {
-		if r.app.view != nil {
-			ctx.Set(r.app.view)
+	if r.Options != nil {
+		if r.Options.View != nil {
+			ctx.Set(r.view)
 		}
-		if r.app.cfg != nil {
-			ctx.Cfg = r.app.cfg
+		if r.Options.Config != nil {
+			ctx.Cfg = r.config
 		}
-		if r.app.model != nil {
-			ctx.DB = r.app.model
+		if r.Options.Model != nil {
+			ctx.DB = r.model
 		}
 	}
+
 }
 
 // executes the method fn on Controller ctrl, it sets context.
@@ -467,13 +481,13 @@ func (r *Router) LoadRoutesFile(file string) error {
 	return nil
 }
 
-// loadRoutes searches for the route file i the cfgPath. The order of file lookup is
+// LoadRoutes searches for the route file i the cfgPath. The order of file lookup is
 // as follows.
 //	* routes.json
 //	* routes.toml
 //	* routes.yml
 // 	* routes.hcl
-func (r *Router) loadRoutes(cfgPath string) {
+func (r *Router) LoadRoutes(cfgPath string) {
 	exts := []string{".json", ".toml", ".yml", ".hcl"}
 	rFile := "routes"
 	for _, ext := range exts {
@@ -485,4 +499,8 @@ func (r *Router) loadRoutes(cfgPath string) {
 		_ = r.LoadRoutesFile(file)
 		break
 	}
+}
+
+func (r *Router) SetOptions(o *Options) {
+	r.Options = o
 }
