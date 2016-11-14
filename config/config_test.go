@@ -45,7 +45,7 @@ func TestConfig(t *testing.T) {
 	}
 
 	//unsupporte file
-	_, err = NewConfig("../fixtures/todo.png")
+	_, err = NewConfig("../fixtures/view/index.tpl")
 	if err == nil {
 		t.Error("expected error")
 	}
