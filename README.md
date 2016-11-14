@@ -402,8 +402,6 @@ If you see something like this
 Then everything is okay, open `http://localhost:8090` in your browser to start writing your todos.
 If you experience anything different, redo the steps and make sure you did them in order and with no errors. If so, and it still doesn't work, open an [issue](https://github.com/gernest/utron/issues).
 
-## Screenshot
-![todo app with utron](fixtures/todo.png)
 
 # Contributing
 
