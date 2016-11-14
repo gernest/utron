@@ -2,7 +2,6 @@ package utron
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -10,26 +9,17 @@ import (
 
 	"github.com/gernest/utron/config"
 	"github.com/gernest/utron/controller"
+	"github.com/gernest/utron/logger"
 	"github.com/gernest/utron/models"
 	"github.com/gernest/utron/view"
 )
-
-var baseApp *App
-
-func init() {
-	baseApp = NewApp()
-	if err := baseApp.Init(); err != nil {
-		// TODO log this?
-		log.Println(err)
-	}
-}
 
 // App is the main utron application.
 type App struct {
 	router     *Router
 	cfg        *config.Config
 	view       view.View
-	log        Logger
+	log        logger.Logger
 	model      *models.Model
 	configPath string
 	isInit     bool
@@ -39,7 +29,7 @@ type App struct {
 // the Init method before serving requests.
 func NewApp() *App {
 	app := &App{}
-	app.Set(logThis)
+	app.Set(logger.NewDefaultLogger(os.Stdout))
 	r := NewRouter(app)
 	app.Set(r)
 	app.Set(models.NewModel())
@@ -103,10 +93,7 @@ func (a *App) init() error {
 	// In case the StaticDir is specified in the Config file, register
 	// a handler serving contents of that directory under the PathPrefix /static/.
 	if appConfig.StaticDir != "" {
-		static, err := getAbsolutePath(appConfig.StaticDir)
-		if err != nil {
-			logThis.Errors(err)
-		}
+		static, _ := getAbsolutePath(appConfig.StaticDir)
 		if static != "" {
 			a.router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(static))))
 		}
@@ -189,8 +176,8 @@ func (a *App) AddController(ctrlfn func() controller.Controller, middlewares ...
 //	Model by passing *Model
 func (a *App) Set(value interface{}) {
 	switch value.(type) {
-	case Logger:
-		a.log = value.(Logger)
+	case logger.Logger:
+		a.log = value.(logger.Logger)
 	case *Router:
 		a.router = value.(*Router)
 	case view.View:
@@ -207,22 +194,6 @@ func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	a.router.ServeHTTP(w, r)
 }
 
-// SetConfigPath sets the path to look for the configuration files in the
-// global utron App.
-func SetConfigPath(path string) {
-	baseApp.SetConfigPath(path)
-}
-
-// RegisterModels registers models in the global utron App.
-func RegisterModels(models ...interface{}) {
-	_ = baseApp.model.Register(models...)
-}
-
-// RegisterController registers a controller in the global utron App.
-func RegisterController(ctrl controller.Controller, middlewares ...interface{}) {
-	_ = baseApp.router.Add(GetCtrlFunc(ctrl), middlewares...)
-}
-
 // GetCtrlFunc returns a new copy of the contoller everytime the function is called
 func GetCtrlFunc(ctrl controller.Controller) func() controller.Controller {
 	v := reflect.ValueOf(ctrl)
@@ -234,32 +205,4 @@ func GetCtrlFunc(ctrl controller.Controller) func() controller.Controller {
 		}
 		return e.Interface().(controller.Controller)
 	}
-}
-
-// ServeHTTP serves request using global utron App.
-func ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if !baseApp.isInit {
-		if err := baseApp.Init(); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	}
-	baseApp.ServeHTTP(w, r)
-}
-
-// Migrate runs migrations on the global utron app.
-func Migrate() {
-	baseApp.model.AutoMigrateAll()
-}
-
-// Run runs a http server, serving the global utron App.
-//
-// By using this, you should make sure you followed the MVC pattern.
-func Run() {
-	if baseApp.cfg.Automigrate {
-		Migrate()
-	}
-	port := baseApp.cfg.Port
-	logThis.Info("starting server at ", baseApp.cfg.BaseURL)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), baseApp))
 }

@@ -395,7 +395,7 @@ func (r *Router) handleController(ctx *base.Context, fn string, ctrl controller.
 	}
 	err := ctx.Commit()
 	if err != nil {
-		logThis.Errors(err)
+		//TODO:  Log error
 	}
 }
 
@@ -459,7 +459,7 @@ func (r *Router) LoadRoutesFile(file string) error {
 	for _, v := range rFile.Routes {
 		parsedRoute, perr := splitRoutes(v)
 		if perr != nil {
-			logThis.Errors(fmt.Sprintf("utron: parsing route %s %v", v, perr))
+			// TODO: log error?
 			continue
 		}
 		r.routes = append(r.routes, parsedRoute)

@@ -81,12 +81,3 @@ func TestGetAbsPath(t *testing.T) {
 	}
 
 }
-
-func TestGlobal(t *testing.T) {
-
-	//NOTE this is not a serious test
-	cfgPath := "fixtures/config"
-	SetConfigPath(cfgPath)
-	RegisterModels(&Sample{})
-	RegisterController(&Sample{})
-}
