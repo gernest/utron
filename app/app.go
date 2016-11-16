@@ -86,12 +86,12 @@ func (a *App) init() error {
 		if err != nil {
 			return err
 		}
-		a.Set(model)
+		a.Model = model
 	}
 	a.Router.Options = a.options()
 	a.Router.LoadRoutes(a.ConfigPath) // Load a routes file if available.
-	a.Set(appConfig)
-	a.Set(views)
+	a.Config = appConfig
+	a.View = views
 	a.isInit = true
 
 	// In case the StaticDir is specified in the Config file, register
@@ -170,27 +170,6 @@ func findConfigFile(dir string, name string) (file string, err error) {
 // AddController registers a controller, and middlewares if any is provided.
 func (a *App) AddController(ctrlfn func() controller.Controller, middlewares ...interface{}) {
 	_ = a.Router.Add(ctrlfn, middlewares...)
-}
-
-// Set is for assigning a value to *App components. The following can be set:
-//	Logger by passing Logger
-//	View by passing View
-//	Router by passing *Router
-//	Config by passing *Config
-//	Model by passing *Model
-func (a *App) Set(value interface{}) {
-	switch value.(type) {
-	case logger.Logger:
-		a.Log = value.(logger.Logger)
-	case *router.Router:
-		a.Router = value.(*router.Router)
-	case view.View:
-		a.View = value.(view.View)
-	case *config.Config:
-		a.Config = value.(*config.Config)
-	case *models.Model:
-		a.Model = value.(*models.Model)
-	}
 }
 
 // ServeHTTP serves http requests. It can be used with other http.Handler implementations.

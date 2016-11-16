@@ -12,12 +12,11 @@ import (
 // NewApp creates a new bare-bone utron application. To use the MVC components, you should call
 // the Init method before serving requests.
 func NewApp() *app.App {
-	app := &app.App{}
-	app.Set(logger.NewDefaultLogger(os.Stdout))
-	r := router.NewRouter()
-	app.Set(r)
-	app.Set(models.NewModel())
-	return app
+	return &app.App{
+		Log:    logger.NewDefaultLogger(os.Stdout),
+		Router: router.NewRouter(),
+		Model:  models.NewModel(),
+	}
 }
 
 // NewMVC creates a new MVC utron app. If cfg is passed, it should be a directory to look for
