@@ -14,28 +14,47 @@ import (
 	"github.com/gernest/utron/view"
 )
 
+//StaticServerFunc is a function that returns the static assetsfiles server.
+//
+// The first argument retrued is the path prefix for the static assets. If strp
+// is set to true then the prefix is going to be stripped.
+type StatiServerFunc func(*config.Config) (prefix string, strip bool, h http.Handler)
+
 // App is the main utron application.
 type App struct {
-	router     *router.Router
-	cfg        *config.Config
-	view       view.View
-	log        logger.Logger
-	model      *models.Model
-	configPath string
-	isInit     bool
+	Router       *router.Router
+	Config       *config.Config
+	View         view.View
+	Log          logger.Logger
+	Model        *models.Model
+	ConfigPath   string
+	StaticServer StatiServerFunc
+	isInit       bool
+}
+
+//StaticServer implements StaticServerFunc.
+//
+// This uses the http.Fileserver to handle static assets. The routes prefixed
+// with /static/ are static asset routes by default.
+func StaticServer(cfg *config.Config) (string, bool, http.Handler) {
+	static, _ := getAbsolutePath(cfg.StaticDir)
+	if static != "" {
+		return "/static/", true, http.FileServer(http.Dir(static))
+	}
+	return "", false, nil
 }
 
 func (a *App) options() *router.Options {
 	return &router.Options{
-		Model:  a.model,
-		View:   a.view,
-		Config: a.cfg,
+		Model:  a.Model,
+		View:   a.View,
+		Config: a.Config,
 	}
 }
 
 // Init initializes the MVC App.
 func (a *App) Init() error {
-	if a.configPath == "" {
+	if a.ConfigPath == "" {
 		a.SetConfigPath("config")
 	}
 	return a.init()
@@ -43,12 +62,12 @@ func (a *App) Init() error {
 
 // SetConfigPath sets the directory path to search for the config files.
 func (a *App) SetConfigPath(dir string) {
-	a.configPath = dir
+	a.ConfigPath = dir
 }
 
 // init initializes values to the app components.
 func (a *App) init() error {
-	appConfig, err := loadConfig(a.configPath)
+	appConfig, err := loadConfig(a.ConfigPath)
 	if err != nil {
 		return err
 	}
@@ -57,8 +76,8 @@ func (a *App) init() error {
 	if err != nil {
 		return err
 	}
-	if a.model != nil && !a.model.IsOpen() {
-		oerr := a.model.OpenWithConfig(appConfig)
+	if a.Model != nil && !a.Model.IsOpen() {
+		oerr := a.Model.OpenWithConfig(appConfig)
 		if oerr != nil {
 			return oerr
 		}
@@ -69,8 +88,8 @@ func (a *App) init() error {
 		}
 		a.Set(model)
 	}
-	a.router.Options = a.options()
-	a.router.LoadRoutes(a.configPath) // Load a routes file if available.
+	a.Router.Options = a.options()
+	a.Router.LoadRoutes(a.ConfigPath) // Load a routes file if available.
 	a.Set(appConfig)
 	a.Set(views)
 	a.isInit = true
@@ -80,7 +99,7 @@ func (a *App) init() error {
 	if appConfig.StaticDir != "" {
 		static, _ := getAbsolutePath(appConfig.StaticDir)
 		if static != "" {
-			a.router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(static))))
+			a.Router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(static))))
 		}
 
 	}
@@ -150,7 +169,7 @@ func findConfigFile(dir string, name string) (file string, err error) {
 
 // AddController registers a controller, and middlewares if any is provided.
 func (a *App) AddController(ctrlfn func() controller.Controller, middlewares ...interface{}) {
-	_ = a.router.Add(ctrlfn, middlewares...)
+	_ = a.Router.Add(ctrlfn, middlewares...)
 }
 
 // Set is for assigning a value to *App components. The following can be set:
@@ -162,19 +181,19 @@ func (a *App) AddController(ctrlfn func() controller.Controller, middlewares ...
 func (a *App) Set(value interface{}) {
 	switch value.(type) {
 	case logger.Logger:
-		a.log = value.(logger.Logger)
+		a.Log = value.(logger.Logger)
 	case *router.Router:
-		a.router = value.(*router.Router)
+		a.Router = value.(*router.Router)
 	case view.View:
-		a.view = value.(view.View)
+		a.View = value.(view.View)
 	case *config.Config:
-		a.cfg = value.(*config.Config)
+		a.Config = value.(*config.Config)
 	case *models.Model:
-		a.model = value.(*models.Model)
+		a.Model = value.(*models.Model)
 	}
 }
 
 // ServeHTTP serves http requests. It can be used with other http.Handler implementations.
 func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	a.router.ServeHTTP(w, r)
+	a.Router.ServeHTTP(w, r)
 }
