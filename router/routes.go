@@ -293,49 +293,21 @@ func splitRoutes(routeStr string) (*route, error) {
 	return nil, ErrRouteStringFormat
 }
 
-type middlewareTyp int
-
-const (
-	plainMiddleware middlewareTyp = iota
-	ctxMiddleware
-)
-
-type middleware struct {
-	typ   middlewareTyp
-	value interface{}
-}
-
-func (m *middleware) ToHandler(ctx *base.Context) func(http.Handler) http.Handler {
-	if m.typ == plainMiddleware {
-		return m.value.(func(http.Handler) http.Handler)
-	}
-	fn := m.value.(func(*base.Context) error)
-	return func(h http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			err := fn(ctx)
-			if err != nil {
-				return
-			}
-			h.ServeHTTP(w, r)
-		})
-	}
-}
-
 // add registers controller ctrl, using activeRoute. If middlewares are provided, utron uses
 // alice package to chain middlewares.
 func (r *Router) add(activeRoute *route, ctrlfn func() controller.Controller, middlewares ...interface{}) error {
-	var m []*middleware
+	var m []*Middleware
 	if len(middlewares) > 0 {
 		for _, v := range middlewares {
 			switch v.(type) {
 			case func(http.Handler) http.Handler:
-				m = append(m, &middleware{
-					typ:   plainMiddleware,
+				m = append(m, &Middleware{
+					Type:  PlainMiddleware,
 					value: v,
 				})
 			case func(*base.Context) error:
-				m = append(m, &middleware{
-					typ:   ctxMiddleware,
+				m = append(m, &Middleware{
+					Type:  CtxMiddleware,
 					value: v,
 				})
 
@@ -364,7 +336,7 @@ func (r *Router) add(activeRoute *route, ctrlfn func() controller.Controller, mi
 	return nil
 }
 
-func chainMiddleware(ctx *base.Context, wares ...*middleware) alice.Chain {
+func chainMiddleware(ctx *base.Context, wares ...*Middleware) alice.Chain {
 	if len(wares) > 0 {
 		var m []alice.Constructor
 		for _, v := range wares {
@@ -497,8 +469,4 @@ func (r *Router) LoadRoutes(cfgPath string) {
 		_ = r.LoadRoutesFile(file)
 		break
 	}
-}
-
-func (r *Router) SetOptions(o *Options) {
-	r.Options = o
 }
