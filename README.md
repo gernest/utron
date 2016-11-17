@@ -35,17 +35,15 @@ So, `utron` is my reimagining of lightweight MVC, that maintains the golang spir
 
 `utron` works with Go 1.4+
 
-Use this command to obtain latest stable release (currently v.1.x)
+     go get github.com/gernest/utron
 
-	$ go get gopkg.in/gernest/utron.v1
+# Tutorials
 
-You can also run the following to install `master` branch
-
-    $ go get github.com/gernest/utron
+- [create a todo list application with utron](https://github.com/utronframework/tutorials/create_todo_list_application_with_utron.md)
 
 ## Sample application
 
-- [Todo list](https://github.com/gernest/utron-todo)
+- [Todo list](https://github.com/utronframework/todo)
 
 
 # Contributing
