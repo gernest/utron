@@ -11,7 +11,7 @@ import (
 var msg = "gernest"
 
 type Sample struct {
-	*controller.BaseController
+	controller.BaseController
 	Routes []string
 }
 

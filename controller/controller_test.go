@@ -14,7 +14,7 @@ func TestBaseController(t *testing.T) {
 
 	ctx := base.NewContext(w, req)
 
-	ctrl := &BaseController{}
+	ctrl := BaseController{}
 
 	if ctrl.New(ctx); ctrl.Ctx == nil {
 		t.Error("expected Ctx to be set")

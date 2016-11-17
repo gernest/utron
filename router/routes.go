@@ -153,10 +153,8 @@ func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interfa
 		field := uCtrTyp.Field(k)
 
 		// If we find any field matching BaseController
-		// we initialize its value.
+		// This is already initialized , we move to the next field.
 		if field.Name == baseController {
-			fieldVal := uCtr.Field(k)
-			fieldVal.Set(reflect.ValueOf(new(controller.BaseController)))
 			continue
 		}
 
