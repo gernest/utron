@@ -39,7 +39,7 @@ So, `utron` is my reimagining of lightweight MVC, that maintains the golang spir
 
 # Tutorials
 
-- [create a todo list application with utron](https://github.com/utronframework/tutorials/create_todo_list_application_with_utron.md)
+- [create a todo list application with utron](https://github.com/utronframework/tutorials/blob/master/create_todo_list_application_with_utron.md)
 
 ## Sample application
 
