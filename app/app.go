@@ -76,6 +76,7 @@ func (a *App) init() error {
 	if err != nil {
 		return err
 	}
+	a.View = views
 	if a.Model != nil && !a.Model.IsOpen() {
 		oerr := a.Model.OpenWithConfig(appConfig)
 		if oerr != nil {

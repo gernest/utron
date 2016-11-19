@@ -34,8 +34,6 @@ var (
 type Router struct {
 	*mux.Router
 	config  *config.Config
-	view    view.View
-	model   *models.Model
 	routes  []*route
 	Options *Options
 }
@@ -352,13 +350,13 @@ func chainMiddleware(ctx *base.Context, wares ...*Middleware) alice.Chain {
 func (r *Router) prepareContext(ctx *base.Context) {
 	if r.Options != nil {
 		if r.Options.View != nil {
-			ctx.Set(r.view)
+			ctx.Set(r.Options.View)
 		}
 		if r.Options.Config != nil {
-			ctx.Cfg = r.config
+			ctx.Cfg = r.Options.Config
 		}
 		if r.Options.Model != nil {
-			ctx.DB = r.model
+			ctx.DB = r.Options.Model
 		}
 	}
 
@@ -367,7 +365,6 @@ func (r *Router) prepareContext(ctx *base.Context) {
 // executes the method fn on Controller ctrl, it sets context.
 func (r *Router) handleController(ctx *base.Context, fn string, ctrl controller.Controller) {
 	ctrl.New(ctx)
-
 	// execute the method
 	// TODO: better error handling?
 	if x := ita.New(ctrl).Call(fn); x.Error() != nil {
