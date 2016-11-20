@@ -37,6 +37,10 @@ So, `utron` is my reimagining of lightweight MVC, that maintains the golang spir
 
      go get github.com/gernest/utron
 
+For the Old API use
+
+	go get gopkg.in/gernest/utron.v1
+
 # Tutorials
 
 - [create a todo list application with utron](https://github.com/utronframework/tutorials/blob/master/create_todo_list_application_with_utron.md)
@@ -68,10 +72,6 @@ These amazing projects have made `utron` possible:
 * [alice](https://github.com/justinas/alice)
 * [golang](http://golang.org)
 
-
-# Roadmap
-
-*  Fix a lot of typos (English is my third language).
 
 # Licence
 
