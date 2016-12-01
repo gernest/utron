@@ -83,7 +83,8 @@ func (a *App) init() error {
 			return oerr
 		}
 	} else {
-		model, err := models.NewModelWithConfig(appConfig)
+		model := models.NewModel()
+		err = model.OpenWithConfig(appConfig)
 		if err != nil {
 			return err
 		}

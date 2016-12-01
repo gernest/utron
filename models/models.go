@@ -21,15 +21,6 @@ type Model struct {
 	*gorm.DB
 }
 
-// NewModelWithConfig creates a new model, and opens database connection based on cfg settings
-func NewModelWithConfig(cfg *config.Config) (*Model, error) {
-	m := NewModel()
-	if err := m.OpenWithConfig(cfg); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 // NewModel returns a new Model without opening database connection
 func NewModel() *Model {
 	return &Model{
