@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -52,7 +51,7 @@ func TestGetAbsPath(t *testing.T) {
 }
 
 type SimpleMVC struct {
-	*controller.BaseController
+	controller.BaseController
 }
 
 func (s *SimpleMVC) Hello() {
@@ -64,7 +63,6 @@ func (s *SimpleMVC) Hello() {
 func TestMVC(t *testing.T) {
 	app, err := NewMVC("fixtures/mvc")
 	if err != nil {
-		fmt.Println(err)
 		t.Skip(err)
 	}
 	app.AddController(controller.GetCtrlFunc(&SimpleMVC{}))

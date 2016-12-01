@@ -12,6 +12,7 @@ import (
 	"github.com/gernest/utron/models"
 	"github.com/gernest/utron/router"
 	"github.com/gernest/utron/view"
+	"github.com/kr/pretty"
 )
 
 //StaticServerFunc is a function that returns the static assetsfiles server.
@@ -102,6 +103,7 @@ func (a *App) init() error {
 	a.View = views
 	if a.Model != nil && !a.Model.IsOpen() {
 		oerr := a.Model.OpenWithConfig(appConfig)
+		pretty.Println(appConfig)
 		if oerr != nil {
 			return oerr
 		}
