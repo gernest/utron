@@ -30,6 +30,7 @@ type Config struct {
 	Database     string `json:"database" yaml:"database" toml:"database" hcl:"database"`
 	DatabaseConn string `json:"database_conn" yaml:"database_conn" toml:"database_conn" hcl:"database_conn"`
 	Automigrate  bool   `json:"automigrate" yaml:"automigrate" toml:"automigrate" hcl:"automigrate"`
+	NoModel      bool   `json:"no_model" yaml:"no_model" toml:"no_model" hcl:"no_model"`
 }
 
 // DefaultConfig returns the default configuration settings.
