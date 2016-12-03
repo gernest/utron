@@ -249,7 +249,7 @@ func getTypName(typ reflect.Type) string {
 func splitRoutes(routeStr string) (*route, error) {
 
 	// supported contains supported http methods
-	supported := "GET POST PUT PATCH TRACE PATCH DELETE HEAD OPTIONS WS"
+	supported := "GET POST PUT PATCH TRACE PATCH DELETE HEAD OPTIONS"
 
 	// separator is a character used to separate route components from the routes string
 	separator := ";"
