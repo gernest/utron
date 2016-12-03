@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -202,4 +203,14 @@ func (a *App) AddController(ctrlfn func() controller.Controller, middlewares ...
 // ServeHTTP serves http requests. It can be used with other http.Handler implementations.
 func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	a.Router.ServeHTTP(w, r)
+}
+
+//SetNotFoundHandler this sets the hadler that is will execute when the route is
+//not found.
+func (a *App) SetNotFoundHandler(h http.Handler) error {
+	if a.Router != nil {
+		a.Router.NotFoundHandler = h
+		return nil
+	}
+	return errors.New("untron: application router is not set")
 }
