@@ -13,14 +13,13 @@ import (
 	"github.com/gernest/utron/models"
 	"github.com/gernest/utron/router"
 	"github.com/gernest/utron/view"
-	"github.com/kr/pretty"
 )
 
 //StaticServerFunc is a function that returns the static assetsfiles server.
 //
 // The first argument retrued is the path prefix for the static assets. If strp
 // is set to true then the prefix is going to be stripped.
-type StatiServerFunc func(*config.Config) (prefix string, strip bool, h http.Handler)
+type StaticServerFunc func(*config.Config) (prefix string, strip bool, h http.Handler)
 
 // App is the main utron application.
 type App struct {
@@ -30,7 +29,7 @@ type App struct {
 	Log          logger.Logger
 	Model        *models.Model
 	ConfigPath   string
-	StaticServer StatiServerFunc
+	StaticServer StaticServerFunc
 	isInit       bool
 }
 
@@ -104,7 +103,6 @@ func (a *App) init() error {
 	a.View = views
 	if a.Model != nil && !a.Model.IsOpen() {
 		oerr := a.Model.OpenWithConfig(appConfig)
-		pretty.Println(appConfig)
 		if oerr != nil {
 			return oerr
 		}
