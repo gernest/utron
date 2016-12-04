@@ -45,6 +45,8 @@ For the Old API use
 
 - [create a todo list application with utron](https://github.com/utronframework/tutorials/blob/master/create_todo_list_application_with_utron.md)
 
+- [use custom not found handler in utron](https://github.com/utronframework/tutorials/blob/master/set_not_found_handler.md)
+
 ## Sample application
 
 - [Todo list](https://github.com/utronframework/todo)
