@@ -60,7 +60,7 @@ type Context struct {
 	response   http.ResponseWriter
 	out        io.ReadWriter
 	isCommited bool
-	View       view.View
+	view       view.View
 }
 
 // NewContext creates new context for the given w and r
@@ -136,7 +136,7 @@ func (c *Context) SetData(key, value interface{}) {
 func (c *Context) Set(value interface{}) {
 	switch value.(type) {
 	case view.View:
-		c.View = value.(view.View)
+		c.view = value.(view.View)
 	case *http.Request:
 		c.request = value.(*http.Request)
 	case http.ResponseWriter:
@@ -161,13 +161,13 @@ func (c *Context) Commit() error {
 	if c.isCommited {
 		return errors.New("already committed")
 	}
-	if c.Template != "" && c.View != nil {
+	if c.Template != "" && c.view != nil {
 		out := &bytes.Buffer{}
 
 		if c.Cfg != nil {
 			c.Data["Config"] = c.Cfg // add configuration to the view data context
 		}
-		err := c.View.Render(out, c.Template, c.Data)
+		err := c.view.Render(out, c.Template, c.Data)
 		if err != nil {
 			return err
 		}
