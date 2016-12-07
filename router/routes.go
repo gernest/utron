@@ -16,6 +16,7 @@ import (
 	"github.com/gernest/utron/base"
 	"github.com/gernest/utron/config"
 	"github.com/gernest/utron/controller"
+	"github.com/gernest/utron/logger"
 	"github.com/gernest/utron/models"
 	"github.com/gernest/utron/view"
 	"github.com/gorilla/mux"
@@ -28,6 +29,8 @@ var (
 
 	// ErrRouteStringFormat is returned when the route string is of the wrong format
 	ErrRouteStringFormat = errors.New("wrong route string, example is\" get,post;/hello/world;Hello\"")
+
+	defaultLogger = logger.NewDefaultLogger(os.Stdout)
 )
 
 // Router registers routes and handlers. It embeds gorilla mux Router
@@ -43,6 +46,7 @@ type Options struct {
 	Model  *models.Model
 	View   view.View
 	Config *config.Config
+	Log    logger.Logger
 }
 
 // NewRouter returns a new Router, if app is passed then it is used
@@ -358,8 +362,16 @@ func (r *Router) prepareContext(ctx *base.Context) {
 		if r.Options.Model != nil {
 			ctx.DB = r.Options.Model
 		}
+		if r.Options.Log != nil {
+			ctx.Log = r.Options.Log
+		}
 	}
 
+	// It is a good idea to ensure that a well prepared context always has the
+	// Log field set.
+	if ctx.Log == nil {
+		ctx.Log = defaultLogger
+	}
 }
 
 // executes the method fn on Controller ctrl, it sets context.

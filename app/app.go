@@ -73,6 +73,7 @@ func (a *App) options() *router.Options {
 		Model:  a.Model,
 		View:   a.View,
 		Config: a.Config,
+		Log:    a.Log,
 	}
 }
 

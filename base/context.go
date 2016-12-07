@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gernest/utron/config"
+	"github.com/gernest/utron/logger"
 	"github.com/gernest/utron/models"
 	"github.com/gernest/utron/view"
 	"github.com/gorilla/context"
@@ -55,6 +56,8 @@ type Context struct {
 
 	//DB is the database stuff, with all models registered
 	DB *models.Model
+
+	Log logger.Logger
 
 	request    *http.Request
 	response   http.ResponseWriter
