@@ -20,6 +20,7 @@ import (
 	"github.com/gernest/utron/models"
 	"github.com/gernest/utron/view"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"github.com/hashicorp/hcl"
 	"github.com/justinas/alice"
 	"gopkg.in/yaml.v2"
@@ -43,10 +44,11 @@ type Router struct {
 
 //Options additional settings for the router.
 type Options struct {
-	Model  *models.Model
-	View   view.View
-	Config *config.Config
-	Log    logger.Logger
+	Model        *models.Model
+	View         view.View
+	Config       *config.Config
+	Log          logger.Logger
+	SessionStore sessions.Store
 }
 
 // NewRouter returns a new Router, if app is passed then it is used
@@ -364,6 +366,9 @@ func (r *Router) prepareContext(ctx *base.Context) {
 		}
 		if r.Options.Log != nil {
 			ctx.Log = r.Options.Log
+		}
+		if r.Options.SessionStore != nil {
+			ctx.SessionStore = r.Options.SessionStore
 		}
 	}
 

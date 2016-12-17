@@ -1,3 +1,6 @@
+// Package base is the basic building cblock of utron. The main structure here is
+// Context, but for some reasons to avoid confusion since there is a lot of
+// context packages I decided to name this package base instead.
 package base
 
 import (
@@ -12,6 +15,7 @@ import (
 	"github.com/gernest/utron/view"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 )
 
 // Content holds http response content type strings
@@ -58,6 +62,8 @@ type Context struct {
 	DB *models.Model
 
 	Log logger.Logger
+
+	SessionStore sessions.Store
 
 	request    *http.Request
 	response   http.ResponseWriter

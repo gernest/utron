@@ -16,7 +16,8 @@ type Controller interface {
 // BaseController implements the Controller interface, It is recommended all
 // user defined Controllers should embed *BaseController.
 type BaseController struct {
-	Ctx *base.Context
+	Ctx    *base.Context
+	Routes []string
 }
 
 // New sets ctx as the active context
