@@ -8,8 +8,11 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/gernest/utron/config"
 	"github.com/gernest/utron/controller"
 )
+
+const notFoundMsg = "nothing"
 
 func TestGetAbsPath(t *testing.T) {
 	wd, err := os.Getwd()
@@ -77,5 +80,43 @@ func TestMVC(t *testing.T) {
 
 	if !strings.Contains(w.Body.String(), "gernest") {
 		t.Errorf("expected %s to contain gernest", w.Body.String())
+	}
+
+}
+
+func TestApp(t *testing.T) {
+	app := NewApp()
+	// Set not found handler
+	err := app.SetNotFoundHandler(http.HandlerFunc(sampleDefault))
+	if err != nil {
+		t.Error(err)
+	}
+
+	// no router
+	app.Router = nil
+	err = app.SetNotFoundHandler(http.HandlerFunc(sampleDefault))
+	if err == nil {
+		t.Error("expected an error")
+	}
+}
+
+func sampleDefault(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte(notFoundMsg))
+}
+
+func TestStaticServer(t *testing.T) {
+	c := &config.Config{}
+	_, ok, _ := StaticServer(c)
+	if ok {
+		t.Error("expected false")
+	}
+	c.StaticDir = "fixtures"
+	s, ok, _ := StaticServer(c)
+	if !ok {
+		t.Error("expected true")
+	}
+	expect := "/static/"
+	if s != expect {
+		t.Errorf("expected %s got %s", expect, s)
 	}
 }

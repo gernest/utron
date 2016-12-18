@@ -105,19 +105,12 @@ func (a *App) init() error {
 
 	// only when mode is allowed
 	if !appConfig.NoModel {
-		if a.Model != nil && !a.Model.IsOpen() {
-			oerr := a.Model.OpenWithConfig(appConfig)
-			if oerr != nil {
-				return oerr
-			}
-		} else {
-			model := models.NewModel()
-			err = model.OpenWithConfig(appConfig)
-			if err != nil {
-				return err
-			}
-			a.Model = model
+		model := models.NewModel()
+		err = model.OpenWithConfig(appConfig)
+		if err != nil {
+			return err
 		}
+		a.Model = model
 	}
 	a.Router.Options = a.options()
 	a.Router.LoadRoutes(a.ConfigPath) // Load a routes file if available.
