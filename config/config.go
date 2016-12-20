@@ -13,6 +13,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/fatih/camelcase"
+	"github.com/gorilla/securecookie"
 	"github.com/hashicorp/hcl"
 	"gopkg.in/yaml.v2"
 )
@@ -31,18 +32,49 @@ type Config struct {
 	DatabaseConn string `json:"database_conn" yaml:"database_conn" toml:"database_conn" hcl:"database_conn"`
 	Automigrate  bool   `json:"automigrate" yaml:"automigrate" toml:"automigrate" hcl:"automigrate"`
 	NoModel      bool   `json:"no_model" yaml:"no_model" toml:"no_model" hcl:"no_model"`
+
+	// session
+	SessionName     string `json:"session_name" yaml:"session_name" toml:"session_name" hcl:"session_name"`
+	SessionPath     string `json:"session_path" yaml:"session_path" toml:"session_path" hcl:"session_path"`
+	SessionDomain   string `json:"session_domain" yaml:"session_domain" toml:"session_domain" hcl:"session_domain"`
+	SessionMaxAge   int    `json:"session_max_age" yaml:"session_max_age" toml:"session_max_age" hcl:"session_max_age"`
+	SessionSecure   bool   `json:"session_secure" yaml:"session_secure" toml:"session_secure" hcl:"session_secure"`
+	SessionHTTPOnly bool   `json:"session_httponly" yaml:"session_httponly" toml:"session_httponly" hcl:"session_httponly"`
+
+	// The name of the session store to use
+	// Options are
+	// file , cookie ,ql
+	SessionStore string `json:"session_store" yaml:"session_store" toml:"session_store" hcl:"session_store"`
+
+	// Flash is the session name for flash messages
+	Flash string `json:"flash" yaml:"flash" toml:"flash" hcl:"flash"`
+
+	// KeyPair for secure cookie its a comma separates strings of keys.
+	SessionKeyPair []string `json:"session_key_pair" yaml:"session_key_pair" toml:"session_key_pair" hcl:"session_key_pair"`
+
+	// flash message
+	FlashContextKey string `json:"flash_context_key" yaml:"flash_context_key" toml:"flash_context_key" hcl:"flash_context_key"`
 }
 
 // DefaultConfig returns the default configuration settings.
 func DefaultConfig() *Config {
+	a := securecookie.GenerateRandomKey(32)
+	b := securecookie.GenerateRandomKey(32)
 	return &Config{
-		AppName:     "utron web app",
-		BaseURL:     "http://localhost:8090",
-		Port:        8090,
-		Verbose:     false,
-		StaticDir:   "static",
-		ViewsDir:    "views",
-		Automigrate: true,
+		AppName:       "utron web app",
+		BaseURL:       "http://localhost:8090",
+		Port:          8090,
+		Verbose:       false,
+		StaticDir:     "static",
+		ViewsDir:      "views",
+		Automigrate:   true,
+		SessionName:   "_utron",
+		SessionPath:   "/",
+		SessionMaxAge: 2592000,
+		SessionKeyPair: []string{
+			string(a), string(b),
+		},
+		Flash: "_flash",
 	}
 }
 
@@ -93,6 +125,15 @@ func NewConfig(path string) (*Config, error) {
 	err = cfg.SyncEnv()
 	if err != nil {
 		return nil, err
+	}
+
+	// ensure the key pairs are set
+	if cfg.SessionKeyPair == nil {
+		a := securecookie.GenerateRandomKey(32)
+		b := securecookie.GenerateRandomKey(32)
+		cfg.SessionKeyPair = []string{
+			string(a), string(b),
+		}
 	}
 	return cfg, nil
 }
