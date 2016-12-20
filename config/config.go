@@ -41,6 +41,11 @@ type Config struct {
 	SessionSecure   bool   `json:"session_secure" yaml:"session_secure" toml:"session_secure" hcl:"session_secure"`
 	SessionHTTPOnly bool   `json:"session_httponly" yaml:"session_httponly" toml:"session_httponly" hcl:"session_httponly"`
 
+	// The name of the session store to use
+	// Options are
+	// file , cookie ,ql
+	SessionStore string `json:"session_store" yaml:"session_store" toml:"session_store" hcl:"session_store"`
+
 	// Flash is the session name for flash messages
 	Flash string `json:"flash" yaml:"flash" toml:"flash" hcl:"flash"`
 
