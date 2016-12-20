@@ -126,6 +126,15 @@ func NewConfig(path string) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// ensure the key pairs are set
+	if cfg.SessionKeyPair == nil {
+		a := securecookie.GenerateRandomKey(32)
+		b := securecookie.GenerateRandomKey(32)
+		cfg.SessionKeyPair = []string{
+			string(a), string(b),
+		}
+	}
 	return cfg, nil
 }
 

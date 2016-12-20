@@ -1,18 +1,23 @@
 package app
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
 
+	"github.com/gernest/qlstore"
 	"github.com/gernest/utron/config"
 	"github.com/gernest/utron/controller"
 	"github.com/gernest/utron/logger"
 	"github.com/gernest/utron/models"
 	"github.com/gernest/utron/router"
 	"github.com/gernest/utron/view"
+	"github.com/gorilla/sessions"
+	// load ql drier
+	_ "github.com/cznic/ql/driver"
 )
 
 //StaticServerFunc is a function that returns the static assetsfiles server.
@@ -30,6 +35,7 @@ type App struct {
 	Model        *models.Model
 	ConfigPath   string
 	StaticServer StaticServerFunc
+	SessionStore sessions.Store
 	isInit       bool
 }
 
@@ -70,10 +76,11 @@ func StaticServer(cfg *config.Config) (string, bool, http.Handler) {
 
 func (a *App) options() *router.Options {
 	return &router.Options{
-		Model:  a.Model,
-		View:   a.View,
-		Config: a.Config,
-		Log:    a.Log,
+		Model:        a.Model,
+		View:         a.View,
+		Config:       a.Config,
+		Log:          a.Log,
+		SessionStore: a.SessionStore,
 	}
 }
 
@@ -112,6 +119,14 @@ func (a *App) init() error {
 		}
 		a.Model = model
 	}
+
+	// The sessionistore s really not critical. The application can just run
+	// without session set
+	store, err := getSesionStore(appConfig)
+	if err == nil {
+		a.SessionStore = store
+	}
+
 	a.Router.Options = a.options()
 	a.Router.LoadRoutes(a.ConfigPath) // Load a routes file if available.
 	a.Config = appConfig
@@ -128,6 +143,36 @@ func (a *App) init() error {
 
 	}
 	return nil
+}
+
+func getSesionStore(cfg *config.Config) (sessions.Store, error) {
+	opts := &sessions.Options{
+		Path:     cfg.SessionPath,
+		Domain:   cfg.SessionDomain,
+		MaxAge:   cfg.SessionMaxAge,
+		Secure:   cfg.SessionSecure,
+		HttpOnly: cfg.SessionSecure,
+	}
+	db, err := sql.Open("ql-mem", "session.db")
+	if err != nil {
+		return nil, err
+	}
+	err = qlstore.Migrate(db)
+	if err != nil {
+		return nil, err
+	}
+
+	store := qlstore.NewQLStore(db, "/", 2592000, keyPairs(cfg.SessionKeyPair)...)
+	store.Options = opts
+	return store, nil
+}
+
+func keyPairs(src []string) [][]byte {
+	var pairs [][]byte
+	for _, v := range src {
+		pairs = append(pairs, []byte(v))
+	}
+	return pairs
 }
 
 // getAbsolutePath returns the absolute path to dir. If the dir is relative, then we add
