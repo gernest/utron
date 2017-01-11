@@ -25,7 +25,7 @@ func TestSimpleView(t *testing.T) {
 	for _, tpl := range tpls {
 		verr := v.Render(out, tpl, data)
 		if verr != nil {
-			t.Error(err)
+			t.Error(verr)
 		}
 		if !strings.Contains(out.String(), data.Name) {
 			t.Errorf("expeted %s to contain %s", out.String(), data.Name)
