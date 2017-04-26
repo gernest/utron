@@ -57,7 +57,7 @@ func GetFlashes(ctx *base.Context, name, key string) (Flashes, error) {
 
 // AddFlashToCtx takes flash messages stored in a cookie which is associated with the
 // request found in ctx, and puts them inside the ctx object. The flash messages can then
-// be retrived by calling ctx.Get( FlashKey).
+// be retrieved by calling ctx.Get( FlashKey).
 //
 // NOTE When there are no flash messages then nothing is set.
 func AddFlashToCtx(ctx *base.Context, name, key string) error {
