@@ -24,7 +24,7 @@
 //
 // There are many frameworks out there, you might be wondering why do we need
 // yet another framework?. We probably don't.. Utron is just a summary of the
-// tools, and techinques I use to develop web  applications in Go.
+// tools, and techniques I use to develop web  applications in Go.
 //
 // This includes the best libraries, and the best organization of the code base.
 // Utron has one of the very handy Controller( you will see more details in the
