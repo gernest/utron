@@ -130,7 +130,6 @@ func (a *App) init() error {
 	a.Router.Options = a.options()
 	a.Router.LoadRoutes(a.ConfigPath) // Load a routes file if available.
 	a.Config = appConfig
-	a.View = views
 	a.isInit = true
 
 	// In case the StaticDir is specified in the Config file, register
