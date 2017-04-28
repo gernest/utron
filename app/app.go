@@ -103,6 +103,7 @@ func (a *App) init() error {
 	if err != nil {
 		return err
 	}
+	a.Config = appConfig
 
 	views, err := view.NewSimpleView(appConfig.ViewsDir)
 	if err != nil {
@@ -128,8 +129,7 @@ func (a *App) init() error {
 	}
 
 	a.Router.Options = a.options()
-	a.Router.LoadRoutes(a.ConfigPath) // Load a routes file if available.
-	a.Config = appConfig
+	a.Router.LoadRoutes(a.ConfigPath) // Load a routes file if available.	
 	a.isInit = true
 
 	// In case the StaticDir is specified in the Config file, register
