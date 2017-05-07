@@ -324,7 +324,7 @@ func (r *Router) add(activeRoute *route, ctrlfn func() controller.Controller, mi
 		ctx := base.NewContext(w, req)
 		r.prepareContext(ctx)
 		chain := chainMiddleware(ctx, m...)
-		chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrlfn(), activeRoute.rate)).ServeHTTP(w, req)
+		chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrlfn())).ServeHTTP(w, req)
 	})
 
 	// register methods if any
