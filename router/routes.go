@@ -320,23 +320,18 @@ func (r *Router) add(activeRoute *route, ctrlfn func() controller.Controller, mi
 			}
 		}
 	}
-	// register methods if any
-	if len(activeRoute.methods) > 0 {
-		r.HandleFunc(activeRoute.pattern, func(w http.ResponseWriter, req *http.Request) {
-			ctx := base.NewContext(w, req)
-			r.prepareContext(ctx)
-			chain := chainMiddleware(ctx, m...)
-			chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrlfn())).ServeHTTP(w, req)
-		}).Methods(activeRoute.methods...)
-		return nil
-	}
-	r.HandleFunc(activeRoute.pattern, func(w http.ResponseWriter, req *http.Request) {
+	route := r.HandleFunc(activeRoute.pattern, func(w http.ResponseWriter, req *http.Request) {
 		ctx := base.NewContext(w, req)
 		r.prepareContext(ctx)
 		chain := chainMiddleware(ctx, m...)
 		chain.ThenFunc(r.wrapController(ctx, activeRoute.fn, ctrlfn())).ServeHTTP(w, req)
 	})
 
+	// register methods if any
+	if len(activeRoute.methods) > 0 {
+		route.Methods(activeRoute.methods...)
+
+	}
 	return nil
 }
 

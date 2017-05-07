@@ -45,7 +45,7 @@ func NewSimpleView(viewDir string) (View, error) {
 func (s *SimpleView) load(dir string) (View, error) {
 
 	// supported is the list of file extensions that will be parsed as templates
-	supported := []string{".tpl", ".html", ".tmpl"}
+	supported := map[string]bool{".tpl": true, ".html": true, ".tmpl": true}
 
 	werr := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -56,14 +56,7 @@ func (s *SimpleView) load(dir string) (View, error) {
 		}
 
 		extension := filepath.Ext(path)
-		found := false
-		for _, ext := range supported {
-			if ext == extension {
-				found = true
-				break
-			}
-		}
-		if !found {
+		if _, ok := supported[extension]; !ok {
 			return nil
 		}
 
@@ -87,8 +80,8 @@ func (s *SimpleView) load(dir string) (View, error) {
 		name = strings.TrimSuffix(name, extension) // remove extension
 
 		t := s.tmpl.New(name)
-		_, err = t.Parse(string(data))
-		if err != nil {
+		
+		if _, err = t.Parse(string(data)); err != nil {
 			return err
 		}
 		return nil
