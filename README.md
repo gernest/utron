@@ -19,7 +19,7 @@
 # Overview
 `utron` is a lightweight MVC framework. It is based on the principles of simplicity, relevance and elegance.
 
-* Simplicity. The design is simple, easy to understand and doesn't introduce many layers between you and the standard library. It is a goal of the project that users should be able to understand the whole framework in a single day.
+* Simplicity. The design is simple, easy to understand, and doesn't introduce many layers between you and the standard library. It is a goal of the project that users should be able to understand the whole framework in a single day.
 
 * Relevance. `utron` doesn't assume anything. We focus on things that matter, this way we are able to ensure easy maintenance and keep the system well-organized, well-planned and sweet.
 
