@@ -7,7 +7,9 @@ go:
  - 1.9.x
  - tip
 services:
-  -postgresql
+  - postgresql
+  - redis-server
+  - memcached
 before_script:
   - psql -c 'create database utron;' -U postgres
 before_install:
