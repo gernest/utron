@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"github.com/segmentio/ksuid"
+	"github.com/rs/xid"
 	"strings"
 )
 
@@ -72,7 +72,7 @@ func (ts *TagSet) tagIds() ([]string, error) {
 }
 
 func (ts *TagSet) resetTag(name string) (string, error) {
-	id := ksuid.New().String()
+	id := xid.New().String()
 
 	err := ts.Store.Forever(ts.tagKey(name), id)
 
