@@ -188,6 +188,30 @@ func TestPutGetStructWithTags(t *testing.T) {
 	}
 }
 
+func TestTagSet(t *testing.T) {
+	for _, driver := range drivers {
+		cache := store(driver)
+
+		tagSet := cache.Tags("Alejandro").GetTags()
+
+		namespace, err := tagSet.GetNamespace()
+
+		if err != nil {
+			panic(err)
+		}
+
+		if len([]rune(namespace)) != 20 {
+			t.Error("The namespace is not 20 chars long.", namespace)
+		}
+
+		got := tagSet.Reset()
+
+		if got != nil {
+			t.Error("Reset did not return nil.", got)
+		}
+	}
+}
+
 func tag() string {
 	return "tag"
 }

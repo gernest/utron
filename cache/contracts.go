@@ -53,4 +53,6 @@ type TaggedStoreInterface interface {
 	CacheInterface
 
 	TagFlush() error
+
+	GetTags() TagSet
 }

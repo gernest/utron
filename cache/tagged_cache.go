@@ -158,6 +158,11 @@ func (tc *TaggedCache) TagFlush() error {
 	return tc.Tags.Reset()
 }
 
+// GetTags returns the TaggedCache Tags
+func (tc *TaggedCache) GetTags() TagSet {
+	return tc.Tags
+}
+
 func (tc *TaggedCache) taggedItemKey(key string) (string, error) {
 	h := sha1.New()
 
