@@ -20,6 +20,7 @@ matrix:
   allow_failures:
     - go: 1.5.x
     - go: 1.6.x
+    - tip
 
 script:
  - $HOME/gopath/bin/goveralls -v -service=travis-ci -repotoken=$COVERALLS
