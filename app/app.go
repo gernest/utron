@@ -8,16 +8,15 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/joesteel2010/qlstore"
+	_ "github.com/cznic/ql/driver"
+	"github.com/gernest/qlstore"
+	"github.com/gorilla/sessions"
 	"github.com/joesteel2010/utron/config"
 	"github.com/joesteel2010/utron/controller"
 	"github.com/joesteel2010/utron/logger"
 	"github.com/joesteel2010/utron/models"
 	"github.com/joesteel2010/utron/router"
-	"utron/view"
-	"github.com/gorilla/sessions"
-	"log"
-	_ "github.com/cznic/ql/driver"
+	"github.com/joesteel2010/utron/view"
 )
 
 //StaticServerFunc is a function that returns the static assetsfiles server.
@@ -104,7 +103,6 @@ func (a *App) init() error {
 		return err
 	}
 	a.Config = appConfig
-	log.Printf("Creating new view")
 	views, err := view.GetView(appConfig.ViewsDir)
 	if err != nil {
 		return err
@@ -129,7 +127,7 @@ func (a *App) init() error {
 	}
 
 	a.Router.Options = a.options()
-	a.Router.LoadRoutes(a.ConfigPath) // Load a routes file if available.	
+	a.Router.LoadRoutes(a.ConfigPath) // Load a routes file if available.
 	a.isInit = true
 
 	// In case the StaticDir is specified in the Config file, register

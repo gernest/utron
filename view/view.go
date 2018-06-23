@@ -8,8 +8,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"log"
-	"reflect"
 )
 
 var viewFactory ViewFactoryFunc = func(viewDir string) (View, error) {
