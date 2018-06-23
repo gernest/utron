@@ -8,15 +8,15 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gernest/qlstore"
-	"github.com/gernest/utron/config"
-	"github.com/gernest/utron/controller"
-	"github.com/gernest/utron/logger"
-	"github.com/gernest/utron/models"
-	"github.com/gernest/utron/router"
-	"github.com/gernest/utron/view"
+	"github.com/joesteel2010/qlstore"
+	"github.com/joesteel2010/utron/config"
+	"github.com/joesteel2010/utron/controller"
+	"github.com/joesteel2010/utron/logger"
+	"github.com/joesteel2010/utron/models"
+	"github.com/joesteel2010/utron/router"
+	"utron/view"
 	"github.com/gorilla/sessions"
-	// load ql drier
+	"log"
 	_ "github.com/cznic/ql/driver"
 )
 
@@ -104,8 +104,8 @@ func (a *App) init() error {
 		return err
 	}
 	a.Config = appConfig
-
-	views, err := view.NewSimpleView(appConfig.ViewsDir)
+	log.Printf("Creating new view")
+	views, err := view.GetView(appConfig.ViewsDir)
 	if err != nil {
 		return err
 	}
