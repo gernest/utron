@@ -5,11 +5,12 @@ go:
  - 1.7.x
  - 1.8.x
  - 1.9.x
+ - 1.10.x
  - tip
 services:
   -postgresql
 before_script:
-  - psql -c 'create database utron;' -U postgres
+  - psql -c 'create database gowaf;' -U postgres
 before_install:
  - go get -t -v
  - go get github.com/mattn/goveralls
