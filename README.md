@@ -1,7 +1,7 @@
 ![gowaf logo](gowaf.png)
 
 # gowaf
-[![GoDoc](https://godoc.org/github.com/gernest/gowaf?status.svg)](https://godoc.org/github.com/gernest/gowaf) [![Coverage Status](https://coveralls.io/repos/gernest/gowaf/badge.svg?branch=master&service=github)](https://coveralls.io/github/gernest/gowaf?branch=master) [![Build Status](https://travis-ci.org/gernest/gowaf.svg)](https://travis-ci.org/gernest/gowaf) [![Join the chat at https://gitter.im/gernest/gowaf](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gernest/gowaf?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Go Report Card](https://goreportcard.com/badge/github.com/gernest/gowaf)](https://goreportcard.com/report/github.com/gernest/gowaf)
+[![GoDoc](https://godoc.org/github.com/gernest/gowaf?status.svg)](https://godoc.org/github.com/gernest/gowaf) [![Coverage Status](https://coveralls.io/repos/github/NlaakStudios/gowaf/badge.svg)](https://coveralls.io/github/NlaakStudios/gowaf) [![Build Status](https://travis-ci.org/gernest/gowaf.svg)](https://travis-ci.org/gernest/gowaf) [![Join the chat at https://gitter.im/gernest/gowaf](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gernest/gowaf?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Go Report Card](https://goreportcard.com/badge/github.com/gernest/gowaf)](https://goreportcard.com/report/github.com/gernest/gowaf)
 
 
 `gowaf` is a lightweight MVC framework in Go ([Golang](https://golang.org)) for building fast, scalable and robust database-driven web applications.
