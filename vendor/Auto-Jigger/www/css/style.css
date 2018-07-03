@@ -1,0 +1,194 @@
+@font-face {
+  font-family: 'Titillium Web', sans-serif;
+  src: font-url('https://fonts.googleapis.com/css?family=Titillium+Web');
+
+  font-weight: normal;
+  font-style: normal;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.wrapper {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  z-index: 1000;
+  overflow: hidden;
+  background: rgb(14, 73, 141);
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJhODZjYyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxZjVmYTgiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+  background: -moz-linear-gradient(top, rgb(251, 205, 130) 0%, rgb(92, 135, 4) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(251, 205, 130)), color-stop(100%, rgb(92, 135, 4)));
+  background: -webkit-linear-gradient(top, rgb(251, 205, 130) 0%, rgb(92, 135, 4) 100%);
+  background: -o-linear-gradient(top, rgb(251, 205, 130) 0%, rgb(92, 135, 4) 100%);
+  background: -ms-linear-gradient(top, rgb(251, 205, 130) 0%, rgb(92, 135, 4) 100%);
+  background: linear-gradient(to bottom, rgba(251, 205, 130, 1) 0%, rgba(192, 135, 4, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a86cc', endColorstr='#1f5fa8', GradientType=0);
+}
+
+h1 {
+	display: block;
+	margin: 40px auto 0;
+	color: #ffffff;
+	margin: auto;
+	width: 7em;
+	border: none;
+	padding: 1em;		  
+}
+
+.content {
+  width: 560px;
+  position: absolute;
+  z-index: 99999;
+  left: 50%;
+  top: 50%;
+  margin: -6% 0 0 -280px;
+  color: #fff;
+  text-align: center;
+  font-family: proxima-nova, Arial, sans-serif;
+}
+
+h2 {
+  font-size: 40px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+p {
+  font-size: 15px;
+  color: rgb(197, 218, 237);
+  line-height: 20px;
+  font-weight: normal;
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+  border-bottom: 1px solid #fff;
+  padding-bottom: 2px;
+  display: inline-block;
+}
+
+a:hover {
+  opacity: .7;
+}
+
+.back-link {
+  border: 2px solid rgba(255, 255, 255, .8);
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 15px 25px;
+  border-radius: 5px;
+  font-size: 12px;
+  margin-top: 20px;
+}
+
+.line {
+  display: block;
+  height: 3px;
+  background-color: #fff;
+  width: 8%;
+  margin: 30px auto;
+  opacity: .7;
+}
+
+@keyframes fadeinOutD6 {
+  0% {
+	transform: rotate(0deg);
+  }
+  50% {
+	transform: rotate(6deg);
+  }
+  100% {
+	transform: rotate(0deg);
+  }
+}
+
+@keyframes fadeinOutD13 {
+  0% {
+	transform: rotate(0deg);
+  }
+  50% {
+	transform: rotate(13deg);
+  }
+  100% {
+	transform: rotate(0deg);
+  }
+}
+
+.bitcoin-net {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  z-index: 5000;
+}
+
+.bitcoin-net-1,
+.bitcoin-net-2,
+.bitcoin-net-3 {
+  position: absolute;
+  background-size: cover;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  animation-name: fadeinOutD6;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+
+}
+
+.bitcoin-net-1 {
+  background-image: url("../images/net-1.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: .02;
+  animation-duration: 12s;
+}
+
+.bitcoin-net-2 {
+  opacity: .06;
+  background-image: url("../images/net-3.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 85%;
+  animation-duration: 8s;
+}
+
+.bitcoin-net-3 {
+  opacity: .1;
+  background-image: url("../images/net-2.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 65%;
+  animation-duration: 16s;
+  animation-name: fadeinOutD13;
+}
+
+@media (max-width: 520px) {
+  .content {
+	width: 80%;
+	left: 0;
+	margin: -25% 10% 0;
+  }
+  h2 {
+	font-size: 25px;
+  }
+  h3 {
+	font-size: 20px;
+  }
+  .line {
+	margin: 20px auto;
+  }
+}
