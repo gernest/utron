@@ -59,7 +59,7 @@ func TestConfigEnv(t *testing.T) {
 	fields := []struct {
 		name, env, value string
 	}{
-		{"AppName", "APP_NAME", "GoWAF"},
+		{"AppName", "APP_NAME", "GoWAF WebApp"},
 		{"BaseURL", "BASE_URL", "http://localhost:8090"},
 		{"Port", "PORT", "8091"},
 		{"ViewsDir", "VIEWS_DIR", "fixtures/view"},
@@ -91,7 +91,7 @@ func TestConfigEnv(t *testing.T) {
 		t.Errorf("expected 8091 got %d instead", cfg.Port)
 	}
 
-	if cfg.AppName != "utron" {
-		t.Errorf("expected utron got %s", cfg.AppName)
+	if cfg.AppName != "GoWAF WebApp" {
+		t.Errorf("expected 'GoWAF WebApp' got %s", cfg.AppName)
 	}
 }
