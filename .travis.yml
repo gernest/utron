@@ -11,4 +11,4 @@ before_install:
  - go get -t -v
  - go get github.com/mattn/goveralls
 script:
- - $HOME/gopath/bin/goveralls -v -service=travis-ci -repotoken=$COVERALLS
+ - $GOPATH/bin/goveralls -v -service=travis-ci -repotoken=$COVERALLS
