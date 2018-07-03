@@ -28,7 +28,7 @@ So, `gowaf` is my reimagining of lightweight MVC, that maintains the golang spir
 
 ## Installation
 
-`gowaf` works with Go 1.4+
+`gowaf` works with Go 1.9+
 
      go get github.com/NlaakStudios/gowaf
 
@@ -67,7 +67,8 @@ These amazing projects have made `gowaf` possible:
 * [gorm](https://github.com/jinzhu/gorm)
 * [alice](https://github.com/justinas/alice)
 * [golang](http://golang.org)
-
+* [Auto-Jigger](https://github.com/NlaakStudios/auto-jigger)
+* [Start Bootstrap - SB Admin 2](https://github.com/BlackrockDigital/startbootstrap-sb-admin-2)
 
 # Licence
 
