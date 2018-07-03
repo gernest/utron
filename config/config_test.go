@@ -59,7 +59,7 @@ func TestConfigEnv(t *testing.T) {
 	fields := []struct {
 		name, env, value string
 	}{
-		{"AppName", "APP_NAME", "utron"},
+		{"AppName", "APP_NAME", "GoWAF"},
 		{"BaseURL", "BASE_URL", "http://localhost:8090"},
 		{"Port", "PORT", "8091"},
 		{"ViewsDir", "VIEWS_DIR", "fixtures/view"},
