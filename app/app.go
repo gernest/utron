@@ -26,7 +26,7 @@ import (
 // is set to true then the prefix is going to be stripped.
 type StaticServerFunc func(*config.Config) (prefix string, strip bool, h http.Handler)
 
-// App is the main utron application.
+// App is the main gowaf application.
 type App struct {
 	Router       *router.Router
 	Config       *config.Config
@@ -39,7 +39,7 @@ type App struct {
 	isInit       bool
 }
 
-// NewApp creates a new bare-bone utron application. To use the MVC components, you should call
+// NewApp creates a new bare-bone gowaf application. To use the MVC components, you should call
 // the Init method before serving requests.
 func NewApp() *App {
 	return &App{
@@ -49,7 +49,7 @@ func NewApp() *App {
 	}
 }
 
-// NewMVC creates a new MVC utron app. If cfg is passed, it should be a directory to look for
+// NewMVC creates a new MVC gowaf app. If cfg is passed, it should be a directory to look for
 // the configuration files. The App returned is initialized.
 func NewMVC(cfg ...string) (*App, error) {
 	app := NewApp()
@@ -232,7 +232,7 @@ func findConfigFile(dir string, name string) (file string, err error) {
 			return
 		}
 	}
-	return "", fmt.Errorf("utron: can't find configuration file %s in %s", name, dir)
+	return "", fmt.Errorf("gowaf: can't find configuration file %s in %s", name, dir)
 }
 
 // AddController registers a controller, and middlewares if any is provided.

@@ -77,7 +77,7 @@ type route struct {
 // 	or
 // 	func(*base.Context)error
 //
-// utron uses the alice package to chain middlewares, this means all alice compatible middleware
+// gowaf uses the alice package to chain middlewares, this means all alice compatible middleware
 // works out of the box
 func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interface{}) error {
 	var (
@@ -174,7 +174,7 @@ func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interfa
 		//                  The case does not matter, you can use lower case or upper case characters
 		//                  or even mixed case, that is get,GET,gET and GeT will all be treated as GET
 		//
-		//        path:     Is a url path or pattern, utron uses gorilla mux package. So, everything you can do
+		//        path:     Is a url path or pattern, gowaf uses gorilla mux package. So, everything you can do
 		//                  with gorilla mux url path then you can do here.
 		//                  e.g /hello/{world}
 		//                  Don't worry about the params, they will be accessible via .Ctx.Params field in your
@@ -297,7 +297,7 @@ func splitRoutes(routeStr string) (*route, error) {
 	return nil, ErrRouteStringFormat
 }
 
-// add registers controller ctrl, using activeRoute. If middlewares are provided, utron uses
+// add registers controller ctrl, using activeRoute. If middlewares are provided, gowaf uses
 // alice package to chain middlewares.
 func (r *Router) add(activeRoute *route, ctrlfn func() controller.Controller, middlewares ...interface{}) error {
 	var m []*Middleware

@@ -28,7 +28,7 @@ func NewSimpleView(viewDir string) (View, error) {
 		return nil, err
 	}
 	if !info.IsDir() {
-		return nil, fmt.Errorf("utron: %s is not a directory", viewDir)
+		return nil, fmt.Errorf("gowaf: %s is not a directory", viewDir)
 	}
 	s := &SimpleView{
 		viewDir: viewDir,

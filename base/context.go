@@ -1,4 +1,4 @@
-// Package base is the basic building cblock of utron. The main structure here is
+// Package base is the basic building cblock of gowaf. The main structure here is
 // Context, but for some reasons to avoid confusion since there is a lot of
 // context packages I decided to name this package base instead.
 package base
@@ -41,7 +41,7 @@ var Content = struct {
 type Context struct {
 
 	// Params are the parameters specified in the url patterns
-	// utron uses gorilla mux for routing. So basically Params stores results
+	// gowaf uses gorilla mux for routing. So basically Params stores results
 	// after calling mux.Vars function .
 	//
 	// e.g. if you have route /hello/{world}

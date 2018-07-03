@@ -6,7 +6,7 @@ import (
 	"github.com/NlaakStudios/gowaf/base"
 )
 
-//MiddlewareType is the kind of middleware. Utron support middleware with
+//MiddlewareType is the kind of middleware. gowaf support middleware with
 //variary of signatures.
 type MiddlewareType int
 
@@ -20,13 +20,13 @@ const (
 	CtxMiddleware
 )
 
-//Middleware is the utron middleware
+//Middleware is the gowaf middleware
 type Middleware struct {
 	Type  MiddlewareType
 	value interface{}
 }
 
-//ToHandler returns a func(http.Handler) http.Handler from the Middleware. Utron
+//ToHandler returns a func(http.Handler) http.Handler from the Middleware. gowaf
 //uses alice to chain middleware.
 //
 // Use this method to get alice compatible middleware.

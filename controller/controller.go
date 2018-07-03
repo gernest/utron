@@ -7,7 +7,7 @@ import (
 	"github.com/NlaakStudios/gowaf/base"
 )
 
-// Controller is an interface for utron controllers
+// Controller is an interface for gowaf controllers
 type Controller interface {
 	New(*base.Context)
 	Render() error
