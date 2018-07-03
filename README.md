@@ -35,11 +35,8 @@ So, `gowaf` is my reimagining of lightweight MVC, that maintains the golang spir
 
 `gowaf` works with Go 1.4+
 
-     go get github.com/gernest/gowaf
+     go get github.com/NlaakStudios/gowaf
 
-For the Old API use
-
-	go get gopkg.in/gernest/gowaf.v1
 
 # Tutorials
 
@@ -60,10 +57,11 @@ Start with clicking the star button to make the author and his neighbors happy. 
 If you have any questions, just open an issue.
 
 # Author
-Geofrey Ernest
-
+Ultron original Author Geofrey Ernest
 Twitter  : [@gernesti](https://twitter.com/gernesti)
 
+GoWAF fork Author
+Twitter : [@andrewdonelson](https://twitter.com/andrewdonelson)
 
 
 # Acknowledgements
