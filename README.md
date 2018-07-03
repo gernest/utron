@@ -1,11 +1,7 @@
 ![gowaf logo](gowaf.png)
 
-https://travis-ci.org/NlaakStudios/gowaf.svg?branch=master
-
 # gowaf
 [![GoDoc](https://godoc.org/github.com/gernest/gowaf?status.svg)](https://godoc.org/github.com/gernest/gowaf) [![Coverage Status](https://coveralls.io/repos/github/NlaakStudios/gowaf/badge.svg)](https://coveralls.io/github/NlaakStudios/gowaf) [![Build Status](https://travis-ci.org/NlaakStudios/gowaf.svg)](https://travis-ci.org/NlaakStudios/gowaf.svg)
-
-`gowaf` is a lightweight MVC framework in Go ([Golang](https://golang.org)) for building fast, scalable and robust database-driven web applications.
 
 # Features
 * [x] Postgres, MySQL, SQLite and Foundation database support
@@ -15,10 +11,8 @@ https://travis-ci.org/NlaakStudios/gowaf.svg?branch=master
 * [x] Lightweight. Only MVC
 * [x] Multiple configuration files support (currently json, yaml, toml and hcl)
 
-
-
 # Overview
-`gowaf` is a lightweight MVC framework. It is based on the principles of simplicity, relevance and elegance.
+`gowaf` is a Modern Responsive MVC framework in Go ([Golang](https://golang.org)) for building fast, scalable and robust database-driven web applications.It uses ([Auto-Jigger](https://github.com/NlaakStudios/auto-jigger)) A ultra light API that automatically handles the inclusion of Modernizr, jQuery, Bootstrap and Font-Awesome as well as ([Start Bootstrap - SB Admin 2](https://github.com/BlackrockDigital/startbootstrap-sb-admin-2)) to get you up and running fast right out of the box.
 
 * Simplicity. The design is simple, easy to understand, and doesn't introduce many layers between you and the standard library. It is a goal of the project that users should be able to understand the whole framework in a single day.
 
