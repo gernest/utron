@@ -1,4 +1,4 @@
-//Package utron is a lightweight MVC framework for building fast, scalable and robust web applications
+//Package gowaf is a lightweight MVC framework for building fast, scalable and robust web applications
 //
 // Utron is built with focus of composability. This means, you can reap all the
 // benefit of using utron while maintaining harmony with existing libraries and
@@ -42,4 +42,4 @@
 // lot of complexities to the application, so uttron avoids this. utron
 // applicatio is a simple struct that you can play around with in whatever way
 // that you find suits you.
-package utron
+package gowaf
