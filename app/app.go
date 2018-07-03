@@ -9,12 +9,12 @@ import (
 	"path/filepath"
 
 	"github.com/gernest/qlstore"
-	"github.com/gernest/utron/config"
-	"github.com/gernest/utron/controller"
-	"github.com/gernest/utron/logger"
-	"github.com/gernest/utron/models"
-	"github.com/gernest/utron/router"
-	"github.com/gernest/utron/view"
+	"github.com/NlaakStudios/gowaf/config"
+	"github.com/NlaakStudios/gowaf/controller"
+	"github.com/NlaakStudios/gowaf/logger"
+	"github.com/NlaakStudios/gowaf/models"
+	"github.com/NlaakStudios/gowaf/router"
+	"github.com/NlaakStudios/gowaf/view"
 	"github.com/gorilla/sessions"
 	// load ql drier
 	_ "github.com/cznic/ql/driver"

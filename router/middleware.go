@@ -3,7 +3,7 @@ package router
 import (
 	"net/http"
 
-	"github.com/gernest/utron/base"
+	"github.com/NlaakStudios/gowaf/base"
 )
 
 //MiddlewareType is the kind of middleware. Utron support middleware with

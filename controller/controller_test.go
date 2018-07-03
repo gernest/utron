@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gernest/utron/base"
+	"github.com/NlaakStudios/gowaf/base"
 )
 
 func TestBaseController(t *testing.T) {

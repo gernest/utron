@@ -4,7 +4,7 @@ import (
 	"encoding/gob"
 	"errors"
 
-	"github.com/gernest/utron/base"
+	"github.com/NlaakStudios/gowaf/base"
 )
 
 const (
