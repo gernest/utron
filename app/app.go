@@ -121,7 +121,7 @@ func (a *App) init() error {
 		a.Model = model
 	}
 
-	// The sessionistore s really not critical. The application can just run
+	// The sessionistore is really not critical. The application can just run
 	// without session set
 	store, err := getSesionStore(appConfig)
 	if err == nil {
@@ -252,5 +252,5 @@ func (a *App) SetNotFoundHandler(h http.Handler) error {
 		a.Router.NotFoundHandler = h
 		return nil
 	}
-	return errors.New("untron: application router is not set")
+	return errors.New("gowaf: application router is not set")
 }
