@@ -97,7 +97,7 @@ func TestMVCGood(t *testing.T) {
 
 func TestMVCGoodNoModel(t *testing.T) {
 
-	app, err := NewMVC("fixtures/mvc-nomodel")
+	app, err := NewMVC("fixtures/mvc-fails")
 	if err != nil {
 		t.Skip(err)
 	}

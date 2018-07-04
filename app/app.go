@@ -8,13 +8,13 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gernest/qlstore"
 	"github.com/NlaakStudios/gowaf/config"
 	"github.com/NlaakStudios/gowaf/controller"
 	"github.com/NlaakStudios/gowaf/logger"
 	"github.com/NlaakStudios/gowaf/models"
 	"github.com/NlaakStudios/gowaf/router"
 	"github.com/NlaakStudios/gowaf/view"
+	"github.com/gernest/qlstore"
 	"github.com/gorilla/sessions"
 	// load ql driver
 	_ "github.com/cznic/ql/driver"
@@ -110,6 +110,11 @@ func (a *App) init() error {
 	}
 	a.Config = appConfig
 
+	if _, err := os.Stat(appConfig.ViewsDir); os.IsNotExist(err) {
+		// path/to/view folder does not exist use default fixtures/view
+		appConfig.ViewsDir = "fixtures/view"
+	}
+
 	views, err := view.NewSimpleView(appConfig.ViewsDir)
 	if err != nil {
 		return err
@@ -134,7 +139,7 @@ func (a *App) init() error {
 	}
 
 	a.Router.Options = a.options()
-	a.Router.LoadRoutes(a.ConfigPath) // Load a routes file if available.	
+	a.Router.LoadRoutes(a.ConfigPath) // Load a routes file if available.
 	a.isInit = true
 
 	// In case the StaticDir is specified in the Config file, register
