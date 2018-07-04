@@ -7,5 +7,6 @@
 	"view_dir": "fixtures/view",
 	"database": "",
 	"database_conn": "",
-  "automigrate":true
+	"automigrate":true,
+	"no_model":true
 }

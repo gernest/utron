@@ -16,13 +16,13 @@ import (
 	"github.com/NlaakStudios/gowaf/router"
 	"github.com/NlaakStudios/gowaf/view"
 	"github.com/gorilla/sessions"
-	// load ql drier
+	// load ql driver
 	_ "github.com/cznic/ql/driver"
 )
 
 //StaticServerFunc is a function that returns the static assetsfiles server.
 //
-// The first argument retrued is the path prefix for the static assets. If strp
+// The first argument returned is the path prefix for the static assets. If strp
 // is set to true then the prefix is going to be stripped.
 type StaticServerFunc func(*config.Config) (prefix string, strip bool, h http.Handler)
 
@@ -121,7 +121,7 @@ func (a *App) init() error {
 		a.Model = model
 	}
 
-	// The sessionistore s really not critical. The application can just run
+	// The sessionistore is really not critical. The application can just run
 	// without session set
 	store, err := getSesionStore(appConfig)
 	if err == nil {
@@ -252,5 +252,5 @@ func (a *App) SetNotFoundHandler(h http.Handler) error {
 		a.Router.NotFoundHandler = h
 		return nil
 	}
-	return errors.New("untron: application router is not set")
+	return errors.New("gowaf: application router is not set")
 }

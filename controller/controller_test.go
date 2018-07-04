@@ -5,6 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/NlaakStudios/gowaf/config"
 	"github.com/NlaakStudios/gowaf/base"
 )
 
@@ -30,6 +31,13 @@ func TestBaseController(t *testing.T) {
 	// JSON response
 	ctrl.JSON(http.StatusOK)
 	cTyp = w.Header().Get(base.Content.Type)
+	if cTyp != base.Content.Application.JSON {
+		t.Errorf("expected %s got %s", base.Content.Application.JSON, cTyp)
+	}
+
+	//RenderJSON test
+	//TODO: This aint right- fix it
+	ctrl.RenderJSON(*config.DefaultConfig(), http.StatusOK)
 	if cTyp != base.Content.Application.JSON {
 		t.Errorf("expected %s got %s", base.Content.Application.JSON, cTyp)
 	}

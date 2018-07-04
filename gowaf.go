@@ -1,3 +1,6 @@
+// MIT license that can be found in the LICENSE file.
+// Go Web Application Framework Library.
+
 package gowaf
 
 import "github.com/NlaakStudios/gowaf/app"
