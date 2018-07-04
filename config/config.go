@@ -18,7 +18,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var errCfgUnsupported = errors.New("utron: config file format not supported")
+var errCfgUnsupported = errors.New("gowaf: config file format not supported")
 
 // Config stores configurations values
 type Config struct {
@@ -61,14 +61,14 @@ func DefaultConfig() *Config {
 	a := securecookie.GenerateRandomKey(32)
 	b := securecookie.GenerateRandomKey(32)
 	return &Config{
-		AppName:       "utron web app",
+		AppName:       "GoWAF WebApp",
 		BaseURL:       "http://localhost:8090",
 		Port:          8090,
 		Verbose:       false,
 		StaticDir:     "static",
 		ViewsDir:      "views",
 		Automigrate:   true,
-		SessionName:   "_utron",
+		SessionName:   "_gowaf",
 		SessionPath:   "/",
 		SessionMaxAge: 2592000,
 		SessionKeyPair: []string{
@@ -163,13 +163,13 @@ func (c *Config) SyncEnv() error {
 		case reflect.Int:
 			v, err := strconv.Atoi(env)
 			if err != nil {
-				return fmt.Errorf("utron: loading config field %s %v", field.Name, err)
+				return fmt.Errorf("gowaf: loading config field %s %v", field.Name, err)
 			}
 			cfg.FieldByName(field.Name).Set(reflect.ValueOf(v))
 		case reflect.Bool:
 			b, err := strconv.ParseBool(env)
 			if err != nil {
-				return fmt.Errorf("utron: loading config field %s %v", field.Name, err)
+				return fmt.Errorf("gowaf: loading config field %s %v", field.Name, err)
 			}
 			cfg.FieldByName(field.Name).SetBool(b)
 		}

@@ -9,7 +9,7 @@ import (
 
 var logThis = NewDefaultLogger(os.Stdout)
 
-// Logger is an interface for utron logger
+// Logger is an interface for gowaf logger
 type Logger interface {
 	Info(v ...interface{})
 	Errors(fv ...interface{})

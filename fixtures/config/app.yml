@@ -1,4 +1,4 @@
-app_name: utron web app
+app_name: GoWAF WebApp
 base_url: http://localhost:8090
 port: 8090
 verbose: false

@@ -9,24 +9,24 @@ import (
 	"path/filepath"
 
 	"github.com/gernest/qlstore"
-	"github.com/gernest/utron/config"
-	"github.com/gernest/utron/controller"
-	"github.com/gernest/utron/logger"
-	"github.com/gernest/utron/models"
-	"github.com/gernest/utron/router"
-	"github.com/gernest/utron/view"
+	"github.com/NlaakStudios/gowaf/config"
+	"github.com/NlaakStudios/gowaf/controller"
+	"github.com/NlaakStudios/gowaf/logger"
+	"github.com/NlaakStudios/gowaf/models"
+	"github.com/NlaakStudios/gowaf/router"
+	"github.com/NlaakStudios/gowaf/view"
 	"github.com/gorilla/sessions"
-	// load ql drier
+	// load ql driver
 	_ "github.com/cznic/ql/driver"
 )
 
 //StaticServerFunc is a function that returns the static assetsfiles server.
 //
-// The first argument retrued is the path prefix for the static assets. If strp
+// The first argument returned is the path prefix for the static assets. If strp
 // is set to true then the prefix is going to be stripped.
 type StaticServerFunc func(*config.Config) (prefix string, strip bool, h http.Handler)
 
-// App is the main utron application.
+// App is the main gowaf application.
 type App struct {
 	Router       *router.Router
 	Config       *config.Config
@@ -39,7 +39,7 @@ type App struct {
 	isInit       bool
 }
 
-// NewApp creates a new bare-bone utron application. To use the MVC components, you should call
+// NewApp creates a new bare-bone gowaf application. To use the MVC components, you should call
 // the Init method before serving requests.
 func NewApp() *App {
 	return &App{
@@ -49,7 +49,7 @@ func NewApp() *App {
 	}
 }
 
-// NewMVC creates a new MVC utron app. If cfg is passed, it should be a directory to look for
+// NewMVC creates a new MVC gowaf app. If cfg is passed, it should be a directory to look for
 // the configuration files. The App returned is initialized.
 func NewMVC(cfg ...string) (*App, error) {
 	app := NewApp()
@@ -121,7 +121,7 @@ func (a *App) init() error {
 		a.Model = model
 	}
 
-	// The sessionistore s really not critical. The application can just run
+	// The sessionistore is really not critical. The application can just run
 	// without session set
 	store, err := getSesionStore(appConfig)
 	if err == nil {
@@ -232,7 +232,7 @@ func findConfigFile(dir string, name string) (file string, err error) {
 			return
 		}
 	}
-	return "", fmt.Errorf("utron: can't find configuration file %s in %s", name, dir)
+	return "", fmt.Errorf("gowaf: can't find configuration file %s in %s", name, dir)
 }
 
 // AddController registers a controller, and middlewares if any is provided.
@@ -252,5 +252,5 @@ func (a *App) SetNotFoundHandler(h http.Handler) error {
 		a.Router.NotFoundHandler = h
 		return nil
 	}
-	return errors.New("untron: application router is not set")
+	return errors.New("gowaf: application router is not set")
 }
