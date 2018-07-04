@@ -16,13 +16,13 @@ import (
 	"github.com/NlaakStudios/gowaf/router"
 	"github.com/NlaakStudios/gowaf/view"
 	"github.com/gorilla/sessions"
-	// load ql drier
+	// load ql driver
 	_ "github.com/cznic/ql/driver"
 )
 
 //StaticServerFunc is a function that returns the static assetsfiles server.
 //
-// The first argument retrued is the path prefix for the static assets. If strp
+// The first argument returned is the path prefix for the static assets. If strp
 // is set to true then the prefix is going to be stripped.
 type StaticServerFunc func(*config.Config) (prefix string, strip bool, h http.Handler)
 

@@ -8,7 +8,7 @@ import (
 	"github.com/NlaakStudios/gowaf/config"
 	"github.com/jinzhu/gorm"
 
-	// support mysql, sqlite3 and postgresql
+	// support none, mysql, sqlite3 and postgresql
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	_ "github.com/lib/pq"
@@ -36,6 +36,11 @@ func (m *Model) IsOpen() bool {
 
 // OpenWithConfig opens database connection with the settings found in cfg
 func (m *Model) OpenWithConfig(cfg *config.Config) error {
+	if len(cfg.DatabaseConn) < 5 {
+		// Not using a database
+		return nil
+	} 
+	
 	db, err := gorm.Open(cfg.Database, cfg.DatabaseConn)
 	if err != nil {
 		return err
