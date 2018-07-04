@@ -7,4 +7,4 @@ view_dir = "fixtures/view"
 database = "postgres"
 database_conn = "postgres://postgres@localhost/utron?sslmode=disable"
 automigrate = true
-no_model = false
+no_model = true

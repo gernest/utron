@@ -5,6 +5,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -63,11 +64,21 @@ func (s *SimpleMVC) Hello() {
 	s.String(http.StatusOK)
 }
 
-func TestMVC(t *testing.T) {
+func TestMVCBad(t *testing.T) {
+	app, err := NewMVC("")
+	if err != nil {
+		t.Skip(err)
+		t.Logf("Expected failure. %s", strconv.FormatBool(app.isInit))
+	}
+}
+
+func TestMVCGood(t *testing.T) {
+
 	app, err := NewMVC("fixtures/mvc")
 	if err != nil {
 		t.Skip(err)
 	}
+
 	app.AddController(controller.GetCtrlFunc(&SimpleMVC{}))
 
 	req, _ := http.NewRequest("GET", "/simplemvc/hello", nil)
@@ -84,6 +95,30 @@ func TestMVC(t *testing.T) {
 
 }
 
+func TestMVCGoodNoModel(t *testing.T) {
+
+	app, err := NewMVC("fixtures/mvc-nomodel")
+	if err != nil {
+		t.Skip(err)
+	}
+
+	app.SetNoModel(true)
+
+	app.AddController(controller.GetCtrlFunc(&SimpleMVC{}))
+
+	req, _ := http.NewRequest("GET", "/simplemvc/hello", nil)
+	w := httptest.NewRecorder()
+	app.ServeHTTP(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("expcted %d got %d", http.StatusOK, w.Code)
+	}
+
+	if !strings.Contains(w.Body.String(), "gernest") {
+		t.Errorf("expected %s to contain gernest", w.Body.String())
+	}
+
+}
 func TestApp(t *testing.T) {
 	app := NewApp()
 	// Set not found handler

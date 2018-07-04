@@ -97,6 +97,11 @@ func (a *App) SetConfigPath(dir string) {
 	a.ConfigPath = dir
 }
 
+// SetNoModel sets the Config.NoModel value manually in the config.
+func (a *App) SetNoModel(no bool) {
+	a.Config.NoModel = no
+}
+
 // init initializes values to the app components.
 func (a *App) init() error {
 	appConfig, err := loadConfig(a.ConfigPath)
@@ -183,7 +188,7 @@ func getAbsolutePath(dir string) (string, error) {
 		return "", err
 	}
 	if !info.IsDir() {
-		return "", fmt.Errorf("untron: %s is not a directory", dir)
+		return "", fmt.Errorf("gowaf: %s is not a directory", dir)
 	}
 
 	if filepath.IsAbs(dir) { // If dir is already absolute, return it.
