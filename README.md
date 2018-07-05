@@ -1,7 +1,7 @@
 ![gowaf logo](gowaf.png)
 
 # gowaf
-[![GoDoc](https://godoc.org/github.com/gernest/gowaf?status.svg)](https://godoc.org/github.com/gernest/gowaf) [![Coverage Status](https://coveralls.io/repos/github/NlaakStudios/gowaf/badge.svg)](https://coveralls.io/github/NlaakStudios/gowaf) [![Build Status](https://travis-ci.org/NlaakStudios/gowaf.svg)](https://travis-ci.org/NlaakStudios/gowaf.svg)
+[![GoDoc](https://godoc.org/github.com/gernest/gowaf?status.svg)](https://godoc.org/github.com/gernest/gowaf) [![Coverage Status](https://coveralls.io/repos/github/NlaakStudios/gowaf/badge.svg?branch=master)](https://coveralls.io/github/NlaakStudios/gowaf?branch=master) [![Build Status](https://travis-ci.org/NlaakStudios/gowaf.svg)](https://travis-ci.org/NlaakStudios/gowaf.svg)
 
 # Features
 * [x] Postgres, MySQL, SQLite and Foundation database support
