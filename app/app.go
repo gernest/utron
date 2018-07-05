@@ -97,6 +97,11 @@ func (a *App) SetConfigPath(dir string) {
 	a.ConfigPath = dir
 }
 
+// SetViewPath sets the directory path to search for the view files.
+func (a *App) SetViewPath(dir string) {
+	a.Config.ViewsDir = dir
+}
+
 // SetNoModel sets the Config.NoModel value manually in the config.
 func (a *App) SetNoModel(no bool) {
 	a.Config.NoModel = no
@@ -110,13 +115,14 @@ func (a *App) init() error {
 	}
 	a.Config = appConfig
 
-	if _, err := os.Stat(appConfig.ViewsDir); os.IsNotExist(err) {
-		// path/to/view folder does not exist use default fixtures/view
-		appConfig.ViewsDir = "fixtures/view"
-	}
+	// if _, err := os.Stat(appConfig.ViewsDir); os.IsNotExist(err) {
+	// 	// path/to/view folder does not exist use default fixtures/view
+	// 	appConfig.ViewsDir = "fixtures/view"
+	// }
 
 	views, err := view.NewSimpleView(appConfig.ViewsDir)
 	if err != nil {
+		//TODO: Coverage - Need Failure here
 		return err
 	}
 	a.View = views
@@ -128,6 +134,8 @@ func (a *App) init() error {
 		if err != nil {
 			return err
 		}
+
+		//TODO: Coverage - Need good config here with No_Model = true
 		a.Model = model
 	}
 
@@ -147,6 +155,7 @@ func (a *App) init() error {
 	if appConfig.StaticDir != "" {
 		static, _ := getAbsolutePath(appConfig.StaticDir)
 		if static != "" {
+			//TODO: Coverage -  Need to hit here
 			a.Router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(static))))
 		}
 
@@ -162,12 +171,16 @@ func getSesionStore(cfg *config.Config) (sessions.Store, error) {
 		Secure:   cfg.SessionSecure,
 		HttpOnly: cfg.SessionSecure,
 	}
+
 	db, err := sql.Open("ql-mem", "session.db")
 	if err != nil {
+		//TODO: Coverage -  Need to hit here
 		return nil, err
 	}
+
 	err = qlstore.Migrate(db)
 	if err != nil {
+		//TODO: Coverage -  Need to hit here
 		return nil, err
 	}
 
@@ -193,6 +206,7 @@ func getAbsolutePath(dir string) (string, error) {
 		return "", err
 	}
 	if !info.IsDir() {
+		//TODO: Coverage -  Need to hit here
 		return "", fmt.Errorf("gowaf: %s is not a directory", dir)
 	}
 
@@ -201,11 +215,13 @@ func getAbsolutePath(dir string) (string, error) {
 	}
 	wd, err := os.Getwd()
 	if err != nil {
+		//TODO: Coverage -  Need to hit here
 		return "", err
 	}
 	absDir := filepath.Join(wd, dir)
 	_, err = os.Stat(absDir)
 	if err != nil {
+		//TODO: Coverage -  Need to hit here
 		return "", err
 	}
 	return absDir, nil
@@ -235,6 +251,7 @@ func findConfigFile(dir string, name string) (file string, err error) {
 	for _, ext := range extensions {
 		file = filepath.Join(dir, name)
 		if info, serr := os.Stat(file); serr == nil && !info.IsDir() {
+			//TODO: Coverage -  Need to hit here
 			return
 		}
 		file = file + ext

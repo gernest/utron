@@ -119,6 +119,33 @@ func TestMVCGoodNoModel(t *testing.T) {
 	}
 
 }
+func TestAppInit(t *testing.T) {
+	app := NewApp()
+
+	//Bad ConfigPath
+	app.SetConfigPath("bad/path/mvc")
+	if err := app.Init(); err != nil {
+		t.Log("Expected failure.")
+	}
+
+	//Good ConfigPath
+	app.SetConfigPath("fixtures/mvc")
+	if err := app.Init(); err != nil {
+		t.Error(err)
+	}
+
+	//Bad View Path
+	app.SetViewPath("bad/path/view")
+	if err := app.Init(); err != nil {
+		t.Log("Expected failure.")
+	}
+
+	//Good View Path
+	if err := app.Init(); err != nil {
+		t.Error(err)
+	}
+}
+
 func TestApp(t *testing.T) {
 	app := NewApp()
 	// Set not found handler
