@@ -123,24 +123,29 @@ func TestAppInit(t *testing.T) {
 	app := NewApp()
 
 	//Bad ConfigPath
+	t.Log("Forcing failure for ConfigPath.")
 	app.SetConfigPath("bad/path/mvc")
 	if err := app.Init(); err != nil {
 		t.Log("Expected failure.")
 	}
 
 	//Good ConfigPath
+	t.Log("Forcing success for ConfigPath.")
 	app.SetConfigPath("fixtures/mvc")
 	if err := app.Init(); err != nil {
 		t.Error(err)
 	}
 
 	//Bad View Path
+	t.Log("Forcing failure for ViewDir.")
 	app.SetViewPath("bad/path/view")
 	if err := app.Init(); err != nil {
 		t.Log("Expected failure.")
 	}
 
 	//Good View Path
+	t.Log("Forcing success for ViewDir.")
+	app.SetViewPath("fixtures/view")
 	if err := app.Init(); err != nil {
 		t.Error(err)
 	}

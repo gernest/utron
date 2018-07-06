@@ -5,7 +5,9 @@ verbose = false
 static_dir = "fixtures/view"
 view_dir = "fixtures/view"
 database = "postgres"
-#database_conn = "postgres://postgres@localhost/utron?sslmode=disable"
-database_conn = "postgres://GoWAFAdmin:Pa$$W0rd!@localhost/WithAuth?sslmode=disable"
+database_conn = "postgres://postgres@localhost/gowaf?sslmode=disable"
+#database_conn = "postgres://postgres:Pa$$W0rd!@localhost/gowaf?sslmode=disable"
+#database = ""
+#database_conn = ""
 automigrate = true
 no_model = false
