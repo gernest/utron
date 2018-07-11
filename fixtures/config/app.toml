@@ -4,6 +4,7 @@ port = 8090
 verbose = false
 static_dir = "fixtures/static"
 view_dir = "fixtures/view"
+admin_template = 0
 database = ""
 database_conn = ""
 automigrate = true

@@ -51,6 +51,7 @@ func (s *SimpleView) load(dir string) (View, error) {
 		if err != nil {
 			return err
 		}
+
 		if info.IsDir() {
 			return nil
 		}
@@ -80,7 +81,7 @@ func (s *SimpleView) load(dir string) (View, error) {
 		name = strings.TrimSuffix(name, extension) // remove extension
 
 		t := s.tmpl.New(name)
-		
+
 		if _, err = t.Parse(string(data)); err != nil {
 			return err
 		}
