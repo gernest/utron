@@ -127,7 +127,7 @@ func (a *App) init() error {
 	}
 	a.View = views
 
-	// only when mode is allowed
+	// only when model is allowed
 	if !appConfig.NoModel {
 		model := models.NewModel()
 		err = model.OpenWithConfig(appConfig)
