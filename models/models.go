@@ -36,17 +36,23 @@ func (m *Model) IsOpen() bool {
 
 // OpenWithConfig opens database connection with the settings found in cfg
 func (m *Model) OpenWithConfig(cfg *config.Config) error {
+
+	//See if a dabatase was defined in the config
 	if len(cfg.DatabaseConn) < 5 {
 		// Not using a database
 		return nil
-	} 
-	
+	}
+
+	//try and open a connection to the database defined in the config
 	db, err := gorm.Open(cfg.Database, cfg.DatabaseConn)
 	if err != nil {
 		return err
 	}
+
+	//Success we have a database connection
 	m.DB = db
 	m.isOpen = true
+
 	return nil
 }
 
@@ -70,9 +76,11 @@ func (m *Model) Register(values ...interface{}) error {
 			}
 		}
 	}
+
 	for k, v := range models {
 		m.models[k] = v
 	}
+
 	return nil
 }
 
@@ -82,6 +90,7 @@ func (m *Model) AutoMigrateAll() {
 		m.AutoMigrate(v.Interface())
 	}
 }
+
 func getTypName(typ reflect.Type) string {
 	if typ.Name() != "" {
 		return typ.Name()
