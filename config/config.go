@@ -19,10 +19,10 @@ import (
 )
 
 /*
-Required Directory Structure
+Required Directory Structure for WebApp
 webapp-binary.exe
 |
-|- serve
+|- serve				`all static files served fromt nis folder and all subfolders`
      |- assets			`All WebApp specific files (css, js, images, audio and video)`
      |    |- js
      |    |- css
