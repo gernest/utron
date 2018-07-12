@@ -1,28 +1,36 @@
 package models
 
 import (
+	"fmt"
+	"log"
+	"net/http"
 	"testing"
 
+	"github.com/NlaakStudios/gowaf"
+	c "github.com/NlaakStudios/gowaf/controller"
+	"github.com/NlaakStudios/gowaf/models"
 	"github.com/gorilla/schema"
-	"github.com/jinzhu/gorm"
 )
 
-type TestData struct {
-	gorm.Model
-	AString  string `valid:"required,length(6|16)" schema:"astring"`
-	AInteger int    `schema:"ainteger"`
-	ABoolean bool   `schema:"aboolean"`
-}
-
-var myTestModel TestData
 var decoder = schema.NewDecoder()
 
-func TestModel(t *testing.T) {
-
-	myTestModel := NewModel()
-	if myTestModel == nil {
-		t.Fail()
+func TestModels(t *testing.T) {
+	// Start the MVC App
+	app, err := gowaf.NewMVC()
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	myTestModel.Model.Register(&models.TestData{})
+	// Register Models
+	app.Model.Register(&models.TestModel{})
+
+	// CReate Models tables if they dont exist yet
+	app.Model.AutoMigrateAll()
+
+	// Register Controller
+	app.AddController(c.NewTestModel)
+
+	// Start the server
+	port := fmt.Sprintf(":%d", app.Config.Port)
+	log.Fatal(http.ListenAndServe(port, app))
 }
