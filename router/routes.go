@@ -12,13 +12,13 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/gernest/ita"
 	"github.com/NlaakStudios/gowaf/base"
 	"github.com/NlaakStudios/gowaf/config"
 	"github.com/NlaakStudios/gowaf/controller"
 	"github.com/NlaakStudios/gowaf/logger"
 	"github.com/NlaakStudios/gowaf/models"
 	"github.com/NlaakStudios/gowaf/view"
+	"github.com/gernest/ita"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/hashicorp/hcl"
@@ -460,7 +460,7 @@ func (r *Router) LoadRoutesFile(file string) error {
 	return nil
 }
 
-// LoadRoutes searches for the route file i the cfgPath. The order of file lookup is
+// LoadRoutes searches for the route file in the cfgPath. The order of file lookup is
 // as follows.
 //	* routes.json
 //	* routes.toml
