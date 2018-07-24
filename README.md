@@ -57,8 +57,8 @@ Start with clicking the star button to make the author and his neighbors happy. 
 
 Please review these articles and use the views and practices when contributing.
 
-[RESTful API Design](./RESTful_API.md)
-[Twelve Go Best Practices](https://talks.golang.org/2013/bestpractices.slide#1)
+* [RESTful API Design](./RESTful_API.md)
+* [Twelve Go Best Practices](https://talks.golang.org/2013/bestpractices.slide#1)
 
 If you have any questions, just open an issue.
 
