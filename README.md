@@ -55,6 +55,7 @@ So, `gowaf` is my reimagining of lightweight MVC, that maintains the golang spir
 
 Start with clicking the star button to make the author and his neighbors happy. Then fork the repository and submit a pull request for whatever change you want to be added to this project.
 
+[RESTful API Design](./RESTful_API.md)
 If you have any questions, just open an issue.
 
 # Author
