@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/NlaakStudios/gowaf/config"
 	"github.com/NlaakStudios/gowaf/base"
+	"github.com/NlaakStudios/gowaf/config"
 )
 
 func TestBaseController(t *testing.T) {

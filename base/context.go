@@ -171,7 +171,7 @@ func (c *Context) Commit() error {
 		return errors.New("already committed")
 	}
 	if c.Template != "" && c.view != nil {
-		out := &bytes.Buffer{}		
+		out := &bytes.Buffer{}
 		err := c.view.Render(out, c.Template, c.Data)
 		if err != nil {
 			return err

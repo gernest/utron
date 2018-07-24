@@ -16,6 +16,7 @@ import (
 	"github.com/NlaakStudios/gowaf/view"
 	"github.com/gernest/qlstore"
 	"github.com/gorilla/sessions"
+
 	// load ql driver
 	_ "github.com/cznic/ql/driver"
 )
