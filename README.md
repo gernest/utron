@@ -30,7 +30,13 @@ So, `gowaf` is my reimagining of lightweight MVC, that maintains the golang spir
 
 `gowaf` works with Go 1.9+
 
-     go get github.com/NlaakStudios/gowaf
+     go get -u github.com/NlaakStudios/gowaf
+     go get -u github.com/gorilla/schema
+     go get -u github.com/asaskevich/govalidator
+     go get -u github.com/justinas/alice
+     go get -u github.com/gernest/ita
+     go get -u github.com/gernest/qlstore
+     go get -u github.com/cznic/ql/driver
 
 
 # Tutorials
