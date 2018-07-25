@@ -382,6 +382,9 @@ func (a *App) Run() {
 
 	if startNodeCmd.Parsed() {
 		//a.StartNode(a.NodePort)
+		port := fmt.Sprintf(":%d", a.Config.Port)
+		a.Log.Info("Starting server, listening on port", port)
+		log.Fatal(http.ListenAndServe(port, a))
 	}
 
 	if versionCmd.Parsed() {
