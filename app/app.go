@@ -311,3 +311,11 @@ func (a *App) printUsage() {
 	fmt.Println("	version - Display node version")
 	fmt.Println("")
 }
+
+//validateArgs validates the parameters passsed in via commandline
+func (a *App) validateArgs() {
+	if len(os.Args) < 2 {
+		a.printUsage()
+		os.Exit(1)
+	}
+}
