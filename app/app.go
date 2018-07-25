@@ -29,15 +29,16 @@ type StaticServerFunc func(*config.Config) (prefix string, strip bool, h http.Ha
 
 // App is the main gowaf application.
 type App struct {
-	Router       *router.Router
-	Config       *config.Config
-	View         view.View
-	Log          logger.Logger
-	Model        *models.Model
-	ConfigPath   string
-	StaticServer StaticServerFunc
-	SessionStore sessions.Store
-	isInit       bool
+	Router        *router.Router
+	Config        *config.Config
+	View          view.View
+	Log           logger.Logger
+	Model         *models.Model
+	FixtureFolder string
+	ConfigPath    string
+	StaticServer  StaticServerFunc
+	SessionStore  sessions.Store
+	isInit        bool
 }
 
 // NewApp creates a new bare-bone gowaf application. To use the MVC components, you should call
@@ -50,13 +51,19 @@ func NewApp() *App {
 	}
 }
 
-// NewMVC creates a new MVC gowaf app. If cfg is passed, it should be a directory to look for
-// the configuration files. The App returned is initialized.
-func NewMVC(cfg ...string) (*App, error) {
+// NewMVC creates a new MVC gowaf app. If dir is passed, it should be a directory to look for
+// all project folders (config, static, views, models, controllers, etc). The App returned is initialized.
+func NewMVC(dir ...string) (*App, error) {
 	app := NewApp()
-	if len(cfg) > 0 {
-		app.SetConfigPath(cfg[0])
+
+	if len(dir) > 0 {
+		app.SetFixturePath(dir[0])
+	} else {
+		app.SetFixturePath("./fixtures")
 	}
+
+	app.SetConfigPath(fmt.Sprintf("%s/config", app.FixtureFolder))
+
 	if err := app.Init(); err != nil {
 		return nil, err
 	}
@@ -93,6 +100,11 @@ func (a *App) Init() error {
 	return a.init()
 }
 
+// SetFixturePath sets the directory path as a base to all other folders (config, views, etc).
+func (a *App) SetFixturePath(dir string) {
+	a.FixtureFolder = dir
+}
+
 // SetConfigPath sets the directory path to search for the config files.
 func (a *App) SetConfigPath(dir string) {
 	a.ConfigPath = dir
@@ -116,12 +128,13 @@ func (a *App) init() error {
 	}
 	a.Config = appConfig
 
-	// if _, err := os.Stat(appConfig.ViewsDir); os.IsNotExist(err) {
-	// 	// path/to/view folder does not exist use default fixtures/view
-	// 	appConfig.ViewsDir = "fixtures/view"
-	// }
+	a.SetViewPath(fmt.Sprintf("%s/views", a.FixtureFolder))
+	if _, err := os.Stat(appConfig.ViewsDir); os.IsNotExist(err) {
+		// path/to/view folder does not exist use default fixtures/view
+		a.Config.ViewsDir = "./fixtures/view"
+	}
 
-	views, err := view.NewSimpleView(appConfig.ViewsDir)
+	views, err := view.NewSimpleView(a.Config.ViewsDir)
 	if err != nil {
 		//TODO: Coverage - Need Failure here
 		return err
@@ -281,4 +294,18 @@ func (a *App) SetNotFoundHandler(h http.Handler) error {
 		return nil
 	}
 	return errors.New("gowaf: application router is not set")
+}
+
+//************COMMAND LINE STUFF ***************/
+//printUsage diplay commandline usage information to the user.
+func (a *App) printUsage() {
+	fmt.Println("")
+	fmt.Println("%s Daemon", a.Config.AppName)
+	fmt.Println("-----------------------------------------------------------------------------------------")
+	fmt.Println("Usage:")
+	fmt.Println("	usefolder -path/to/fixtures/folder - Defines the target fixture folder to use")
+	fmt.Println("	migrate -path/to/csv/folder - Defines the target csv import folder to use")
+	fmt.Println("	startnode - Start a node")
+	fmt.Println("	version - Display node version")
+	fmt.Println("")
 }
