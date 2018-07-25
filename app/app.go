@@ -29,6 +29,7 @@ type StaticServerFunc func(*config.Config) (prefix string, strip bool, h http.Ha
 
 // App is the main gowaf application.
 type App struct {
+	Version       string
 	Router        *router.Router
 	Config        *config.Config
 	View          view.View
@@ -45,9 +46,10 @@ type App struct {
 // the Init method before serving requests.
 func NewApp() *App {
 	return &App{
-		Log:    logger.NewDefaultLogger(os.Stdout),
-		Router: router.NewRouter(),
-		Model:  models.NewModel(),
+		Version: Version(),
+		Log:     logger.NewDefaultLogger(os.Stdout),
+		Router:  router.NewRouter(),
+		Model:   models.NewModel(),
 	}
 }
 
@@ -300,7 +302,7 @@ func (a *App) SetNotFoundHandler(h http.Handler) error {
 //printUsage diplay commandline usage information to the user.
 func (a *App) printUsage() {
 	fmt.Println("")
-	fmt.Println("%s Daemon", a.Config.AppName)
+	fmt.Println("%s v%s Daemon", a.Config.AppName, a.Config.Version)
 	fmt.Println("-----------------------------------------------------------------------------------------")
 	fmt.Println("Usage:")
 	fmt.Println("	usefolder -path/to/fixtures/folder - Defines the target fixture folder to use")
