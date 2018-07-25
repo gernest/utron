@@ -304,7 +304,7 @@ func (a *App) SetNotFoundHandler(h http.Handler) error {
 //printUsage diplay commandline usage information to the user.
 func (a *App) printUsage() {
 	fmt.Println()
-	fmt.Println("%s v%s Daemon", a.Config.AppName, a.Version)
+	fmt.Printf("%s v%s Daemon\n", a.Config.AppName, a.Version)
 	fmt.Println("-----------------------------------------------------------------------------------------")
 	fmt.Println("Usage:")
 	fmt.Println("	usefolder -path/to/fixtures/folder - Defines the target fixture folder to use")
@@ -369,7 +369,6 @@ func (a *App) Run() {
 			os.Exit(1)
 		}
 		a.FixtureFolder = *useFolder
-		//a.ShowBalance(*getBalanceAddress)
 	}
 
 	if migrateCmd.Parsed() {
