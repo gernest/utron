@@ -3,7 +3,9 @@ package app
 import (
 	"database/sql"
 	"errors"
+	"flag"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -301,15 +303,15 @@ func (a *App) SetNotFoundHandler(h http.Handler) error {
 //************COMMAND LINE STUFF ***************/
 //printUsage diplay commandline usage information to the user.
 func (a *App) printUsage() {
-	fmt.Println("")
+	fmt.Println()
 	fmt.Println("%s v%s Daemon", a.Config.AppName, a.Version)
 	fmt.Println("-----------------------------------------------------------------------------------------")
 	fmt.Println("Usage:")
 	fmt.Println("	usefolder -path/to/fixtures/folder - Defines the target fixture folder to use")
 	fmt.Println("	migrate -path/to/csv/folder - Defines the target csv import folder to use")
 	fmt.Println("	startnode - Start a node")
-	fmt.Println("	version - Display node version")
-	fmt.Println("")
+	fmt.Println("	version - Display version")
+	fmt.Println()
 }
 
 //validateArgs validates the parameters passsed in via commandline
@@ -318,4 +320,72 @@ func (a *App) validateArgs() {
 		a.printUsage()
 		os.Exit(1)
 	}
+}
+
+// Run parses command line arguments and processes commands
+func (a *App) Run() {
+
+	//Validate the command line arguments
+	a.validateArgs()
+
+	userFolderCmd := flag.NewFlagSet("userfolder", flag.ExitOnError)
+	migrateCmd := flag.NewFlagSet("migrate", flag.ExitOnError)
+	startNodeCmd := flag.NewFlagSet("startnode", flag.ExitOnError)
+	versionCmd := flag.NewFlagSet("version", flag.ExitOnError)
+
+	useFolder := userFolderCmd.String("path", "", "The path to the fixtures folder to use")
+	migrateFolder := migrateCmd.String("path", "", "The path to the csv inmport folder to use")
+	//startNode := startNodeCmd.String("", "", "Starts the application")
+
+	switch os.Args[1] {
+	case "userfolder":
+		err := userFolderCmd.Parse(os.Args[2:])
+		if err != nil {
+			log.Panic(err)
+		}
+	case "migrate":
+		err := migrateCmd.Parse(os.Args[2:])
+		if err != nil {
+			log.Panic(err)
+		}
+	case "startnode":
+		err := startNodeCmd.Parse(os.Args[2:])
+		if err != nil {
+			log.Panic(err)
+		}
+	case "version":
+		err := versionCmd.Parse(os.Args[1:])
+		if err != nil {
+			log.Panic(err)
+		}
+	default:
+		a.printUsage()
+		os.Exit(1)
+	}
+
+	if userFolderCmd.Parsed() {
+		if *useFolder == "" {
+			userFolderCmd.Usage()
+			os.Exit(1)
+		}
+		a.FixtureFolder = *useFolder
+		//a.ShowBalance(*getBalanceAddress)
+	}
+
+	if migrateCmd.Parsed() {
+		if *migrateFolder == "" {
+			migrateCmd.Usage()
+			os.Exit(1)
+		}
+
+	}
+
+	if startNodeCmd.Parsed() {
+		//a.StartNode(a.NodePort)
+	}
+
+	if versionCmd.Parsed() {
+		fmt.Println(a.Version)
+	}
+
 }
