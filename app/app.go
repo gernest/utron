@@ -132,10 +132,10 @@ func (a *App) init() error {
 	}
 	a.Config = appConfig
 
-	a.SetViewPath(fmt.Sprintf("%s/views", a.FixtureFolder))
+	//a.SetViewPath(a.FixtureFolder))
 	if _, err := os.Stat(appConfig.ViewsDir); os.IsNotExist(err) {
 		// path/to/view folder does not exist use default fixtures/view
-		a.Config.ViewsDir = "./fixtures/view"
+		a.Config.ViewsDir = "./views"
 	}
 
 	views, err := view.NewSimpleView(a.Config.ViewsDir)
