@@ -107,6 +107,7 @@ func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interfa
 	numCtr := cTyp.NumMethod()
 
 	ctrlName := getTypName(cTyp) // The name of the controller
+	r.Options.Log.Info("Initializing controller ", ctrlName, "...")
 
 	for v := range make([]struct{}, numCtr) {
 		method := cTyp.Method(v)
@@ -125,13 +126,15 @@ func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interfa
 		// TODD: figure out the way of passing parameters to the method arguments?
 		patt := "/" + strings.ToLower(ctrlName) + "/" + strings.ToLower(method.Name)
 
-		r := &route{
+		rt := &route{
 			pattern: patt,
 			ctrl:    ctrlName,
 			fn:      method.Name,
 		}
-		routes.standard = append(routes.standard, r)
+		routes.standard = append(routes.standard, rt)
+		r.Options.Log.Info("Added Route for ", ctrlName, " -> ", patt)
 	}
+	r.Options.Log.Info(len(routes.standard), " routes were added.")
 
 	// ultimate returns the actual value stored in rVals this means if rVals is a pointer,
 	// then we return the value that is pointed to. We are dealing with structs, so the returned
