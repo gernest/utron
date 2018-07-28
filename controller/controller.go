@@ -8,7 +8,8 @@ import (
 	"github.com/gorilla/schema"
 )
 
-var decoder = schema.NewDecoder()
+// Decoder is use to decode the schema
+var Decoder = schema.NewDecoder()
 
 // Controller is an interface for gowaf controllers
 type Controller interface {
