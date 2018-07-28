@@ -5,7 +5,10 @@ import (
 	"reflect"
 
 	"github.com/NlaakStudios/gowaf/base"
+	"github.com/gorilla/schema"
 )
+
+var decoder = schema.NewDecoder()
 
 // Controller is an interface for gowaf controllers
 type Controller interface {
