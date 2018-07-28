@@ -3,8 +3,7 @@
 
 package gowaf
 
-import "github.com/NlaakStudios/gowaf/app"
-
+/* Example Usage
 // NewApp creates a new bare-bone gwaf application. To use the MVC components, you should call
 // the Init method before serving requests.
 func NewApp() *app.App {
@@ -16,3 +15,4 @@ func NewApp() *app.App {
 func NewMVC(cfg ...string) (*app.App, error) {
 	return app.NewMVC(cfg...)
 }
+*/
