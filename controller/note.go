@@ -4,13 +4,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/NlaakStudios/gowaf/controller"
 	"github.com/NlaakStudios/gowaf/models"
 )
 
 //Note is a controller for Note list
 type Note struct {
-	controller.BaseController
+	BaseController
 	Routes []string
 }
 
@@ -28,7 +27,7 @@ func (t *Note) Create() {
 	Note := &models.Note{}
 	req := t.Ctx.Request()
 	_ = req.ParseForm()
-	if err := controller.Decoder.Decode(Note, req.PostForm); err != nil {
+	if err := Decoder.Decode(Note, req.PostForm); err != nil {
 		t.Ctx.Data["Message"] = err.Error()
 		t.Ctx.Template = "error"
 		t.HTML(http.StatusInternalServerError)
@@ -54,7 +53,7 @@ func (t *Note) Delete() {
 }
 
 //NewNote returns a new  Note list controller
-func NewNote() controller.Controller {
+func NewNote() Controller {
 	return &Note{
 		Routes: []string{
 			"get;/note;Index",

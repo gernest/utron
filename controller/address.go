@@ -4,13 +4,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/NlaakStudios/gowaf/controller"
 	"github.com/NlaakStudios/gowaf/models"
 )
 
 // Account is the controller for the Account Model
 type Address struct {
-	controller.BaseController
+	BaseController
 	Routes []string
 }
 
@@ -29,7 +28,7 @@ func (c *Address) Create() {
 	Address := &models.Address{}
 	req := c.Ctx.Request()
 	_ = req.ParseForm()
-	if err := controller.Decoder.Decode(Address, req.PostForm); err != nil {
+	if err := Decoder.Decode(Address, req.PostForm); err != nil {
 		c.Ctx.Data["Message"] = err.Error()
 		c.Ctx.Template = "error"
 		c.HTML(http.StatusInternalServerError)
@@ -58,7 +57,7 @@ func (c *Address) Delete() {
 }
 
 //NewAddress returns a new  Address list controller
-func NewAddress() controller.Controller {
+func NewAddress() Controller {
 	return &Address{
 		Routes: []string{
 			"get;/address;Index",

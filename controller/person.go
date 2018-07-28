@@ -4,13 +4,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/NlaakStudios/gowaf/controller"
 	"github.com/NlaakStudios/gowaf/models"
 )
 
 //Person is a controller for Person list
 type Person struct {
-	controller.BaseController
+	BaseController
 	Routes []string
 }
 
@@ -28,7 +27,7 @@ func (t *Person) Create() {
 	Person := &models.Person{}
 	req := t.Ctx.Request()
 	_ = req.ParseForm()
-	if err := controller.Decoder.Decode(Person, req.PostForm); err != nil {
+	if err := Decoder.Decode(Person, req.PostForm); err != nil {
 		t.Ctx.Data["Message"] = err.Error()
 		t.Ctx.Template = "error"
 		t.HTML(http.StatusInternalServerError)
@@ -54,7 +53,7 @@ func (t *Person) Delete() {
 }
 
 //NewPerson returns a new  Person list controller
-func NewPerson() controller.Controller {
+func NewPerson() Controller {
 	return &Person{
 		Routes: []string{
 			"get;/person;Index",

@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/NlaakStudios/gowaf/controller"
 	"github.com/NlaakStudios/gowaf/models"
 	"github.com/kr/pretty"
 )
 
 // Account is the controller for the Account Model
 type Account struct {
-	controller.BaseController
+	BaseController
 	Routes []string
 }
 
@@ -35,7 +34,7 @@ func (a *Account) Register() {
 
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
 	u := &models.Account{}
-	err := controller.Decoder.Decode(u, r.PostForm)
+	err := Decoder.Decode(u, r.PostForm)
 	if err != nil {
 		// set flash messages
 		a.Ctx.Log.Errors(err)
@@ -71,7 +70,7 @@ func (a *Account) Login() {
 
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
 	u := &models.Account{}
-	err := controller.Decoder.Decode(u, r.PostForm)
+	err := Decoder.Decode(u, r.PostForm)
 	if err != nil {
 		// set flash messages
 		a.Ctx.Log.Errors(err)
@@ -97,7 +96,7 @@ func (a *Account) Logout() {
 }
 
 // NewAccount returns a new account controller object
-func NewAccount() controller.Controller {
+func NewAccount() Controller {
 	return &Account{
 		Routes: []string{
 			"get;/account;Index",
