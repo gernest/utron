@@ -1,11 +1,11 @@
-package controllers
+package controller
 
 import (
 	"fmt"
 	"net/http"
 
-	"github.com/NlaakStudios/gowaf/models/user"
 	"github.com/NlaakStudios/gowaf/controller"
+	"github.com/NlaakStudios/gowaf/models"
 	"github.com/kr/pretty"
 )
 
@@ -34,7 +34,7 @@ func (a *Account) Register() {
 	}
 
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
-	u := &user.Account{}
+	u := &models.Account{}
 	err := controller.Decoder.Decode(u, r.PostForm)
 	if err != nil {
 		// set flash messages
@@ -70,7 +70,7 @@ func (a *Account) Login() {
 	}
 
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
-	u := &user.Account{}
+	u := &models.Account{}
 	err := controller.Decoder.Decode(u, r.PostForm)
 	if err != nil {
 		// set flash messages
@@ -78,7 +78,7 @@ func (a *Account) Login() {
 		return
 	}
 
-	var acct user.Account
+	var acct models.Account
 	a.Ctx.DB.First(&acct, "Username = ?", u.Username) // find username with code form username
 	if acct.Password == u.Password {
 

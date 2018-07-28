@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/NlaakStudios/GOModels/models/common"
 	"github.com/fatih/structs"
 )
 
@@ -34,7 +33,7 @@ type CoinStruct struct {
 	Symbol    string
 	Decimals  uint
 	Supply    CoinSupplyStruct
-	Company   common.Company
+	Company   Company
 	Compliant CompliantStruct
 	URLS      CoinURLStruct
 }

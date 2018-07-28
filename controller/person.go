@@ -1,11 +1,11 @@
-package controllers
+package controller
 
 import (
 	"net/http"
 	"strconv"
 
-	"github.com/NlaakStudios/gowaf/models/common"
 	"github.com/NlaakStudios/gowaf/controller"
+	"github.com/NlaakStudios/gowaf/models"
 )
 
 //Person is a controller for Person list
@@ -16,7 +16,7 @@ type Person struct {
 
 //Home renders a Person list
 func (t *Person) Index() {
-	Persons := []*common.Person{}
+	Persons := []*models.Person{}
 	t.Ctx.DB.Order("created_at desc").Find(&Persons)
 	t.Ctx.Data["List"] = Persons
 	t.Ctx.Template = "application/person/index"
@@ -25,7 +25,7 @@ func (t *Person) Index() {
 
 //Create creates a Person  item
 func (t *Person) Create() {
-	Person := &common.Person{}
+	Person := &models.Person{}
 	req := t.Ctx.Request()
 	_ = req.ParseForm()
 	if err := controller.Decoder.Decode(Person, req.PostForm); err != nil {
@@ -49,7 +49,7 @@ func (t *Person) Delete() {
 		t.HTML(http.StatusInternalServerError)
 		return
 	}
-	t.Ctx.DB.Delete(&common.Person{ID: id})
+	t.Ctx.DB.Delete(&models.Person{ID: id})
 	t.Ctx.Redirect("/person", http.StatusFound)
 }
 

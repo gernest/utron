@@ -1,11 +1,11 @@
-package controllers
+package controller
 
 import (
 	"net/http"
 	"strconv"
 
-	"github.com/NlaakStudios/gowaf/models/common"
 	"github.com/NlaakStudios/gowaf/controller"
+	"github.com/NlaakStudios/gowaf/models"
 )
 
 //Note is a controller for Note list
@@ -16,7 +16,7 @@ type Note struct {
 
 //Home renders a Note list
 func (t *Note) Index() {
-	Notes := []*common.Note{}
+	Notes := []*models.Note{}
 	t.Ctx.DB.Order("created_at desc").Find(&Notes)
 	t.Ctx.Data["List"] = Notes
 	t.Ctx.Template = "application/note/index"
@@ -25,7 +25,7 @@ func (t *Note) Index() {
 
 //Create creates a Note  item
 func (t *Note) Create() {
-	Note := &common.Note{}
+	Note := &models.Note{}
 	req := t.Ctx.Request()
 	_ = req.ParseForm()
 	if err := controller.Decoder.Decode(Note, req.PostForm); err != nil {
@@ -49,7 +49,7 @@ func (t *Note) Delete() {
 		t.HTML(http.StatusInternalServerError)
 		return
 	}
-	t.Ctx.DB.Delete(&common.Note{ID: id})
+	t.Ctx.DB.Delete(&models.Note{ID: id})
 	t.Ctx.Redirect("/note", http.StatusFound)
 }
 

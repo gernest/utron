@@ -1,11 +1,11 @@
-package controllers
+package controller
 
 import (
 	"net/http"
 	"strconv"
 
-	"github.com/NlaakStudios/gowaf/models/common"
 	"github.com/NlaakStudios/gowaf/controller"
+	"github.com/NlaakStudios/gowaf/models"
 )
 
 // Account is the controller for the Account Model
@@ -16,7 +16,7 @@ type Address struct {
 
 //Home renders a Address list
 func (c *Address) Index() {
-	Addresss := []*common.Address{}
+	Addresss := []*models.Address{}
 	c.Ctx.DB.Order("created_at desc").Find(&Addresss)
 	c.Ctx.Data["List"] = Addresss
 	c.Ctx.Template = "application/address/index"
@@ -26,7 +26,7 @@ func (c *Address) Index() {
 
 //Create creates a Address  item
 func (c *Address) Create() {
-	Address := &common.Address{}
+	Address := &models.Address{}
 	req := c.Ctx.Request()
 	_ = req.ParseForm()
 	if err := controller.Decoder.Decode(Address, req.PostForm); err != nil {
@@ -52,7 +52,7 @@ func (c *Address) Delete() {
 		return
 	}
 	//TODO: How to compare gorm.Model.ID
-	c.Ctx.DB.Delete(&common.Address{ID: id})
+	c.Ctx.DB.Delete(&models.Address{ID: id})
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.Ctx.Redirect("/address", http.StatusFound)
 }
