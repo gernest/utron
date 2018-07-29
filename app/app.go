@@ -71,6 +71,11 @@ func NewMVC(dir ...string) (*App, error) {
 	if err := app.Init(); err != nil {
 		return nil, err
 	}
+
+	app.Log.Info("Using base fixture folder at ", app.FixtureFolder)
+	app.Log.Info("Using config at ", app.ConfigPath)
+	app.Log.Info("Using static assets at ", app.Config.StaticDir)
+
 	return app, nil
 }
 
