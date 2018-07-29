@@ -18,13 +18,14 @@ func (c *Address) Index() {
 	Addresss := []*models.Address{}
 	c.Ctx.DB.Order("created_at desc").Find(&Addresss)
 	c.Ctx.Data["List"] = Addresss
-	c.Ctx.Template = "application/address/index"
+	//c.Ctx.Template = "application/address/index"
 	c.HTML(http.StatusOK)
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 }
 
 //Create creates a Address  item
 func (c *Address) Create() {
+	c.Ctx.Template = "application/address/index"
 	Address := &models.Address{}
 	req := c.Ctx.Request()
 	_ = req.ParseForm()
@@ -41,6 +42,21 @@ func (c *Address) Create() {
 }
 
 //Delete deletes a Address item
+func (c *Address) View() {
+	AddressID := c.Ctx.Params["id"]
+	id, err := strconv.Atoi(AddressID)
+	if err != nil {
+		c.Ctx.Data["Message"] = err.Error()
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusInternalServerError)
+		return
+	}
+
+	c.Ctx.DB.Find(&models.Address{ID: id})
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+}
+
+//Delete deletes a Address item
 func (c *Address) Delete() {
 	AddressID := c.Ctx.Params["id"]
 	id, err := strconv.Atoi(AddressID)
@@ -50,7 +66,7 @@ func (c *Address) Delete() {
 		c.HTML(http.StatusInternalServerError)
 		return
 	}
-	//TODO: How to compare gorm.Model.ID
+
 	c.Ctx.DB.Delete(&models.Address{ID: id})
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.Ctx.Redirect("/address", http.StatusFound)
@@ -62,6 +78,7 @@ func NewAddress() Controller {
 		Routes: []string{
 			"get;/address;Index",
 			"post;/address/create;Create",
+			"get;/address/view/{id};View",
 			"get;/address/delete/{id};Delete",
 		},
 	}

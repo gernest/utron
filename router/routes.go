@@ -107,7 +107,7 @@ func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interfa
 	numCtr := cTyp.NumMethod()
 
 	ctrlName := getTypName(cTyp) // The name of the controller
-	r.Options.Log.Info("Initializing controller ", ctrlName, "...")
+	r.Options.Log.Info("Initializing routes for controller ", ctrlName, "...")
 
 	for v := range make([]struct{}, numCtr) {
 		method := cTyp.Method(v)
@@ -134,7 +134,7 @@ func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interfa
 		routes.standard = append(routes.standard, rt)
 		r.Options.Log.Info("Added Route for ", ctrlName, " -> ", patt)
 	}
-	r.Options.Log.Info(len(routes.standard), " routes were added.")
+	r.Options.Log.Success(len(routes.standard), " routes were added for ", ctrlName)
 
 	// ultimate returns the actual value stored in rVals this means if rVals is a pointer,
 	// then we return the value that is pointed to. We are dealing with structs, so the returned

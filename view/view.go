@@ -97,5 +97,6 @@ func (s *SimpleView) load(dir string) (View, error) {
 
 // Render executes template named name, passing data as context, the output is written to out.
 func (s *SimpleView) Render(out io.Writer, name string, data interface{}) error {
+	println("Render Template: ", name) //DELETE THIS - DEBUG
 	return s.tmpl.ExecuteTemplate(out, name, data)
 }
