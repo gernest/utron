@@ -18,7 +18,7 @@ func (c *Address) Index() {
 	Addresss := []*models.Address{}
 	c.Ctx.DB.Order("created_at desc").Find(&Addresss)
 	c.Ctx.Data["List"] = Addresss
-	//c.Ctx.Template = "application/address/index"
+	c.Ctx.Template = "application/address/index"
 	c.HTML(http.StatusOK)
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 }
@@ -76,6 +76,7 @@ func (c *Address) Delete() {
 func NewAddress() Controller {
 	return &Address{
 		Routes: []string{
+			//method;route;handler
 			"get;/address;Index",
 			"post;/address/create;Create",
 			"get;/address/view/{id};View",
