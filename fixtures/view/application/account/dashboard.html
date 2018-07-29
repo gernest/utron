@@ -1,0 +1,263 @@
+{{template "dochead.html"}}	
+<!-- ============================================================== -->
+<!-- Start Dashboard Net Worth over Time -->
+<!-- ============================================================== -->
+<div class="row">
+	<div class="col-lg-6">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">Net Worth over Time</h4>
+				<ul class="list-inline text-right">
+					<li>
+						<h5><i class="fa fa-circle m-r-5 text-warning"></i>Bitcoin</h5>
+					</li>
+					<li>
+						<h5><i class="fa fa-circle m-r-5 text-info"></i>Ethereum</h5>
+					</li>
+					<li>
+						<h5><i class="fa fa-circle m-r-5 text-success"></i>Spartacus</h5>
+					</li>
+				</ul>
+				<div id="morris-area-chart" style="position: relative; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+					<svg height="342" version="1.1" width="755" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="overflow: hidden; position: relative;">
+						<defs style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></defs>
+						<!-- Left Legend AMount-->
+						<text x="32.84375" y="310" text-anchor="end" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal">
+							<tspan dy="4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">0</tspan>
+						</text>
+						<path fill="none" stroke="#e0e0e0" d="M45.34375,310H721.5" stroke-width="0.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path>
+						<text x="32.84375" y="238.75" text-anchor="end" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal">
+							<tspan dy="4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">75</tspan>
+						</text>
+						<path fill="none" stroke="#e0e0e0" d="M45.34375,238.75H721.5" stroke-width="0.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path>
+						<text x="32.84375" y="167.5" text-anchor="end" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal">
+							<tspan dy="4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">150</tspan>
+						</text>
+						<path fill="none" stroke="#e0e0e0" d="M45.34375,167.5H721.5" stroke-width="0.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path>
+						<text x="32.84375" y="96.25" text-anchor="end" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal">
+							<tspan dy="4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">225</tspan>
+						</text>
+						<path fill="none" stroke="#e0e0e0" d="M45.34375,96.25H721.5" stroke-width="0.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path>
+						<text x="32.84375" y="25" text-anchor="end" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: end; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal">
+							<tspan dy="4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">300</tspan>
+						</text>
+						<path fill="none" stroke="#e0e0e0" d="M45.34375,25H721.5" stroke-width="0.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path>
+						
+						<!-- Bottom Legend -->
+						<text x="721.5" y="322.5" text-anchor="middle" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal" transform="matrix(1,0,0,1,0,7)">
+							<tspan dy="4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">2016</tspan>
+						</text>
+						<text x="608.8587260383387" y="322.5" text-anchor="middle" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal" transform="matrix(1,0,0,1,0,7)">
+							<tspan dy="4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">2015</tspan>
+						</text>
+						<text x="496.2174520766773" y="322.5" text-anchor="middle" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal" transform="matrix(1,0,0,1,0,7)">
+							<tspan dy="4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">2014</tspan>
+						</text>
+						<text x="383.576178115016" y="322.5" text-anchor="middle" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal" transform="matrix(1,0,0,1,0,7)">
+							<tspan dy="4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">2013</tspan>
+						</text>
+						<text x="270.6262979233227" y="322.5" text-anchor="middle" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal" transform="matrix(1,0,0,1,0,7)">
+							<tspan dy="4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">2012</tspan>
+						</text>
+						<text x="157.98502396166134" y="322.5" text-anchor="middle" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal" transform="matrix(1,0,0,1,0,7)">
+							<tspan dy="4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">2011</tspan>
+						</text>
+						<text x="45.34375" y="322.5" text-anchor="middle" font-family="sans-serif" font-size="12px" stroke="none" fill="#888888" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-family: sans-serif; font-size: 12px; font-weight: normal;" font-weight="normal" transform="matrix(1,0,0,1,0,7)">
+							<tspan dy="4" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">2010</tspan>
+						</text>
+						<path fill="#87d790" stroke="none" d="M45.34375,262.5C73.50406849041534,243.5,129.824705471246,190.0625,157.98502396166134,186.5C186.14534245207668,182.9375,242.46597943290735,226.88474692202462,270.6262979233227,234C298.86376797124603,241.13474692202462,355.3387080670926,255.39124487004105,383.576178115016,243.5C411.7364966054313,231.64124487004105,468.057133586262,143.15625,496.2174520766773,139C524.3777705670926,134.84375,580.6984075479234,218.5625,608.8587260383387,210.25C637.019044528754,201.9375,693.3396815095847,106.9375,721.5,72.5L721.5,310L45.34375,310Z" fill-opacity="0" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); fill-opacity: 0;"></path>
+						<path fill="none" stroke="#55ce63" d="M45.34375,262.5C73.50406849041534,243.5,129.824705471246,190.0625,157.98502396166134,186.5C186.14534245207668,182.9375,242.46597943290735,226.88474692202462,270.6262979233227,234C298.86376797124603,241.13474692202462,355.3387080670926,255.39124487004105,383.576178115016,243.5C411.7364966054313,231.64124487004105,468.057133586262,143.15625,496.2174520766773,139C524.3777705670926,134.84375,580.6984075479234,218.5625,608.8587260383387,210.25C637.019044528754,201.9375,693.3396815095847,106.9375,721.5,72.5" stroke-width="3" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path>
+						<circle cx="45.34375" cy="262.5" r="3" fill="#55ce63" stroke="#55ce63" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="157.98502396166134" cy="186.5" r="3" fill="#55ce63" stroke="#55ce63" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="270.6262979233227" cy="234" r="3" fill="#55ce63" stroke="#55ce63" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="383.576178115016" cy="243.5" r="3" fill="#55ce63" stroke="#55ce63" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="496.2174520766773" cy="139" r="3" fill="#55ce63" stroke="#55ce63" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="608.8587260383387" cy="210.25" r="3" fill="#55ce63" stroke="#55ce63" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="721.5" cy="72.5" r="3" fill="#55ce63" stroke="#55ce63" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						
+						<path fill="#39aff5" stroke="none" d="M45.34375,234C73.50406849041534,229.25,129.824705471246,212.625,157.98502396166134,215C186.14534245207668,217.375,242.46597943290735,264.858755129959,270.6262979233227,253C298.86376797124603,241.10875512995895,355.3387080670926,130.70212038303694,383.576178115016,120C411.7364966054313,109.32712038303694,468.057133586262,155.625,496.2174520766773,167.5C524.3777705670926,179.375,580.6984075479234,215,608.8587260383387,215C637.019044528754,215,693.3396815095847,179.375,721.5,167.5L721.5,310L45.34375,310Z" fill-opacity="0" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); fill-opacity: 0;"></path>
+						<path fill="none" stroke="#009efb" d="M45.34375,234C73.50406849041534,229.25,129.824705471246,212.625,157.98502396166134,215C186.14534245207668,217.375,242.46597943290735,264.858755129959,270.6262979233227,253C298.86376797124603,241.10875512995895,355.3387080670926,130.70212038303694,383.576178115016,120C411.7364966054313,109.32712038303694,468.057133586262,155.625,496.2174520766773,167.5C524.3777705670926,179.375,580.6984075479234,215,608.8587260383387,215C637.019044528754,215,693.3396815095847,179.375,721.5,167.5" stroke-width="3" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path>
+						<circle cx="45.34375" cy="234" r="3" fill="#009efb" stroke="#009efb" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="157.98502396166134" cy="215" r="3" fill="#009efb" stroke="#009efb" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="270.6262979233227" cy="253" r="3" fill="#009efb" stroke="#009efb" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="383.576178115016" cy="120" r="3" fill="#009efb" stroke="#009efb" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="496.2174520766773" cy="167.5" r="3" fill="#009efb" stroke="#009efb" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="608.8587260383387" cy="215" r="3" fill="#009efb" stroke="#009efb" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="721.5" cy="167.5" r="3" fill="#009efb" stroke="#009efb" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						
+						<path fill="#3a4957" stroke="none" d="M45.34375,291C73.50406849041534,276.75,129.824705471246,239.9375,157.98502396166134,234C186.14534245207668,228.0625,242.46597943290735,250.61525307797538,270.6262979233227,243.5C298.86376797124603,236.36525307797538,355.3387080670926,185.32387140902873,383.576178115016,177C411.7364966054313,168.69887140902873,468.057133586262,169.875,496.2174520766773,177C524.3777705670926,184.125,580.6984075479234,241.125,608.8587260383387,234C637.019044528754,226.875,693.3396815095847,148.5,721.5,120L721.5,310L45.34375,310Z" fill-opacity="0" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); fill-opacity: 0;"></path>
+						<path fill="none" stroke="#2f3d4a" d="M45.34375,291C73.50406849041534,276.75,129.824705471246,239.9375,157.98502396166134,234C186.14534245207668,228.0625,242.46597943290735,250.61525307797538,270.6262979233227,243.5C298.86376797124603,236.36525307797538,355.3387080670926,185.32387140902873,383.576178115016,177C411.7364966054313,168.69887140902873,468.057133586262,169.875,496.2174520766773,177C524.3777705670926,184.125,580.6984075479234,241.125,608.8587260383387,234C637.019044528754,226.875,693.3396815095847,148.5,721.5,120" stroke-width="3" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path>
+						<circle cx="45.34375" cy="291" r="3" fill="#2f3d4a" stroke="#2f3d4a" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="157.98502396166134" cy="234" r="3" fill="#2f3d4a" stroke="#2f3d4a" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="270.6262979233227" cy="243.5" r="3" fill="#2f3d4a" stroke="#2f3d4a" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="383.576178115016" cy="177" r="3" fill="#2f3d4a" stroke="#2f3d4a" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="496.2174520766773" cy="177" r="3" fill="#2f3d4a" stroke="#2f3d4a" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="608.8587260383387" cy="234" r="3" fill="#2f3d4a" stroke="#2f3d4a" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+						<circle cx="721.5" cy="120" r="3" fill="#2f3d4a" stroke="#2f3d4a" stroke-width="1" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></circle>
+					</svg>
+						
+			<div class="morris-hover morris-default-style" style="left: 606.359px; top: 28px; display: none;">			
+			<div class="morris-hover-row-label">2016</div>			
+			<div class="morris-hover-point" style="color: #55ce63">Bitcoin: 250</div>
+			<div class="morris-hover-point" style="color: #009efb">Ethereum: 150</div>
+			<div class="morris-hover-point" style="color: #2f3d4a">Spartacus: 200</div>
+			</div></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-6">
+		<div class="card card-body">
+			<div class="row">
+				<div class="col-md-4 col-lg-3 text-center">
+					<a href="app-contact-detail.html"><img src="../assets/images/users/default.jpg" alt="user" class="img-circle img-responsive"></a>
+				</div>
+				<div class="col-md-8 col-lg-9">
+					<h4 class="box-title m-b-0">{{ .username }}&nbsp;<a href="/settings/profile" data-toggle="tooltip" data-original-title="Edit" aria-describedby="tooltip345880"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a></h4> <small>{{.kycverified}}</small>
+					<address>
+						{{.addrnum}} {{.addrstreet}}, {{.addrcity}}, {{.addrstate}}, {{.addrzip}}, {{.addrcountry}}
+						<br>
+						<br>
+						<abbr title="Phone">P:</abbr>{{.phncode}} ({{.phnarea}}) {{.phnnumber}}
+					</address>
+				</div>
+			</div>
+		</div>							
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">Account Security Overview&nbsp;<a href="/settings/security" data-toggle="tooltip" data-original-title="Edit" aria-describedby="tooltip345880"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a></h4>
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Item</th>
+								<th>Last Updated</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Two Factor Authentication (2FA)</td>
+								<td><span class="text-muted"><i class="fa fa-clock-o"></i> Oct 16, 2017</span> </td>
+								<td><div class="label label-table label-success">Enabled</div></td>
+							</tr>
+							<tr>
+								<td>Withdraw Email Verification</td>
+								<td><span class="text-muted"><i class="fa fa-clock-o"></i> Nov 3, 2017</span> </td>
+								<td><div class="label label-table label-danger">Disabled</div></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div>
+<!-- ============================================================== -->
+<!-- End Dashboard Net Worth over Time -->
+<!-- ============================================================== -->
+
+
+<!-- ============================================================== -->
+<!-- Start Dashboard Wallets -->
+<!-- ============================================================== -->
+<div class="row">
+	<!-- Column -->
+	<div class="col-lg-3 col-md-6">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">Bitcoin</h4>
+				<div class="text-right">
+					<h2 class="font-light m-b-0"><i class="ti-arrow-up text-success"></i> $4,000 </h2>
+					<span class="text-muted">0.123456 BTC</span>
+				</div>
+				<span class="text-warning">40%</span>
+				<div class="progress">
+					<div class="progress-bar bg-warning" role="progressbar" style="width: 40%; height: 6px;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+				</div>
+				<div class="card-footer text-center">								
+					<div class="btn-group" role="group" aria-label="Wallet Action">
+						<a href="/wallet/bitcoin/deposit"><button type="button" class="btn btn-sm btn-outline-success btn-rounded"><i class="ti-plus"></i> Deposit </button></a>
+						<a href="/wallet/bitcoin/history"><button type="button" class="btn btn-sm btn-outline-info btn-rounded"><i class="fa fa-heart"></i> History </button></a>
+						<a href="/wallet/bitcoin/withdraw"><button type="button" class="btn btn-sm btn-outline-danger btn-rounded"> Withdraw <i class="ti-minus"></i> </button></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Column -->
+	<!-- Column -->
+	<div class="col-lg-3 col-md-6">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">Ethereum</h4>
+				<div class="text-right">
+					<h2 class="font-light m-b-0"><i class="ti-arrow-down text-danger"></i> $3,000</h2>
+					<span class="text-muted">0.123456 ETH</span>
+				</div>
+				<span class="text-info">30%</span>
+				<div class="progress">
+					<div class="progress-bar bg-info" role="progressbar" style="width: 30%; height: 6px;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+				</div>
+				<div class="card-footer text-center">								
+					<div class="btn-group" role="group" aria-label="Wallet Action">
+						<a href="/wallet/ethereum/deposit"><button type="button" class="btn btn-sm btn-outline-success btn-rounded"><i class="ti-plus"></i> Deposit </button></a>
+						<a href="/wallet/ethereum/history"><button type="button" class="btn btn-sm btn-outline-info btn-rounded"><i class="fa fa-heart"></i> History </button></a>
+						<a href="/wallet/ethereum/withdraw"><button type="button" class="btn btn-sm btn-outline-danger btn-rounded"> Withdraw <i class="ti-minus"></i> </button></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Column -->
+	<!-- Column -->
+	<div class="col-lg-3 col-md-6">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">Spartacus</h4>
+				<div class="text-right">
+					<h2 class="font-light m-b-0"><i class="ti-arrow-up text-success"></i> $2,000</h2>
+					<span class="text-muted">123.456789 ICO</span>
+				</div>
+				<span class="text-success">20%</span>
+				<div class="progress">
+					<div class="progress-bar bg-success" role="progressbar" style="width: 20%; height: 6px;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+				</div>
+				<div class="card-footer text-center">								
+					<div class="btn-group" role="group" aria-label="Wallet Action">
+						<a href="/wallet/icocoin/deposit"><button type="button" class="btn btn-sm btn-outline-success btn-rounded"><i class="ti-plus"></i> Deposit </button></a>
+						<a href="/wallet/icocoin/history"><button type="button" class="btn btn-sm btn-outline-info btn-rounded"><i class="fa fa-heart"></i> History </button></a>
+						<a href="/wallet/icocoin/withdraw"><button type="button" class="btn btn-sm btn-outline-danger btn-rounded"> Withdraw <i class="ti-minus"></i> </button></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Column -->
+	<!-- Column -->
+	<div class="col-lg-3 col-md-6">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">Total USD</h4>
+				<div class="text-right">
+					<h2 class="font-light m-b-0"><i class="ti-arrow-up text-success"></i> $10,000</h2>
+					<span class="text-muted">Todays Income</span>
+				</div>
+				<span class="text-danger">100%</span>
+				<div class="progress">
+					<div class="progress-bar bg-danger" role="progressbar" style="width: 100%; height: 6px;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+				</div>
+				<div class="card-footer text-center">								
+					<div class="btn-group" role="group" aria-label="Wallet Action">
+						<a href="/wallet/icocoin/history"><button type="button" class="btn btn-sm btn-outline-info btn-rounded"><i class="fa fa-heart"></i> History </button></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Column -->
+</div>				
+<!-- ============================================================== -->
+<!-- End Dashboard Wallets -->
+<!-- ============================================================== -->
+{{template "docfoot.html"}}		
