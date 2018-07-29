@@ -28,7 +28,6 @@ func (c *Phone) Create() {
 	Phone := &models.Phone{}
 	req := c.Ctx.Request()
 	_ = req.ParseForm()
-	c.Ctx.Template = "application/phone/create"
 	if err := Decoder.Decode(Phone, req.PostForm); err != nil {
 		c.Ctx.Data["Message"] = err.Error()
 		c.Ctx.Template = "error"
@@ -43,7 +42,6 @@ func (c *Phone) Create() {
 
 //Delete deletes a Phone item
 func (c *Phone) Delete() {
-	c.Ctx.Template = "application/phone/delete"
 	PhoneID := c.Ctx.Params["id"]
 	id, err := strconv.Atoi(PhoneID)
 	if err != nil {
