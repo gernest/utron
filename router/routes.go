@@ -391,7 +391,7 @@ func (r *Router) handleController(ctx *base.Context, fn string, ctrl controller.
 	}
 	err := ctx.Commit()
 	if err != nil {
-		//TODO:  Log error
+		r.Options.Log.Errors(err)
 	}
 }
 
