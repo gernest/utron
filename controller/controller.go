@@ -26,6 +26,7 @@ type BaseController struct {
 
 // New sets ctx as the active context
 func (b *BaseController) New(ctx *base.Context) {
+	ctx.CoreDataInit()
 	b.Ctx = ctx
 }
 
