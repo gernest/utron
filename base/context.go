@@ -88,11 +88,6 @@ func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 // Init initializes the context
 func (c *Context) Init() {
 	c.Params = mux.Vars(c.request)
-	c.CoreDataInit()
-}
-
-// CoreDataInit adds default common properties to the templates available template variables
-func (c *Context) CoreDataInit() {
 	c.SetData("dp_date_year", "2018")
 	c.SetData("dp_site_name", c.Cfg.AppName)
 	//c.SetData("dp_model_name", c.view)
