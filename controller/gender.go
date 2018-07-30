@@ -19,42 +19,56 @@ func (c *Gender) Index() {
 	c.Ctx.DB.Order("created_at desc").Find(&Genders)
 	c.Ctx.Data["List"] = Genders
 	c.Ctx.Template = "application/gender/index"
-	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.HTML(http.StatusOK)
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 }
 
 //Create creates a Gender  item
 func (c *Gender) Create() {
+	c.Ctx.Template = "application/gender/index"
 	Gender := &models.Gender{}
 	req := c.Ctx.Request()
 	_ = req.ParseForm()
-	c.Ctx.Template = "application/gender/create"
 	if err := Decoder.Decode(Gender, req.PostForm); err != nil {
 		c.Ctx.Data["Message"] = err.Error()
 		c.Ctx.Template = "error"
-		c.Ctx.Log.Errors(err)
 		c.HTML(http.StatusInternalServerError)
 		return
 	}
-	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+
 	c.Ctx.DB.Create(Gender)
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.Ctx.Redirect("/gender", http.StatusFound)
 }
 
 //Delete deletes a Gender item
-func (c *Gender) Delete() {
-	c.Ctx.Template = "application/gender/delete"
+func (c *Gender) View() {
 	GenderID := c.Ctx.Params["id"]
 	id, err := strconv.Atoi(GenderID)
 	if err != nil {
 		c.Ctx.Data["Message"] = err.Error()
 		c.Ctx.Template = "error"
-		c.Ctx.Log.Errors(err)
 		c.HTML(http.StatusInternalServerError)
 		return
 	}
-	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template, id)
+
+	c.Ctx.DB.Find(&models.Gender{ID: id})
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+}
+
+//Delete deletes a Gender item
+func (c *Gender) Delete() {
+	GenderID := c.Ctx.Params["id"]
+	id, err := strconv.Atoi(GenderID)
+	if err != nil {
+		c.Ctx.Data["Message"] = err.Error()
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusInternalServerError)
+		return
+	}
+
 	c.Ctx.DB.Delete(&models.Gender{ID: id})
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.Ctx.Redirect("/gender", http.StatusFound)
 }
 
@@ -62,8 +76,10 @@ func (c *Gender) Delete() {
 func NewGender() Controller {
 	return &Gender{
 		Routes: []string{
+			//method;route;handler
 			"get;/gender;Index",
 			"post;/gender/create;Create",
+			"get;/gender/view/{id};View",
 			"get;/gender/delete/{id};Delete",
 		},
 	}

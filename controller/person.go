@@ -14,50 +14,72 @@ type Person struct {
 }
 
 //Home renders a Person list
-func (t *Person) Index() {
+func (c *Person) Index() {
 	Persons := []*models.Person{}
-	t.Ctx.DB.Order("created_at desc").Find(&Persons)
-	t.Ctx.Data["List"] = Persons
-	t.Ctx.Template = "application/person/index"
-	t.HTML(http.StatusOK)
+	c.Ctx.DB.Order("created_at desc").Find(&Persons)
+	c.Ctx.Data["List"] = Persons
+	c.Ctx.Template = "application/person/index"
+	c.HTML(http.StatusOK)
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 }
 
 //Create creates a Person  item
-func (t *Person) Create() {
+func (c *Person) Create() {
+	c.Ctx.Template = "application/person/index"
 	Person := &models.Person{}
-	req := t.Ctx.Request()
+	req := c.Ctx.Request()
 	_ = req.ParseForm()
 	if err := Decoder.Decode(Person, req.PostForm); err != nil {
-		t.Ctx.Data["Message"] = err.Error()
-		t.Ctx.Template = "error"
-		t.HTML(http.StatusInternalServerError)
+		c.Ctx.Data["Message"] = err.Error()
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusInternalServerError)
 		return
 	}
 
-	t.Ctx.DB.Create(Person)
-	t.Ctx.Redirect("/person", http.StatusFound)
+	c.Ctx.DB.Create(Person)
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+	c.Ctx.Redirect("/person", http.StatusFound)
 }
 
 //Delete deletes a Person item
-func (t *Person) Delete() {
-	PersonID := t.Ctx.Params["id"]
+func (c *Person) View() {
+	PersonID := c.Ctx.Params["id"]
 	id, err := strconv.Atoi(PersonID)
 	if err != nil {
-		t.Ctx.Data["Message"] = err.Error()
-		t.Ctx.Template = "error"
-		t.HTML(http.StatusInternalServerError)
+		c.Ctx.Data["Message"] = err.Error()
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusInternalServerError)
 		return
 	}
-	t.Ctx.DB.Delete(&models.Person{ID: id})
-	t.Ctx.Redirect("/person", http.StatusFound)
+
+	c.Ctx.DB.Find(&models.Person{ID: id})
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+}
+
+//Delete deletes a Person item
+func (c *Person) Delete() {
+	PersonID := c.Ctx.Params["id"]
+	id, err := strconv.Atoi(PersonID)
+	if err != nil {
+		c.Ctx.Data["Message"] = err.Error()
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusInternalServerError)
+		return
+	}
+
+	c.Ctx.DB.Delete(&models.Person{ID: id})
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+	c.Ctx.Redirect("/person", http.StatusFound)
 }
 
 //NewPerson returns a new  Person list controller
 func NewPerson() Controller {
 	return &Person{
 		Routes: []string{
+			//method;route;handler
 			"get;/person;Index",
 			"post;/person/create;Create",
+			"get;/person/view/{id};View",
 			"get;/person/delete/{id};Delete",
 		},
 	}

@@ -58,6 +58,7 @@ func NewNote() Controller {
 		Routes: []string{
 			"get;/note;Index",
 			"post;/note/create;Create",
+			"get;/note/view/{id};View",
 			"get;/note/delete/{id};Delete",
 		},
 	}

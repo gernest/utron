@@ -19,42 +19,56 @@ func (c *Company) Index() {
 	c.Ctx.DB.Order("created_at desc").Find(&Companys)
 	c.Ctx.Data["List"] = Companys
 	c.Ctx.Template = "application/company/index"
-	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.HTML(http.StatusOK)
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 }
 
 //Create creates a Company  item
 func (c *Company) Create() {
+	c.Ctx.Template = "application/company/index"
 	Company := &models.Company{}
 	req := c.Ctx.Request()
 	_ = req.ParseForm()
-	c.Ctx.Template = "application/company/create"
 	if err := Decoder.Decode(Company, req.PostForm); err != nil {
 		c.Ctx.Data["Message"] = err.Error()
 		c.Ctx.Template = "error"
-		c.Ctx.Log.Errors(err)
 		c.HTML(http.StatusInternalServerError)
 		return
 	}
-	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+
 	c.Ctx.DB.Create(Company)
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.Ctx.Redirect("/company", http.StatusFound)
 }
 
 //Delete deletes a Company item
-func (c *Company) Delete() {
-	c.Ctx.Template = "application/company/delete"
+func (c *Company) View() {
 	CompanyID := c.Ctx.Params["id"]
 	id, err := strconv.Atoi(CompanyID)
 	if err != nil {
 		c.Ctx.Data["Message"] = err.Error()
 		c.Ctx.Template = "error"
-		c.Ctx.Log.Errors(err)
 		c.HTML(http.StatusInternalServerError)
 		return
 	}
-	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template, id)
+
+	c.Ctx.DB.Find(&models.Company{ID: id})
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+}
+
+//Delete deletes a Company item
+func (c *Company) Delete() {
+	CompanyID := c.Ctx.Params["id"]
+	id, err := strconv.Atoi(CompanyID)
+	if err != nil {
+		c.Ctx.Data["Message"] = err.Error()
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusInternalServerError)
+		return
+	}
+
 	c.Ctx.DB.Delete(&models.Company{ID: id})
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.Ctx.Redirect("/company", http.StatusFound)
 }
 
@@ -62,8 +76,10 @@ func (c *Company) Delete() {
 func NewCompany() Controller {
 	return &Company{
 		Routes: []string{
+			//method;route;handler
 			"get;/company;Index",
 			"post;/company/create;Create",
+			"get;/company/view/{id};View",
 			"get;/company/delete/{id};Delete",
 		},
 	}
