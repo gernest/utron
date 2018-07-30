@@ -92,8 +92,11 @@ func (c *Context) Init() {
 
 // CoreDataInit adds default common properties to the templates available template variables
 func (c *Context) CoreDataInit() {
-	c.SetData("dp_date_year", "2018")
-	c.SetData("dp_site_name", c.Cfg.AppName)
+	c.SetData("current_year", "2018")
+	c.SetData("site_name", c.Cfg.AppName)
+	c.SetData("themecolor", c.Cfg.ThemeColor)
+	c.SetData("use_datatables", 1)
+
 	//c.SetData("dp_model_name", c.view)
 }
 

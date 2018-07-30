@@ -70,6 +70,8 @@ type Config struct {
 	DatabaseConn  string `json:"database_conn" yaml:"database_conn" toml:"database_conn" hcl:"database_conn"`
 	Automigrate   bool   `json:"automigrate" yaml:"automigrate" toml:"automigrate" hcl:"automigrate"`
 	NoModel       bool   `json:"no_model" yaml:"no_model" toml:"no_model" hcl:"no_model"`
+	ThemeColor    string `json:"themecolor" yaml:"themecolor" toml:"themecolor" hcl:"themecolor"`
+	GoogleID      string `json:"googleid" yaml:"googleid" toml:"googleid" hcl:"googleid"`
 
 	// session
 	SessionName     string `json:"session_name" yaml:"session_name" toml:"session_name" hcl:"session_name"`
@@ -107,6 +109,8 @@ func DefaultConfig() *Config {
 		ViewsDir:      "views",
 		AdminTemplate: AdminTemplateSBAdmin,
 		Automigrate:   true,
+		ThemeColor:    "blue",
+		GoogleID:      "",
 		SessionName:   "_gowaf",
 		SessionPath:   "/",
 		SessionMaxAge: 2592000,
