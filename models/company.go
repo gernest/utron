@@ -5,13 +5,13 @@ import (
 	"time"
 )
 
-//CompanyStruct stores information about the company behind the coin/blockchain
+//Company stores information about the company
 type Company struct {
 	ID        int       `schema:"id"`
 	CreatedAt time.Time `schema:"created"`
 	UpdatedAt time.Time `schema:"updated"`
 	Name      string    `schema:"name"`
-	ContactID Person    `schema:"contact_id"`
+	ContactID int       `schema:"contact_id"`
 	Person    Person    `gorm:"foreignkey:ContactID"`
 	PhoneID   int       `schema:"phone_id"`
 	Phone     Phone     `gorm:"foreignkey:PhoneID"`
