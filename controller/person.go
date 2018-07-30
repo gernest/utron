@@ -16,6 +16,7 @@ type Person struct {
 //Home renders a Person list
 func (c *Person) Index() {
 	Persons := []*models.Person{}
+	c.Ctx.DB.Preload("Gender").Preload("PersonName").Preload("Email").Preload("PersonType").Preload("Phone").Find(&Persons)
 	c.Ctx.DB.Order("created_at desc").Find(&Persons)
 	c.Ctx.Data["List"] = Persons
 	c.Ctx.Template = "application/person/index"

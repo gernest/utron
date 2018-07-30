@@ -12,12 +12,12 @@ type Gender struct {
 	CreatedAt  time.Time `schema:"created"`
 	UpdatedAt  time.Time `schema:"updated"`
 	ClaimedSex string    `schema:"claimed_sex"` // what they claim -> male, female, gay, lesbian, transgender, etc
-	BiosSex    byte      `schema:"legal_sex"`   //What is on birth certificate / under the hood? 0=Unknown, 1=Male, 2=Female
+	BioSex     byte      `schema:"legal_sex"`   //What is on birth certificate / under the hood? 0=Unknown, 1=Male, 2=Female
 }
 
 // SingleLine returns a formatted single line text representing the Model
 func (m *Gender) SingleLine() string {
-	return fmt.Sprintf("%s (%s)", m.ClaimedSex, m.BioSexToString(m.BiosSex))
+	return fmt.Sprintf("%s (%s)", m.ClaimedSex, m.BioSexToString(m.BioSex))
 }
 
 // MultiLine returns a formatted multi-line text representing the Model
