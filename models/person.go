@@ -12,6 +12,10 @@ type Person struct {
 	UpdatedAt time.Time `schema:"updated"`
 	Dob       time.Time `schema:"dob"`
 
+	//GenderID is the UID of the Person's Gender as found in the gender table
+	GenderID int    `schema:"gender_id"`
+	Gender   Gender `gorm:"foreignkey:GenderID"`
+
 	//NameID is the UID of the Person's name as found in the person_name table
 	NameID     int        `schema:"name_id"`
 	PersonName PersonName `gorm:"foreignkey:NameID"`
