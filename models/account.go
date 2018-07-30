@@ -17,8 +17,10 @@ type Account struct {
 	Email          string    `valid:"required,email" schema:"email"`
 	VerifyPass     string    `gorm:"-" schema:"verifypass"`
 	HashedPassword string
-	CompanyID      int `schema:"company_id"`
-	PersonID       int `schema:"person_id"`
+	CompanyID      int     `schema:"company_id"`
+	Company        Company `gorm:"foreignkey:CompanyID"`
+	PersonID       int     `schema:"person_id"`
+	Person         Person  `gorm:"foreignkey:PersonID"`
 }
 
 // Validate is used to verifiy password hash match
