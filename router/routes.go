@@ -368,6 +368,7 @@ func (r *Router) prepareContext(ctx *base.Context) {
 		if r.Options.SessionStore != nil {
 			ctx.SessionStore = r.Options.SessionStore
 		}
+		ctx.CoreDataInit()
 	}
 
 	// It is a good idea to ensure that a well prepared context always has the

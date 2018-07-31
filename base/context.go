@@ -92,12 +92,10 @@ func (c *Context) Init() {
 
 // CoreDataInit adds default common properties to the templates available template variables
 func (c *Context) CoreDataInit() {
-	c.SetData("current_year", "2018")
-	c.SetData("site_name", c.Cfg.AppName)
-	c.SetData("themecolor", c.Cfg.ThemeColor)
-	c.SetData("use_datatables", 1)
-
-	//c.SetData("dp_model_name", c.view)
+	c.Data["current_year"] = 2018
+	c.Data["site_name"] = c.Cfg.AppName
+	c.Data["themecolor"] = c.Cfg.ThemeColor
+	c.Data["use_datatables"] = 1
 }
 
 // Write writes the data to the context, data is written to the http.ResponseWriter
