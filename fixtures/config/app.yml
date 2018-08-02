@@ -8,3 +8,4 @@ admin_template: 0
 database: ""
 database_conn: ""
 automigrate: true 
+googleid: ""
