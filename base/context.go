@@ -95,6 +95,7 @@ func (c *Context) CoreDataInit() {
 	c.Data["current_year"] = 2018
 	c.Data["site_name"] = c.Cfg.AppName
 	c.Data["themecolor"] = c.Cfg.ThemeColor
+	c.Data["googleid"] = c.Cfg.GoogleID
 	c.Data["use_datatables"] = 1
 }
 
