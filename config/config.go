@@ -69,6 +69,7 @@ type Config struct {
 	Database      string `json:"database" yaml:"database" toml:"database" hcl:"database"`
 	DatabaseConn  string `json:"database_conn" yaml:"database_conn" toml:"database_conn" hcl:"database_conn"`
 	Automigrate   bool   `json:"automigrate" yaml:"automigrate" toml:"automigrate" hcl:"automigrate"`
+	LoadTestData  bool   `json:"load_test_data" yaml:"load_test_data" toml:"load_test_data" hcl:"load_test_data"`
 	NoModel       bool   `json:"no_model" yaml:"no_model" toml:"no_model" hcl:"no_model"`
 	ThemeColor    string `json:"themecolor" yaml:"themecolor" toml:"themecolor" hcl:"themecolor"`
 	GoogleID      string `json:"googleid" yaml:"googleid" toml:"googleid" hcl:"googleid"`
@@ -104,13 +105,17 @@ func DefaultConfig() *Config {
 		AppName:       "GoWAF WebApp",
 		BaseURL:       "http://localhost:8090",
 		Port:          8090,
+		ThemeColor:    "blue",
+		GoogleID:      "",
+		AdminTemplate: AdminTemplateSBAdmin,
 		Verbose:       false,
 		StaticDir:     "static",
 		ViewsDir:      "views",
-		AdminTemplate: AdminTemplateSBAdmin,
+		Database:      "",
+		DatabaseConn:  "",
 		Automigrate:   true,
-		ThemeColor:    "blue",
-		GoogleID:      "",
+		NoModel:       true,
+		LoadTestData:  false,
 		SessionName:   "_gowaf",
 		SessionPath:   "/",
 		SessionMaxAge: 2592000,
