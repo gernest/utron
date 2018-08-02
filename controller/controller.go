@@ -5,6 +5,7 @@ import (
 	"reflect"
 
 	"github.com/NlaakStudios/gowaf/base"
+	"github.com/NlaakStudios/gowaf/models"
 	"github.com/gorilla/schema"
 )
 
@@ -20,6 +21,7 @@ type Controller interface {
 // BaseController implements the Controller interface, It is recommended all
 // user defined Controllers should embed *BaseController.
 type BaseController struct {
+	Stats  *models.ModelStats
 	Ctx    *base.Context
 	Routes []string
 }
