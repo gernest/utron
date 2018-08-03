@@ -110,6 +110,7 @@ func (c *Context) CoreDataInit() {
 	c.Data["use_sparkline"] = false  //Set to true in your handler to enable  sparkline graphs
 	c.Data["use_datatables"] = false //Set to true in your handler to enable datatables
 
+	//flash.AddFlashToCtx(c)
 }
 
 // Write writes the data to the context, data is written to the http.ResponseWriter

@@ -62,6 +62,9 @@ func (a *Account) Login() {
 	r.ParseForm()
 	a.Ctx.Template = "application/account/login"
 	if r.Method == "GET" {
+		//TODO: Check cookie/session for valid login (ipaddress authroized, etc.) If so use the session to login...
+		//else redirect to login page
+
 		a.Ctx.Data["title"] = "User Login"
 		a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
 		return
@@ -81,8 +84,10 @@ func (a *Account) Login() {
 	if acct.CheckPassword(acct.HashedPassword, u.Password) {
 		//Login Success - Passwords match
 		acct.State = models.UserStateSignedIn
+		//TODO: Set Session
+		//TODO: Flash Login Success Message (Frontend)
 		a.Ctx.Log.Success("Login Accepted")
-		//pretty.Println(acct)
+
 	} else {
 		//Login Success - Passwords match
 		a.Ctx.Log.Errors("Invalid Password")
