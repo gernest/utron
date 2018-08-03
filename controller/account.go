@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/NlaakStudios/gowaf/models"
-	"github.com/kr/pretty"
 )
 
 // Account is the controller for the Account Model
@@ -49,6 +48,7 @@ func (a *Account) Register() {
 	}
 
 	// Add to database
+	u.HashedPassword = u.SetPassword(u.Password)
 	a.Ctx.DB.Create(u)
 
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
@@ -80,8 +80,9 @@ func (a *Account) Login() {
 	a.Ctx.DB.First(&acct, "Username = ?", u.Username) // find username with code form username
 	if acct.CheckPassword(acct.HashedPassword, u.Password) {
 		//Login Success - Passwords match
+		acct.State = models.UserStateSignedIn
 		a.Ctx.Log.Success("Login Accepted")
-		pretty.Println(acct)
+		//pretty.Println(acct)
 	} else {
 		//Login Success - Passwords match
 		a.Ctx.Log.Errors("Invalid Password")

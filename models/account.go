@@ -52,7 +52,10 @@ type Account struct {
 	Username       string    `valid:"required,length(6|16)" schema:"username"`
 	Email          string    `valid:"required,length(6|16)" schema:"email"`
 	Password       string    `gorm:"-" valid:"required,length(6|24)" schema:"password"`
-	HashedPassword string
+	VerifyPassword string    `gorm:"-" valid:"required,length(6|24)" schema:"verify_password"`
+	HashedPassword string    `schema:"hashed_password"`
+	State          byte      `schema:"state"`
+	Access         byte      `schema:"access"`
 
 	//EmailID        int       `schema:"email_id"`
 	//Email          Email     `gorm:"foreignkey:EmailID"`
@@ -104,7 +107,7 @@ func (m *Account) Validate() error {
 	if err != nil {
 		return err
 	}
-	if m.Password != m.VerifyPass {
+	if m.Password != m.VerifyPassword {
 		return errors.New("Model.Account: Password missmatch")
 	}
 	return err
@@ -122,7 +125,7 @@ func (m *Account) SetPassword(pw string) string {
 	return string(hash)
 }
 
-// CheckPassword checks that the password hash int he database matches the password the user just gave. Return TRUE if valid
+// CheckPassword checks that the password hash in the database matches the password the user just gave. Return TRUE if valid
 func (m *Account) CheckPassword(dbHash, givenPW string) bool {
 	// Comparing the password with the hash
 	if err := bcrypt.CompareHashAndPassword([]byte(dbHash), []byte(givenPW)); err != nil {
