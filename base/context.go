@@ -8,6 +8,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/NlaakStudios/gowaf/config"
 	"github.com/NlaakStudios/gowaf/logger"
@@ -92,9 +93,16 @@ func (c *Context) Init() {
 
 // CoreDataInit adds default common properties to the templates available template variables
 func (c *Context) CoreDataInit() {
-	c.Data["current_year"] = 2018
+	year, month, day := time.Now().Date()
+	c.Data["current_year"] = year
+	c.Data["current_month"] = month
+	c.Data["current_day"] = day
 	c.Data["site_name"] = c.Cfg.AppName
+	c.Data["site_url"] = c.Cfg.BaseURL
 	c.Data["themecolor"] = c.Cfg.ThemeColor
+	c.Data["notifications"] = c.Cfg.Notifications
+	c.Data["mail"] = c.Cfg.Mail
+	c.Data["profile"] = c.Cfg.Profile
 	c.Data["googleid"] = c.Cfg.GoogleID //NULL is disabled, set to enbed UA and Code
 	c.Data["use_styles"] = false        //Set to true in your handler to enable user style switching
 	c.Data["use_sparkline"] = false     //Set to true in your handler to enable  sparkline graphs
