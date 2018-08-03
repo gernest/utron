@@ -71,8 +71,12 @@ type Config struct {
 	Automigrate   bool   `json:"automigrate" yaml:"automigrate" toml:"automigrate" hcl:"automigrate"`
 	LoadTestData  bool   `json:"load_test_data" yaml:"load_test_data" toml:"load_test_data" hcl:"load_test_data"`
 	NoModel       bool   `json:"no_model" yaml:"no_model" toml:"no_model" hcl:"no_model"`
-	ThemeColor    string `json:"themecolor" yaml:"themecolor" toml:"themecolor" hcl:"themecolor"`
 	GoogleID      string `json:"googleid" yaml:"googleid" toml:"googleid" hcl:"googleid"`
+
+	Notifications bool   `json:"notifications" yaml:"notifications" toml:"notifications" hcl:"notifications"`
+	Mail          bool   `json:"mail" yaml:"mail" toml:"mail" hcl:"mail"`
+	Profile       bool   `json:"profile" yaml:"profile" toml:"profile" hcl:"profile"`
+	ThemeColor    string `json:"themecolor" yaml:"themecolor" toml:"themecolor" hcl:"themecolor"`
 
 	// session
 	SessionName     string `json:"session_name" yaml:"session_name" toml:"session_name" hcl:"session_name"`
@@ -115,6 +119,9 @@ func DefaultConfig() *Config {
 		DatabaseConn:  "",
 		Automigrate:   true,
 		NoModel:       true,
+		Notifications: false,
+		Mail:          false,
+		Profile:       false,
 		LoadTestData:  false,
 		SessionName:   "_gowaf",
 		SessionPath:   "/",
