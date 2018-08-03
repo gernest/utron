@@ -95,8 +95,11 @@ func (c *Context) CoreDataInit() {
 	c.Data["current_year"] = 2018
 	c.Data["site_name"] = c.Cfg.AppName
 	c.Data["themecolor"] = c.Cfg.ThemeColor
-	c.Data["googleid"] = c.Cfg.GoogleID
-	c.Data["use_datatables"] = 1
+	c.Data["googleid"] = c.Cfg.GoogleID //NULL is disabled, set to enbed UA and Code
+	c.Data["use_styles"] = false        //Set to true in your handler to enable user style switching
+	c.Data["use_sparkline"] = false     //Set to true in your handler to enable  sparkline graphs
+	c.Data["use_datatables"] = false    //Set to true in your handler to enable datatables
+
 }
 
 // Write writes the data to the context, data is written to the http.ResponseWriter
