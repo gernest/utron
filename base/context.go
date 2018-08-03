@@ -110,6 +110,12 @@ func (c *Context) CoreDataInit() {
 	c.Data["use_sparkline"] = false  //Set to true in your handler to enable  sparkline graphs
 	c.Data["use_datatables"] = false //Set to true in your handler to enable datatables
 
+	c.Data["flash_action"] = ""
+	c.Data["flash_message"] = ""
+	c.Data["flash_time"] = c.Cfg.FlashTime		//time in milliseconds to show the message before hiding (default is 3500)
+	c.Data["flash_stack"] = c.Cfg.FlashStack	//how many message to display at once (default is 6)
+
+
 	//flash.AddFlashToCtx(c)
 }
 

@@ -78,6 +78,8 @@ type Config struct {
 	Profile       bool   `json:"profile" yaml:"profile" toml:"profile" hcl:"profile"`
 	ThemeColor    string `json:"themecolor" yaml:"themecolor" toml:"themecolor" hcl:"themecolor"`
 
+	FlashTime  uint `json:"flash_time" yaml:"flash_time" toml:"flash_time" hcl:"flash_time"`
+	FlashStack uint `json:"flash_stack" yaml:"flash_stack" toml:"flash_stack" hcl:"flash_stack"`
 	// session
 	SessionName     string `json:"session_name" yaml:"session_name" toml:"session_name" hcl:"session_name"`
 	SessionPath     string `json:"session_path" yaml:"session_path" toml:"session_path" hcl:"session_path"`
@@ -123,6 +125,8 @@ func DefaultConfig() *Config {
 		Mail:          false,
 		Profile:       false,
 		LoadTestData:  false,
+		FlashTime:     3500,
+		FlashStack:    6,
 		SessionName:   "_gowaf",
 		SessionPath:   "/",
 		SessionMaxAge: 2592000,
