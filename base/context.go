@@ -104,9 +104,11 @@ func (c *Context) CoreDataInit() {
 	c.Data["mail"] = c.Cfg.Mail
 	c.Data["profile"] = c.Cfg.Profile
 	c.Data["googleid"] = c.Cfg.GoogleID //NULL is disabled, set to enbed UA and Code
-	c.Data["use_styles"] = false        //Set to true in your handler to enable user style switching
-	c.Data["use_sparkline"] = false     //Set to true in your handler to enable  sparkline graphs
-	c.Data["use_datatables"] = false    //Set to true in your handler to enable datatables
+
+	// Call these from your route handler if you need access to these libraries
+	c.Data["use_styles"] = false     //Set to true in your handler to enable user style switching
+	c.Data["use_sparkline"] = false  //Set to true in your handler to enable  sparkline graphs
+	c.Data["use_datatables"] = false //Set to true in your handler to enable datatables
 
 }
 

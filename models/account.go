@@ -3,9 +3,45 @@ package models
 import (
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/asaskevich/govalidator"
+	"golang.org/x/crypto/bcrypt"
+)
+
+const (
+	/***************************/
+	/***[User Account States]***/
+	/***************************/
+
+	// UserStateVerifyEmailSend -> Need to send out email verification
+	UserStateVerifyEmailSend = 1
+	// UserStateVerifyEmailSent -> Email verification has been sent
+	UserStateVerifyEmailSent = 2
+	// UserStateVerifyEmailDone -> User clicked on link in email, Verified, Account Active
+	UserStateVerifyEmailDone = 3
+	// UserStateBanned -> Account has been banned. No access granted other than guest
+	UserStateBanned = 4
+	// UserStateIdle -> User Signed in but no activity for 5 min (300 sec)
+	UserStateIdle = 5
+	// UserStateSignedIn -> User is Signed In
+	UserStateSignedIn = 6
+	// UserStateSignedOut -> User is Signed Out
+	UserStateSignedOut = 7
+
+	/**************************/
+	/***[User Access Rights]***/
+	/**************************/
+
+	// UserAccessGuest -> default, no account, Guest access
+	UserAccessGuest = 0
+	// UserAccessMember -> Active account with access to Member content
+	UserAccessMember = 1
+	// UserAccessEmployee -> Active account with access to Member and Employee content
+	UserAccessEmployee = 2
+	// UserAccessAdmin -> Active account with access to Member, Employee and Admin content
+	UserAccessAdmin = 3
 )
 
 // Account is used to represent a user for authentication
@@ -14,15 +50,17 @@ type Account struct {
 	CreatedAt      time.Time `schema:"created"`
 	UpdatedAt      time.Time `schema:"updated"`
 	Username       string    `valid:"required,length(6|16)" schema:"username"`
+	Email          string    `valid:"required,length(6|16)" schema:"email"`
 	Password       string    `gorm:"-" valid:"required,length(6|24)" schema:"password"`
-	EmailID        int       `schema:"email_id"`
-	Email          Email     `gorm:"foreignkey:EmailID"`
-	VerifyPass     string    `gorm:"-" schema:"verifypass"`
-	CompanyID      int       `schema:"company_id"`
-	Company        Company   `gorm:"foreignkey:CompanyID"`
-	PersonID       int       `schema:"person_id"`
-	Person         Person    `gorm:"foreignkey:PersonID"`
 	HashedPassword string
+
+	//EmailID        int       `schema:"email_id"`
+	//Email          Email     `gorm:"foreignkey:EmailID"`
+	//VerifyPass     string    `gorm:"-" schema:"verifypass"`
+	//CompanyID      int       `schema:"company_id"`
+	//Company        Company   `gorm:"foreignkey:CompanyID"`
+	//PersonID       int       `schema:"person_id"`
+	//Person         Person    `gorm:"foreignkey:PersonID"`
 }
 
 // SingleLine returns a formatted single line text representing the Model
@@ -30,10 +68,10 @@ type Account struct {
 func (m *Account) SingleLine() string {
 	return fmt.Sprintf("%s: %s [%d, %d, %d]",
 		m.Username,
-		m.Email.SingleLine(),
+		m.Email,
 		m.ID,
-		m.CompanyID,
-		m.PersonID,
+		//m.CompanyID,
+		//m.PersonID,
 	)
 }
 
@@ -44,9 +82,9 @@ func (m *Account) SingleLine() string {
 func (m *Account) MultiLine() string {
 	return fmt.Sprintf("%s: %s\n%s\n%s\n",
 		m.Username,
-		m.Person.PersonName.SingleLine(),
-		m.Email.Address,
-		m.Company.SingleLine(),
+		//m.Person.PersonName.SingleLine(),
+		//m.Email.Address,
+		//m.Company.SingleLine(),
 	)
 }
 
@@ -70,4 +108,25 @@ func (m *Account) Validate() error {
 		return errors.New("Model.Account: Password missmatch")
 	}
 	return err
+
+}
+
+// SetPassword create a password hash
+func (m *Account) SetPassword(pw string) string {
+	// Generate "hash" to store from user password
+	hash, err := bcrypt.GenerateFromPassword([]byte(pw), bcrypt.DefaultCost)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return string(hash)
+}
+
+// CheckPassword checks that the password hash int he database matches the password the user just gave. Return TRUE if valid
+func (m *Account) CheckPassword(dbHash, givenPW string) bool {
+	// Comparing the password with the hash
+	if err := bcrypt.CompareHashAndPassword([]byte(dbHash), []byte(givenPW)); err != nil {
+		return false
+	}
+	return true
 }

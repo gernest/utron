@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/NlaakStudios/gowaf/models"
@@ -79,12 +78,14 @@ func (a *Account) Login() {
 
 	var acct models.Account
 	a.Ctx.DB.First(&acct, "Username = ?", u.Username) // find username with code form username
-	if acct.Password == u.Password {
-
+	if acct.CheckPassword(acct.HashedPassword, u.Password) {
+		//Login Success - Passwords match
+		a.Ctx.Log.Success("Login Accepted")
+		pretty.Println(acct)
+	} else {
+		//Login Success - Passwords match
+		a.Ctx.Log.Errors("Invalid Password")
 	}
-
-	pretty.Println(acct)
-	fmt.Printf("Success.\n")
 }
 
 // Logout logs the user out of they are logged in
