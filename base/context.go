@@ -7,7 +7,9 @@ import (
 	"bytes"
 	"errors"
 	"io"
+	"net"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/NlaakStudios/gowaf/config"
@@ -97,6 +99,7 @@ func (c *Context) CoreDataInit() {
 	c.Data["current_year"] = year
 	c.Data["current_month"] = month
 	c.Data["current_day"] = day
+	c.Data["remote_ip"] = c.getRealAddr()
 	c.Data["site_name"] = c.Cfg.AppName
 	c.Data["site_url"] = c.Cfg.BaseURL
 	c.Data["themecolor"] = c.Cfg.ThemeColor
@@ -112,9 +115,8 @@ func (c *Context) CoreDataInit() {
 
 	c.Data["flash_action"] = ""
 	c.Data["flash_message"] = ""
-	c.Data["flash_time"] = c.Cfg.FlashTime		//time in milliseconds to show the message before hiding (default is 3500)
-	c.Data["flash_stack"] = c.Cfg.FlashStack	//how many message to display at once (default is 6)
-
+	c.Data["flash_time"] = c.Cfg.FlashTime   //time in milliseconds to show the message before hiding (default is 3500)
+	c.Data["flash_stack"] = c.Cfg.FlashStack //how many message to display at once (default is 6)
 
 	//flash.AddFlashToCtx(c)
 }
@@ -216,4 +218,31 @@ func (c *Context) Commit() error {
 // Redirect redirects request to url using code as status code.
 func (c *Context) Redirect(url string, code int) {
 	http.Redirect(c.Response(), c.Request(), url, code)
+}
+
+//func (c *Context) getRealAddr(r *http.Request) string {
+func (c *Context) getRealAddr() string {
+
+	remoteIP := ""
+	// the default is the originating ip. but we try to find better options because this is almost
+	// never the right IP
+	if parts := strings.Split(c.request.RemoteAddr, ":"); len(parts) == 2 {
+		remoteIP = parts[0]
+	}
+	// If we have a forwarded-for header, take the address from there
+	if xff := strings.Trim(c.request.Header.Get("X-Forwarded-For"), ","); len(xff) > 0 {
+		addrs := strings.Split(xff, ",")
+		lastFwd := addrs[len(addrs)-1]
+		if ip := net.ParseIP(lastFwd); ip != nil {
+			remoteIP = ip.String()
+		}
+		// parse X-Real-Ip header
+	} else if xri := c.request.Header.Get("X-Real-Ip"); len(xri) > 0 {
+		if ip := net.ParseIP(xri); ip != nil {
+			remoteIP = ip.String()
+		}
+	}
+
+	return remoteIP
+
 }
