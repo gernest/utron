@@ -60,6 +60,8 @@ const (
 // Config stores configurations values
 type Config struct {
 	AppName       string `json:"app_name" yaml:"app_name" toml:"app_name" hcl:"app_name"`
+	Domain        string `json:"domain" yaml:"domain" toml:"domain" hcl:"domain"`
+	CompanyName   string `json:"company_name" yaml:"company_name" toml:"company_name" hcl:"company_name"`
 	BaseURL       string `json:"base_url" yaml:"base_url" toml:"base_url" hcl:"base_url"`
 	Port          int    `json:"port" yaml:"port" toml:"port" hcl:"port"`
 	Verbose       bool   `json:"verbose" yaml:"verbose" toml:"verbose" hcl:"verbose"`
@@ -109,6 +111,8 @@ func DefaultConfig() *Config {
 	b := securecookie.GenerateRandomKey(32)
 	return &Config{
 		AppName:       "GoWAF WebApp",
+		Domain:        "nlaak.com",
+		CompanyName:   "Nlaak Studios",
 		BaseURL:       "http://localhost:8090",
 		Port:          8090,
 		ThemeColor:    "blue",

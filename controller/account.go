@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/NlaakStudios/gowaf/models"
+	"gopkg.in/gomail.v2"
 )
 
 // Account is the controller for the Account Model
@@ -81,17 +83,29 @@ func (a *Account) Login() {
 
 	var acct models.Account
 	a.Ctx.DB.First(&acct, "Username = ?", u.Username) // find username with code form username
+	//Did we load a a user?
+	if acct.ID == 0 {
+		a.Ctx.Log.Errors(err)
+		a.Ctx.Redirect("/account/register", http.StatusFound)
+		return
+	}
+
 	if acct.CheckPassword(acct.HashedPassword, u.Password) {
 		//Login Success - Passwords match
 		acct.State = models.UserStateSignedIn
 		//TODO: Set Session
 		//TODO: Flash Login Success Message (Frontend)
+		a.Ctx.Template = "application/account/dashboard"
 		a.Ctx.Log.Success("Login Accepted")
-
 	} else {
 		//Login Success - Passwords match
+		acct.State = models.UserStateSignedOut
+		a.Ctx.Template = "application/account/login"
 		a.Ctx.Log.Errors("Invalid Password")
 	}
+
+	a.Ctx.DB.Update(acct)
+	a.HTML(http.StatusOK)
 }
 
 // Logout logs the user out of they are logged in
@@ -100,6 +114,27 @@ func (a *Account) Logout() {
 	r.ParseForm()
 	a.Ctx.Template = "application/account/logout"
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
+}
+
+// SendEmailVerification Sends a Verification Email to the user registering
+func (a *Account) SendEmailVerification(acct models.Account) {
+	m := gomail.NewMessage()
+	m.SetHeader("From", fmt.Sprintf("noreply@%s", a.Ctx.Cfg.Domain))
+	m.SetHeader("To", acct.Email)
+	m.SetHeader("Subject", fmt.Sprintf("%s email verification", a.Ctx.Cfg.AppName))
+	m.SetBody("text/html", fmt.Sprintf("Hello <b>%s</b>, please verify your email address by clicking <a href=\"%s\">here</a>.", acct.Username, a.Ctx.Cfg.BaseURL))
+
+	d := gomail.NewDialer("smtp.example.com", 587, "user", "123456")
+
+	// Send the email to registering user.
+	if err := d.DialAndSend(m); err != nil {
+		panic(err)
+	}
+
+	//Update the account state to Email Verification Sent
+	acct.State = models.UserStateVerifyEmailSent
+	a.Ctx.DB.Update(acct)
+	a.HTML(http.StatusOK)
 }
 
 // NewAccount returns a new account controller object
