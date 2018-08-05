@@ -99,6 +99,7 @@ func (c *Context) CoreDataInit() {
 	c.Data["current_year"] = year
 	c.Data["current_month"] = month
 	c.Data["current_day"] = day
+	c.Data["loggedin"] = false
 	c.Data["remote_ip"] = c.getRealAddr()
 	c.Data["site_name"] = c.Cfg.AppName
 	c.Data["site_url"] = c.Cfg.BaseURL

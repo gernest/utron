@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/google/uuid"
+
 	"github.com/NlaakStudios/gowaf/models"
 	"gopkg.in/gomail.v2"
 )
@@ -31,6 +33,13 @@ func (a *Account) Register() {
 		a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
 		return
 	}
+	/*
+		sess, err := a.Ctx.SessionStore.New(r, "state")
+		if err == nil && sess != nil {
+			a.Ctx.Log.Info("Session Store Active")
+			//a.Ctx.SessionStore.
+		}
+	*/
 
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
 	u := &models.Account{}
@@ -51,7 +60,17 @@ func (a *Account) Register() {
 
 	// Add to database
 	u.HashedPassword = u.SetPassword(u.Password)
+	u.State = models.UserStateSignedIn
 	a.Ctx.DB.Create(u)
+
+	sess, serr := a.Ctx.NewSession(a.Ctx.Cfg.SessionName)
+	if serr != nil {
+		a.Ctx.Log.Errors("Unable to create new session")
+	}
+
+	sess.ID = uuid.New().String()
+	sess.Values["uid"] = u.ID
+	sess.Values["state"] = u.State
 
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
 
@@ -95,6 +114,7 @@ func (a *Account) Login() {
 		acct.State = models.UserStateSignedIn
 		//TODO: Set Session
 		//TODO: Flash Login Success Message (Frontend)
+		a.Ctx.Data["loggedin"] = true
 		a.Ctx.Template = "application/account/dashboard"
 		a.Ctx.Log.Success("Login Accepted")
 	} else {
@@ -112,7 +132,8 @@ func (a *Account) Login() {
 func (a *Account) Logout() {
 	r := a.Ctx.Request()
 	r.ParseForm()
-	a.Ctx.Template = "application/account/logout"
+	a.Ctx.Data["loggedin"] = false
+	a.Ctx.Template = "application/account/index"
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
 }
 
