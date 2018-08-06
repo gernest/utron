@@ -37,9 +37,10 @@ var (
 // Router registers routes and handlers. It embeds gorilla mux Router
 type Router struct {
 	*mux.Router
-	config  *config.Config
-	routes  []*route
-	Options *Options
+	config    *config.Config
+	routes    []*route
+	Options   *Options
+	NumCtrlrs int
 }
 
 //Options additional settings for the router.
@@ -237,6 +238,8 @@ func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interfa
 		}
 
 	}
+
+	r.NumCtrlrs = len(routes.standard) + len(routes.inCtrl)
 	return nil
 }
 
@@ -336,6 +339,11 @@ func (r *Router) add(activeRoute *route, ctrlfn func() controller.Controller, mi
 
 	}
 	return nil
+}
+
+// Count returns the number of registered models
+func (r *Router) Count() int {
+	return r.NumCtrlrs
 }
 
 func chainMiddleware(ctx *base.Context, wares ...*Middleware) alice.Chain {

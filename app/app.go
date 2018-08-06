@@ -44,6 +44,10 @@ type App struct {
 	isInit        bool
 }
 
+// ResiterFunc is used to pass in a reference to the actuall user defined function for registering
+// the webapp's Models and Controllers
+type RegisterFunc func(*App)
+
 // NewApp creates a new bare-bone gowaf application. To use the MVC components, you should call
 // the Init method before serving requests.
 func NewApp() *App {
@@ -72,16 +76,7 @@ func NewMVC(dir ...string) (*App, error) {
 		return nil, err
 	}
 
-	app.Log.Info("Using base fixture folder at ", app.FixtureFolder)
-	app.Log.Info("Using config at ", app.ConfigPath)
-	app.Log.Info("Using static assets at ", app.Config.StaticDir)
-	app.Log.Info("Using views at ", app.Config.ViewsDir)
-	if app.Config.LoadTestData {
-		app.Log.Warn("Load Test Data is enabled in config, please turn off for production.")
-	}
-	if app.Config.GoogleID != "" {
-		app.Log.Success("Google Analytics enabled with ID: ", app.Config.GoogleID)
-	}
+	app.Log.Info(app.Config.AppName, " v", app.Version, " for ", app.Config.BaseURL, "...")
 
 	return app, nil
 }
@@ -355,7 +350,7 @@ func (a *App) validateArgs() {
 }
 
 // Run parses command line arguments and processes commands
-func (a *App) Run() {
+func (a *App) Run(f RegisterFunc) {
 
 	//Validate the command line arguments
 	a.validateArgs()
@@ -412,7 +407,25 @@ func (a *App) Run() {
 	}
 
 	if startNodeCmd.Parsed() {
-		//a.StartNode(a.NodePort)
+		if a.Config.Verbose {
+			a.Log.Info("Using base fixture folder at ", a.FixtureFolder)
+			a.Log.Info("Using static assets at ", a.Config.StaticDir)
+			a.Log.Info("Using views at ", a.Config.ViewsDir)
+
+			if a.Config.LoadTestData {
+				a.Log.Warn("Load Test Data is enabled in config, please turn off for production.")
+			}
+
+			if a.Config.GoogleID != "" {
+				a.Log.Success("Google Analytics enabled with ID: ", a.Config.GoogleID)
+			}
+		}
+
+		// Call the users Register Function
+		a.Log.Info("Registering Models & Controllers...")
+		f(a)
+		a.Log.Success("Done. ", a.Model.Count(), " Models and ", a.Router.Count(), " Controllers registered.")
+
 		port := fmt.Sprintf(":%d", a.Config.Port)
 		a.Log.Info("Starting server, listening on port", port)
 		log.Fatal(http.ListenAndServe(port, a))
