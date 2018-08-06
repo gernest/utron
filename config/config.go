@@ -18,21 +18,49 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var errCfgUnsupported = errors.New("utron: config file format not supported")
+/*
+Required Directory Structure for WebApp
+webapp-binary.exe
+|
+|- serve				`all static files served fromt nis folder and all subfolders`
+     |- assets			`All WebApp specific files (css, js, images, audio and video)`
+     |    |- js
+     |    |- css
+     |    |- img
+     |    |- vid
+     |    |- aud
+     |- vendor			`All vendor assets - each in thier own folder`
+     |- widgets			`HTML Snippets wrapped in a div with data-widget="WidgetName"`
+     |- templates		`route template files, ie Landing.html, Dashboard.tpl, Login.html, ect.`
+
+*/
+var errCfgUnsupported = errors.New("gowaf: config file format not supported")
 
 // Config stores configurations values
 type Config struct {
 	AppName      string `json:"app_name" yaml:"app_name" toml:"app_name" hcl:"app_name"`
+	Domain       string `json:"domain" yaml:"domain" toml:"domain" hcl:"domain"`
+	CompanyName  string `json:"company_name" yaml:"company_name" toml:"company_name" hcl:"company_name"`
 	BaseURL      string `json:"base_url" yaml:"base_url" toml:"base_url" hcl:"base_url"`
 	Port         int    `json:"port" yaml:"port" toml:"port" hcl:"port"`
 	Verbose      bool   `json:"verbose" yaml:"verbose" toml:"verbose" hcl:"verbose"`
+	FixturesDir  string `json:"fixtures_dir" yaml:"fixtures_dir" toml:"fixtures_dir" hcl:"fixtures_dir"`
 	StaticDir    string `json:"static_dir" yaml:"static_dir" toml:"static_dir" hcl:"static_dir"`
 	ViewsDir     string `json:"view_dir" yaml:"view_dir" toml:"view_dir" hcl:"view_dir"`
 	Database     string `json:"database" yaml:"database" toml:"database" hcl:"database"`
 	DatabaseConn string `json:"database_conn" yaml:"database_conn" toml:"database_conn" hcl:"database_conn"`
 	Automigrate  bool   `json:"automigrate" yaml:"automigrate" toml:"automigrate" hcl:"automigrate"`
+	LoadTestData bool   `json:"load_test_data" yaml:"load_test_data" toml:"load_test_data" hcl:"load_test_data"`
 	NoModel      bool   `json:"no_model" yaml:"no_model" toml:"no_model" hcl:"no_model"`
+	GoogleID     string `json:"googleid" yaml:"googleid" toml:"googleid" hcl:"googleid"`
 
+	Notifications bool   `json:"notifications" yaml:"notifications" toml:"notifications" hcl:"notifications"`
+	Mail          bool   `json:"mail" yaml:"mail" toml:"mail" hcl:"mail"`
+	Profile       bool   `json:"profile" yaml:"profile" toml:"profile" hcl:"profile"`
+	ThemeColor    string `json:"themecolor" yaml:"themecolor" toml:"themecolor" hcl:"themecolor"`
+
+	FlashTime  uint `json:"flash_time" yaml:"flash_time" toml:"flash_time" hcl:"flash_time"`
+	FlashStack uint `json:"flash_stack" yaml:"flash_stack" toml:"flash_stack" hcl:"flash_stack"`
 	// session
 	SessionName     string `json:"session_name" yaml:"session_name" toml:"session_name" hcl:"session_name"`
 	SessionPath     string `json:"session_path" yaml:"session_path" toml:"session_path" hcl:"session_path"`
@@ -61,14 +89,28 @@ func DefaultConfig() *Config {
 	a := securecookie.GenerateRandomKey(32)
 	b := securecookie.GenerateRandomKey(32)
 	return &Config{
-		AppName:       "utron web app",
+		AppName:       "GoWAF WebApp",
+		Domain:        "nlaak.com",
+		CompanyName:   "Nlaak Studios",
 		BaseURL:       "http://localhost:8090",
 		Port:          8090,
+		ThemeColor:    "blue",
+		GoogleID:      "",
 		Verbose:       false,
+		FixturesDir:   "./fixtures",
 		StaticDir:     "static",
 		ViewsDir:      "views",
+		Database:      "",
+		DatabaseConn:  "",
 		Automigrate:   true,
-		SessionName:   "_utron",
+		NoModel:       true,
+		Notifications: false,
+		Mail:          false,
+		Profile:       false,
+		LoadTestData:  false,
+		FlashTime:     3500,
+		FlashStack:    6,
+		SessionName:   "_gowaf",
 		SessionPath:   "/",
 		SessionMaxAge: 2592000,
 		SessionKeyPair: []string{
@@ -163,13 +205,13 @@ func (c *Config) SyncEnv() error {
 		case reflect.Int:
 			v, err := strconv.Atoi(env)
 			if err != nil {
-				return fmt.Errorf("utron: loading config field %s %v", field.Name, err)
+				return fmt.Errorf("gowaf: loading config field %s %v", field.Name, err)
 			}
 			cfg.FieldByName(field.Name).Set(reflect.ValueOf(v))
 		case reflect.Bool:
 			b, err := strconv.ParseBool(env)
 			if err != nil {
-				return fmt.Errorf("utron: loading config field %s %v", field.Name, err)
+				return fmt.Errorf("gowaf: loading config field %s %v", field.Name, err)
 			}
 			cfg.FieldByName(field.Name).SetBool(b)
 		}

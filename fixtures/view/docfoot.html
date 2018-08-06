@@ -1,0 +1,42 @@
+
+                <!-- End Page Content -->
+            </div>
+            <!-- End Container fluid  -->>
+            <!-- Begin footer -->
+			<footer class="topbar" style="color:black">
+				<span>© Copyright {{ .year }}. All Rights Reserved by <a href="{{ .siteurl }}" target="_blank">{{ .sitename }}</a></span>
+				<span class="pull-right">Design & Developed by <a href="https://www.nlaak.com" target="_blank">Nlaak Studios</a></span>
+			</footer>			
+            <!-- End footer -->
+        </div>
+        <!-- End Page wrapper  -->
+    </div>
+    <!-- AUTO JIGGER - END DOC -->
+    <!--[This is a hidden DIV with all JavaScript before closing body tag]-->
+    <div id="tail" class="vanish">
+        <script type="application/javascript" id="auto-jigger-js">
+        /*
+        Nlaak Studios Auto-Jigger @andrewdonelson - https://www.nlaak.com/#autojigger - @nlaakstudios
+        License -  MIT
+        Auto Jigger Core Javascript */
+        AJ$=function(){window.W$=window;W$.D$=W$.document;W$.H$=D$.getElementsByTagName("head")[0];W$.T$=D$.getElementById("tail");W$.B$=D$.getElementsByTagName("body")[0];W$.C$=D$.styleSheets;W$.S$=D$.scripts;var e={VERSION:"3.3.0",LOADING:0,a:0,j:function(a,b,c,e,f,h,k){function l(){console.log("File load successful.")}function m(){console.log("File load failed.")}for(var d,g=0;3>g;g++)arguments[g]=chk(arguments[g],!1),!1===arguments[g]&&console&&console.log("Error");if("script"==arguments[0]||"js"==arguments[0])d=
+        D$.createElement("script"),d.async=0,d.src=c,d.type="application/javascript";else if("link"==arguments[0]||"css"==arguments[0])d=D$.createElement("link"),d.href=c,d.rel="stylesheet",d.type="text/css";else return"html"==arguments[0]?(gfn(c),gex(c),!0):!1;d.id=arguments[1];d.onload=h?h:l.bind(this);d.onerror=k?k:m.bind(this);return function(){var a=!0===e?T$:H$;"string"!=typeof f&&(f="last");if("first"==f)return a.firstElementChild(d),!0;if("last"==f)return a.appendChild(d),!0;a=gei(f);return"undefined"!=
+        typeof a&&null!=a&&null!=a.nextElementSibling?(a.nextElementSibling.insertBefore(d),!0):!1}()},i:function(a){if(T$&&"DIV"==T$.tagName&&a&&"Array"===a.constructor.name){AJ$.LOADING=a.length;AJ$.a=0;cls("logo","add","appear");cls("wrapper","add","vanish","");do{var b=a.shift();var c=AJ$.FILES.indexOf(b);-1===c&&(lds(gex(b),gfn(b),b,"js"==gex(b)?!0:!1,"last",AJ$.l,null),AJ$.FILES.push(b))}while(0<a.length)}},m:function(a){return!(null===a||"undefined"===typeof a||!1===a||""===a)},b:function(a,b){return this.vld(a)?
+        a:b},f:function(a){return D$.getElementById(a)},c:function(a,b,c,e){try{if(a="string"!=typeof a?a:gei(a))switch(b.toLowerCase()){case "set":a.className=c;break;case "clear":a.className="";break;case "add":a.classList.add(c);break;case "remove":try{a.classList.remove(c)}catch(f){}break;case "replace":try{a.classList.remove(c)}catch(f){}try{a.classList.add(e)}catch(f){}break;case "toggle":a.classList.toggle(c)}}catch(f){alert(f)}},g:function(a){return"undefined"===typeof a||""==a?"":/(?:\.([^.]+))?$/.exec(a)[1].toLowerCase()},
+        get:function(a,b){var c=new XMLHttpRequest;c.open("GET",a,!0);c.responseType="json";c.onload=function(){var a=c.status;200===a?b(null,c.response):b(a,c.response)};c.send()},put:function(a){var b=new XMLHttpRequest;b.open("POST",a,!0);b.setRequestHeader("Content-type","application/json; charset=utf-8");b.onload=function(){var a=JSON.parse(b.responseText);4==b.readyState&&"201"==b.status?console.table(a):console.error(a)};b.send(json)},h:function(a){if("string"===typeof a)return a.substring(a.lastIndexOf("/")+
+        1)},l:function(){AJ$.a++;AJ$.a===AJ$.LOADING&&(AJ$.READY?AJ$.READY=!0:AJ$.READY||"function"!=typeof window.AutoJiggerReady||(window.AutoJiggerReady(),AJ$.READY=!0));AJ$.READY&&(cls("logo","replace","appear","vanish"),cls("wrapper","replace","vanish","appear"))},FILES:[],READY:!1};W$.vld=e.m;W$.chk=e.b;W$.gei=e.f;W$.cls=e.c;W$.gex=e.g;W$.gfn=e.h;W$.lds=e.j;W$.las=e.i;W$.lds("js","jquery","https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js",!0,"last",function(){W$.las(["https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js","https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css","https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.bundle.min.js"])},null);return e}();
+        
+        /**
+        * AutoJiggerReady() is not required if you do not want to do anything after its ready. This is the correct way to load page specific scripts though.
+        */
+        function AutoJiggerReady() {
+            las([
+                '/assets/css/style.css'
+                ]); //Load up you page scripts/misc files
+        }			
+        </script>
+    </div>    
+</body>
+
+</html>

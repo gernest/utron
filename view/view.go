@@ -28,11 +28,12 @@ func NewSimpleView(viewDir string) (View, error) {
 		return nil, err
 	}
 	if !info.IsDir() {
-		return nil, fmt.Errorf("utron: %s is not a directory", viewDir)
+		return nil, fmt.Errorf("gowaf: %s is not a directory", viewDir)
 	}
 	s := &SimpleView{
 		viewDir: viewDir,
-		tmpl:    template.New(filepath.Base(viewDir)),
+		//tmpl:    template.New(filepath.Base(viewDir)),
+		tmpl:    template.New(viewDir),
 	}
 	return s.load(viewDir)
 }
@@ -51,6 +52,7 @@ func (s *SimpleView) load(dir string) (View, error) {
 		if err != nil {
 			return err
 		}
+
 		if info.IsDir() {
 			return nil
 		}
@@ -80,7 +82,7 @@ func (s *SimpleView) load(dir string) (View, error) {
 		name = strings.TrimSuffix(name, extension) // remove extension
 
 		t := s.tmpl.New(name)
-		
+
 		if _, err = t.Parse(string(data)); err != nil {
 			return err
 		}
@@ -96,5 +98,6 @@ func (s *SimpleView) load(dir string) (View, error) {
 
 // Render executes template named name, passing data as context, the output is written to out.
 func (s *SimpleView) Render(out io.Writer, name string, data interface{}) error {
+	//println("Render Template: ", name) //DELETE THIS - DEBUG
 	return s.tmpl.ExecuteTemplate(out, name, data)
 }

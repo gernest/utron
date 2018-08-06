@@ -1,0 +1,55 @@
+<!-- Basic Default MVC View Template -->
+<!-- TODO: Update formatting to use Monster Admin (Bootstrap) -->
+{{template "dochead" .}}
+
+<div id="address">
+    <!-- Form to add Model-->
+    <!-- TODO: Check Template Vars, If Route is Create Show This -->
+    <form method="post" action="/address/create">
+        <table>
+            <tr>
+                <th>Create A Address</th>
+            </tr>
+            <tr>
+                <td><input name="number"></td>
+                <td><input name="street"></td>
+                <td><input name="city"></td>
+                <td><input name="state"></td>
+                <td><input name="zip"></td>
+                <td><input name="county"></td>
+                <td><input name="country"></td>
+                <td><button type="submit">Create</button></td>
+            </tr>c
+        </table>
+    </form>
+
+    <!-- Table list of all models -->
+    <!-- TODO: Check Template Vars, If Route is Index Show This -->
+    <table>
+        <tr>
+            <th>My Address List</th>
+        </tr>
+        {{range $k,$v:=.List}}
+        <tr>
+            <td>{{$v.ID}}</td>
+            <td>{{$v.Number}}</td>
+            <td>{{$v.Street}}</td>
+            <td>{{$v.City}}</td>
+            <td>{{$v.State}}</td>
+            <td>{{$v.Zip}}</td>
+            <td>{{$v.County}}</td>
+            <td>{{$v.Country}}</td>
+
+            <td><a href="/address/delete/{{$v.ID}}"><button>Delete</button></a></td>
+        </tr>
+        {{end}}
+    </table>
+
+    <!-- TODO: Check Template Vars, If Route is Delete Show This -->
+    <!-- Show Flash Message with Succes or Fail of Delete -->
+
+    <!-- TODO: Check Template Vars, If Route is Update Show This -->
+    <!-- Show Flash Message with Succes or Fail of Update -->
+</div>
+
+{{template "docfoot" .}}

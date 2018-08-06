@@ -1,0 +1,10 @@
+app_name = "GoWAF WebApp"
+base_url = "http://localhost:8090"
+port = 8090
+verbose = false
+static_dir = "fixtures/fakedir"
+view_dir = "fixtures/fakedir"
+database = "postgres"
+database_conn = "postgres://postgres@localhost/utron?sslmode=disable"
+automigrate = true
+no_model = true

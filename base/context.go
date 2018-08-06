@@ -1,4 +1,4 @@
-// Package base is the basic building cblock of utron. The main structure here is
+// Package base is the basic building cblock of gowaf. The main structure here is
 // Context, but for some reasons to avoid confusion since there is a lot of
 // context packages I decided to name this package base instead.
 package base
@@ -7,12 +7,15 @@ import (
 	"bytes"
 	"errors"
 	"io"
+	"net"
 	"net/http"
+	"strings"
+	"time"
 
-	"github.com/gernest/utron/config"
-	"github.com/gernest/utron/logger"
-	"github.com/gernest/utron/models"
-	"github.com/gernest/utron/view"
+	"github.com/NlaakStudios/gowaf/config"
+	"github.com/NlaakStudios/gowaf/logger"
+	"github.com/NlaakStudios/gowaf/models"
+	"github.com/NlaakStudios/gowaf/view"
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -41,7 +44,7 @@ var Content = struct {
 type Context struct {
 
 	// Params are the parameters specified in the url patterns
-	// utron uses gorilla mux for routing. So basically Params stores results
+	// gowaf uses gorilla mux for routing. So basically Params stores results
 	// after calling mux.Vars function .
 	//
 	// e.g. if you have route /hello/{world}
@@ -88,6 +91,35 @@ func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 // Init initializes the context
 func (c *Context) Init() {
 	c.Params = mux.Vars(c.request)
+}
+
+// CoreDataInit adds default common properties to the templates available template variables
+func (c *Context) CoreDataInit() {
+	year, month, day := time.Now().Date()
+	c.Data["current_year"] = year
+	c.Data["current_month"] = month
+	c.Data["current_day"] = day
+	c.Data["loggedin"] = false
+	c.Data["remote_ip"] = c.getRealAddr()
+	c.Data["site_name"] = c.Cfg.AppName
+	c.Data["site_url"] = c.Cfg.BaseURL
+	c.Data["themecolor"] = c.Cfg.ThemeColor
+	c.Data["notifications"] = c.Cfg.Notifications
+	c.Data["mail"] = c.Cfg.Mail
+	c.Data["profile"] = c.Cfg.Profile
+	c.Data["googleid"] = c.Cfg.GoogleID //NULL is disabled, set to enbed UA and Code
+
+	// Call these from your route handler if you need access to these libraries
+	c.Data["use_styles"] = false     //Set to true in your handler to enable user style switching
+	c.Data["use_sparkline"] = false  //Set to true in your handler to enable  sparkline graphs
+	c.Data["use_datatables"] = false //Set to true in your handler to enable datatables
+
+	c.Data["flash_action"] = ""
+	c.Data["flash_message"] = ""
+	c.Data["flash_time"] = c.Cfg.FlashTime   //time in milliseconds to show the message before hiding (default is 3500)
+	c.Data["flash_stack"] = c.Cfg.FlashStack //how many message to display at once (default is 6)
+
+	//flash.AddFlashToCtx(c)
 }
 
 // Write writes the data to the context, data is written to the http.ResponseWriter
@@ -171,7 +203,7 @@ func (c *Context) Commit() error {
 		return errors.New("already committed")
 	}
 	if c.Template != "" && c.view != nil {
-		out := &bytes.Buffer{}		
+		out := &bytes.Buffer{}
 		err := c.view.Render(out, c.Template, c.Data)
 		if err != nil {
 			return err
@@ -187,4 +219,31 @@ func (c *Context) Commit() error {
 // Redirect redirects request to url using code as status code.
 func (c *Context) Redirect(url string, code int) {
 	http.Redirect(c.Response(), c.Request(), url, code)
+}
+
+//func (c *Context) getRealAddr(r *http.Request) string {
+func (c *Context) getRealAddr() string {
+
+	remoteIP := ""
+	// the default is the originating ip. but we try to find better options because this is almost
+	// never the right IP
+	if parts := strings.Split(c.request.RemoteAddr, ":"); len(parts) == 2 {
+		remoteIP = parts[0]
+	}
+	// If we have a forwarded-for header, take the address from there
+	if xff := strings.Trim(c.request.Header.Get("X-Forwarded-For"), ","); len(xff) > 0 {
+		addrs := strings.Split(xff, ",")
+		lastFwd := addrs[len(addrs)-1]
+		if ip := net.ParseIP(lastFwd); ip != nil {
+			remoteIP = ip.String()
+		}
+		// parse X-Real-Ip header
+	} else if xri := c.request.Header.Get("X-Real-Ip"); len(xri) > 0 {
+		if ip := net.ParseIP(xri); ip != nil {
+			remoteIP = ip.String()
+		}
+	}
+
+	return remoteIP
+
 }

@@ -12,13 +12,13 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
+	"github.com/NlaakStudios/gowaf/base"
+	"github.com/NlaakStudios/gowaf/config"
+	"github.com/NlaakStudios/gowaf/controller"
+	"github.com/NlaakStudios/gowaf/logger"
+	"github.com/NlaakStudios/gowaf/models"
+	"github.com/NlaakStudios/gowaf/view"
 	"github.com/gernest/ita"
-	"github.com/gernest/utron/base"
-	"github.com/gernest/utron/config"
-	"github.com/gernest/utron/controller"
-	"github.com/gernest/utron/logger"
-	"github.com/gernest/utron/models"
-	"github.com/gernest/utron/view"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/hashicorp/hcl"
@@ -37,9 +37,10 @@ var (
 // Router registers routes and handlers. It embeds gorilla mux Router
 type Router struct {
 	*mux.Router
-	config  *config.Config
-	routes  []*route
-	Options *Options
+	config    *config.Config
+	routes    []*route
+	Options   *Options
+	NumCtrlrs int
 }
 
 //Options additional settings for the router.
@@ -77,7 +78,7 @@ type route struct {
 // 	or
 // 	func(*base.Context)error
 //
-// utron uses the alice package to chain middlewares, this means all alice compatible middleware
+// gowaf uses the alice package to chain middlewares, this means all alice compatible middleware
 // works out of the box
 func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interface{}) error {
 	var (
@@ -107,6 +108,7 @@ func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interfa
 	numCtr := cTyp.NumMethod()
 
 	ctrlName := getTypName(cTyp) // The name of the controller
+	r.Options.Log.Info("Initializing routes for controller ", ctrlName, "...")
 
 	for v := range make([]struct{}, numCtr) {
 		method := cTyp.Method(v)
@@ -125,13 +127,15 @@ func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interfa
 		// TODD: figure out the way of passing parameters to the method arguments?
 		patt := "/" + strings.ToLower(ctrlName) + "/" + strings.ToLower(method.Name)
 
-		r := &route{
+		rt := &route{
 			pattern: patt,
 			ctrl:    ctrlName,
 			fn:      method.Name,
 		}
-		routes.standard = append(routes.standard, r)
+		routes.standard = append(routes.standard, rt)
+		r.Options.Log.Info("Added Route for ", ctrlName, " -> ", patt)
 	}
+	r.Options.Log.Success(len(routes.standard), " routes were added for ", ctrlName)
 
 	// ultimate returns the actual value stored in rVals this means if rVals is a pointer,
 	// then we return the value that is pointed to. We are dealing with structs, so the returned
@@ -174,7 +178,7 @@ func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interfa
 		//                  The case does not matter, you can use lower case or upper case characters
 		//                  or even mixed case, that is get,GET,gET and GeT will all be treated as GET
 		//
-		//        path:     Is a url path or pattern, utron uses gorilla mux package. So, everything you can do
+		//        path:     Is a url path or pattern, gowaf uses gorilla mux package. So, everything you can do
 		//                  with gorilla mux url path then you can do here.
 		//                  e.g /hello/{world}
 		//                  Don't worry about the params, they will be accessible via .Ctx.Params field in your
@@ -234,6 +238,8 @@ func (r *Router) Add(ctrlfn func() controller.Controller, middlewares ...interfa
 		}
 
 	}
+
+	r.NumCtrlrs = len(routes.standard) + len(routes.inCtrl)
 	return nil
 }
 
@@ -297,7 +303,7 @@ func splitRoutes(routeStr string) (*route, error) {
 	return nil, ErrRouteStringFormat
 }
 
-// add registers controller ctrl, using activeRoute. If middlewares are provided, utron uses
+// add registers controller ctrl, using activeRoute. If middlewares are provided, gowaf uses
 // alice package to chain middlewares.
 func (r *Router) add(activeRoute *route, ctrlfn func() controller.Controller, middlewares ...interface{}) error {
 	var m []*Middleware
@@ -335,6 +341,11 @@ func (r *Router) add(activeRoute *route, ctrlfn func() controller.Controller, mi
 	return nil
 }
 
+// Count returns the number of registered models
+func (r *Router) Count() int {
+	return r.NumCtrlrs
+}
+
 func chainMiddleware(ctx *base.Context, wares ...*Middleware) alice.Chain {
 	if len(wares) > 0 {
 		var m []alice.Constructor
@@ -365,6 +376,7 @@ func (r *Router) prepareContext(ctx *base.Context) {
 		if r.Options.SessionStore != nil {
 			ctx.SessionStore = r.Options.SessionStore
 		}
+		ctx.CoreDataInit()
 	}
 
 	// It is a good idea to ensure that a well prepared context always has the
@@ -388,7 +400,7 @@ func (r *Router) handleController(ctx *base.Context, fn string, ctrl controller.
 	}
 	err := ctx.Commit()
 	if err != nil {
-		//TODO:  Log error
+		r.Options.Log.Errors(err)
 	}
 }
 
@@ -446,7 +458,7 @@ func (r *Router) LoadRoutesFile(file string) error {
 			return err
 		}
 	default:
-		return errors.New("utron: unsupported file format")
+		return errors.New("gowaf: unsupported file format")
 	}
 
 	for _, v := range rFile.Routes {
@@ -460,7 +472,7 @@ func (r *Router) LoadRoutesFile(file string) error {
 	return nil
 }
 
-// LoadRoutes searches for the route file i the cfgPath. The order of file lookup is
+// LoadRoutes searches for the route file in the cfgPath. The order of file lookup is
 // as follows.
 //	* routes.json
 //	* routes.toml
