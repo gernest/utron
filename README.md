@@ -5,6 +5,8 @@
 
 # Features
 * [x] Postgres, MySQL, SQLite and Foundation database support
+* [x] Built-In Core Models such as Account, Person, Address, Phone, etc.
+* [x] Admin Template Ready...See [GoWAF-Templates](https://github.com/NlaakStudios/gowaf-templates)
 * [x] Modular (you can choose which components to use)
 * [x] Middleware support. All [alice](https://github.com/justinas/alice) compatible Middleware works out of the box
 * [x] Gopher spirit (write golang, use all the golang libraries you like)
