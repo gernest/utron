@@ -32,7 +32,8 @@ func NewSimpleView(viewDir string) (View, error) {
 	}
 	s := &SimpleView{
 		viewDir: viewDir,
-		tmpl:    template.New(filepath.Base(viewDir)),
+		//tmpl:    template.New(filepath.Base(viewDir)),
+		tmpl:    template.New(viewDir),
 	}
 	return s.load(viewDir)
 }

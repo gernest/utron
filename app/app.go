@@ -156,6 +156,11 @@ func (a *App) init() error {
 	a.Config = appConfig
 
 	a.SetViewPath(a.Config.ViewsDir)
+	viewsabs, _ := getAbsolutePath(appConfig.ViewsDir)
+	if viewsabs == "" {
+		return err
+	}
+	a.Config.ViewsDir = viewsabs
 	if _, err := os.Stat(appConfig.ViewsDir); os.IsNotExist(err) {
 		// path/to/view folder does not exist use default fixtures/view
 		a.Config.FixturesDir = fmt.Sprintf("%s/%s", a.Config.FixturesDir, "/views")

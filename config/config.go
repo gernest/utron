@@ -36,39 +36,17 @@ webapp-binary.exe
 */
 var errCfgUnsupported = errors.New("gowaf: config file format not supported")
 
-const (
-//AdminTemplateSBAdmin the value (0) used in config field AdminTemplate to use SBAdmin Template
-//AdminTemplateSBAdmin = 0
-
-//AdminTemplateMonsterAdmin the value (1) used in config field AdminTemplate to use Monster Admin Template
-//AdminTemplateMonsterAdmin = 1
-
-//AdminTemplate_ShardsAdmin = 2
-
-//SBAdminVendorDir is the path from the binary to the Admin Template Vendor Folder
-//SBAdminVendorDir = "./vendor/sbadmin2/vendor"
-
-//SBAdminDistDir is the path fromt he binary to the Admin Template Dist (js/css) folder
-//SBAdminDistDir = "./vendor/sbadmin2/dist"
-
-//TODO Add support for external Templates
-
-//MonsterAdmin is the path from the binary to the Monster Admin Assets folder
-//MonsterAdminAssetDir = "monster-admin/html/assets"
-)
-
 // Config stores configurations values
 type Config struct {
-	AppName     string `json:"app_name" yaml:"app_name" toml:"app_name" hcl:"app_name"`
-	Domain      string `json:"domain" yaml:"domain" toml:"domain" hcl:"domain"`
-	CompanyName string `json:"company_name" yaml:"company_name" toml:"company_name" hcl:"company_name"`
-	BaseURL     string `json:"base_url" yaml:"base_url" toml:"base_url" hcl:"base_url"`
-	Port        int    `json:"port" yaml:"port" toml:"port" hcl:"port"`
-	Verbose     bool   `json:"verbose" yaml:"verbose" toml:"verbose" hcl:"verbose"`
-	FixturesDir string `json:"fixtures_dir" yaml:"fixtures_dir" toml:"fixtures_dir" hcl:"fixtures_dir"`
-	StaticDir   string `json:"static_dir" yaml:"static_dir" toml:"static_dir" hcl:"static_dir"`
-	ViewsDir    string `json:"view_dir" yaml:"view_dir" toml:"view_dir" hcl:"view_dir"`
-	//AdminTemplate int    `json:"admin_template" yaml:"admin_template" toml:"admin_template" hcl:"admin_template"`
+	AppName      string `json:"app_name" yaml:"app_name" toml:"app_name" hcl:"app_name"`
+	Domain       string `json:"domain" yaml:"domain" toml:"domain" hcl:"domain"`
+	CompanyName  string `json:"company_name" yaml:"company_name" toml:"company_name" hcl:"company_name"`
+	BaseURL      string `json:"base_url" yaml:"base_url" toml:"base_url" hcl:"base_url"`
+	Port         int    `json:"port" yaml:"port" toml:"port" hcl:"port"`
+	Verbose      bool   `json:"verbose" yaml:"verbose" toml:"verbose" hcl:"verbose"`
+	FixturesDir  string `json:"fixtures_dir" yaml:"fixtures_dir" toml:"fixtures_dir" hcl:"fixtures_dir"`
+	StaticDir    string `json:"static_dir" yaml:"static_dir" toml:"static_dir" hcl:"static_dir"`
+	ViewsDir     string `json:"view_dir" yaml:"view_dir" toml:"view_dir" hcl:"view_dir"`
 	Database     string `json:"database" yaml:"database" toml:"database" hcl:"database"`
 	DatabaseConn string `json:"database_conn" yaml:"database_conn" toml:"database_conn" hcl:"database_conn"`
 	Automigrate  bool   `json:"automigrate" yaml:"automigrate" toml:"automigrate" hcl:"automigrate"`
@@ -111,14 +89,13 @@ func DefaultConfig() *Config {
 	a := securecookie.GenerateRandomKey(32)
 	b := securecookie.GenerateRandomKey(32)
 	return &Config{
-		AppName:     "GoWAF WebApp",
-		Domain:      "nlaak.com",
-		CompanyName: "Nlaak Studios",
-		BaseURL:     "http://localhost:8090",
-		Port:        8090,
-		ThemeColor:  "blue",
-		GoogleID:    "",
-		//AdminTemplate: AdminTemplateSBAdmin,
+		AppName:       "GoWAF WebApp",
+		Domain:        "nlaak.com",
+		CompanyName:   "Nlaak Studios",
+		BaseURL:       "http://localhost:8090",
+		Port:          8090,
+		ThemeColor:    "blue",
+		GoogleID:      "",
 		Verbose:       false,
 		FixturesDir:   "./fixtures",
 		StaticDir:     "static",
