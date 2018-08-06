@@ -72,15 +72,19 @@ func NewMVC(dir ...string) (*App, error) {
 		return nil, err
 	}
 
-	app.Log.Info("Using base fixture folder at ", app.FixtureFolder)
-	app.Log.Info("Using config at ", app.ConfigPath)
-	app.Log.Info("Using static assets at ", app.Config.StaticDir)
-	app.Log.Info("Using views at ", app.Config.ViewsDir)
-	if app.Config.LoadTestData {
-		app.Log.Warn("Load Test Data is enabled in config, please turn off for production.")
-	}
-	if app.Config.GoogleID != "" {
-		app.Log.Success("Google Analytics enabled with ID: ", app.Config.GoogleID)
+	app.Log.Info(app.Config.AppName, " v", app.Version, " for ", app.Config.BaseURL, "...")
+	if app.Config.Verbose {
+		app.Log.Info("Using base fixture folder at ", app.FixtureFolder)
+		app.Log.Info("Using static assets at ", app.Config.StaticDir)
+		app.Log.Info("Using views at ", app.Config.ViewsDir)
+
+		if app.Config.LoadTestData {
+			app.Log.Warn("Load Test Data is enabled in config, please turn off for production.")
+		}
+
+		if app.Config.GoogleID != "" {
+			app.Log.Success("Google Analytics enabled with ID: ", app.Config.GoogleID)
+		}
 	}
 
 	return app, nil
