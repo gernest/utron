@@ -75,6 +75,7 @@ func NewMVC(dir ...string) (*App, error) {
 	app.Log.Info("Using base fixture folder at ", app.FixtureFolder)
 	app.Log.Info("Using config at ", app.ConfigPath)
 	app.Log.Info("Using static assets at ", app.Config.StaticDir)
+	app.Log.Info("Using views at ", app.Config.ViewsDir)
 	if app.Config.LoadTestData {
 		app.Log.Warn("Load Test Data is enabled in config, please turn off for production.")
 	}
@@ -127,7 +128,18 @@ func (a *App) SetConfigPath(dir string) {
 
 // SetViewPath sets the directory path to search for the view files.
 func (a *App) SetViewPath(dir string) {
-	a.Config.ViewsDir = dir
+	if dir == "" {
+		dir = "views"
+	}
+	a.Config.ViewsDir = fmt.Sprintf("%s/%s", a.Config.FixturesDir, dir)
+}
+
+// SetStaticPath sets the directory path to search for the static asset files being served
+func (a *App) SetStaticPath(dir string) {
+	if dir == "" {
+		dir = "static"
+	}
+	a.Config.StaticDir = fmt.Sprintf("%s/%s", a.Config.FixturesDir, dir)
 }
 
 // SetNoModel sets the Config.NoModel value manually in the config.
@@ -143,10 +155,10 @@ func (a *App) init() error {
 	}
 	a.Config = appConfig
 
-	//a.SetViewPath(a.FixtureFolder))
+	a.SetViewPath(a.Config.ViewsDir)
 	if _, err := os.Stat(appConfig.ViewsDir); os.IsNotExist(err) {
 		// path/to/view folder does not exist use default fixtures/view
-		a.Config.ViewsDir = "./views"
+		a.Config.FixturesDir = fmt.Sprintf("%s/%s", a.Config.FixturesDir, "/views")
 	}
 
 	views, err := view.NewSimpleView(a.Config.ViewsDir)
@@ -181,14 +193,15 @@ func (a *App) init() error {
 
 	// In case the StaticDir is specified in the Config file, register
 	// a handler serving contents of that directory under the PathPrefix /static/.
-	if appConfig.StaticDir != "" {
-		static, _ := getAbsolutePath(appConfig.StaticDir)
-		if static != "" {
-			//TODO: Coverage -  Need to hit here
-			a.Router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(static))))
-		}
-
+	//if appConfig.StaticDir != "" {
+	a.SetStaticPath(a.Config.StaticDir)
+	static, _ := getAbsolutePath(appConfig.StaticDir)
+	if static != "" {
+		//TODO: Coverage -  Need to hit here
+		a.Router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(static))))
 	}
+
+	//}
 	return nil
 }
 
