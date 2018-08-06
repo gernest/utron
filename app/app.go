@@ -137,7 +137,7 @@ func (a *App) SetViewPath(dir string) {
 // SetStaticPath sets the directory path to search for the static asset files being served
 func (a *App) SetStaticPath(dir string) {
 	if dir == "" {
-		dir = "static"
+		dir = "assets"
 	}
 	a.Config.StaticDir = fmt.Sprintf("%s/%s", a.Config.FixturesDir, dir)
 }
@@ -203,10 +203,10 @@ func (a *App) init() error {
 	static, _ := getAbsolutePath(appConfig.StaticDir)
 	if static != "" {
 		//TODO: Coverage -  Need to hit here
+		a.SetStaticPath(static)
 		a.Router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(static))))
 	}
 
-	//}
 	return nil
 }
 
