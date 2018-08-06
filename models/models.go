@@ -28,6 +28,11 @@ func NewModel() *Model {
 	}
 }
 
+// Count returns the number of registered models
+func (m *Model) Count() int {
+	return len(m.models)
+}
+
 // IsOpen returns true if the Model has already established connection
 // to the database
 func (m *Model) IsOpen() bool {
