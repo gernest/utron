@@ -32,6 +32,7 @@ type StaticServerFunc func(*config.Config) (prefix string, strip bool, h http.Ha
 // App is the main gowaf application.
 type App struct {
 	Version       string
+	GoWAFVersion  string
 	Router        *router.Router
 	Config        *config.Config
 	View          view.View
@@ -44,26 +45,31 @@ type App struct {
 	isInit        bool
 }
 
-// ResiterFunc is used to pass in a reference to the actuall user defined function for registering
+// ResiterFunc is used to pass in a reference to the actual user defined function for registering
 // the webapp's Models and Controllers
 type RegisterFunc func(*App)
+
+// VersionFunc is used to pass in a reference to the webapps version() func which returns a string
+// representing the version.
+type VersionFunc func(*App)
 
 // NewApp creates a new bare-bone gowaf application. To use the MVC components, you should call
 // the Init method before serving requests.
 func NewApp() *App {
 	return &App{
-		Version: Version(),
-		Log:     logger.NewDefaultLogger(os.Stdout),
-		Router:  router.NewRouter(),
-		Model:   models.NewModel(),
+		//Version:      "0.0.0-notset", ///This is set in the webapp not framework
+		GoWAFVersion: Version(),
+		Log:          logger.NewDefaultLogger(os.Stdout),
+		Router:       router.NewRouter(),
+		Model:        models.NewModel(),
 	}
 }
 
 // NewMVC creates a new MVC gowaf app. If dir is passed, it should be a directory to look for
 // all project folders (config, static, views, models, controllers, etc). The App returned is initialized.
-func NewMVC(dir ...string) (*App, error) {
+func NewMVC(ver string, dir ...string) (*App, error) {
 	app := NewApp()
-
+	app.Version = ver
 	if len(dir) > 0 {
 		app.SetFixturePath(dir[0])
 	} else {
@@ -76,8 +82,13 @@ func NewMVC(dir ...string) (*App, error) {
 		return nil, err
 	}
 
-	app.Log.Info(app.Config.AppName, " v", app.Version, " for ", app.Config.BaseURL, "...")
-
+	fmt.Printf(
+		"%s v%s\nGoWAf Framework v%s\nHost: %s\n%s\n",
+		app.Config.AppName, app.Version,
+		app.GoWAFVersion,
+		app.Config.BaseURL,
+		"------------------------------------------------------",
+	)
 	return app, nil
 }
 
