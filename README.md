@@ -39,9 +39,11 @@ So, `gowaf` is my reimagining of lightweight MVC, that maintains the golang spir
 
 ## Installation
 
-`gowaf` works with Go 1.9+
+`gowaf` works with Go 1.10+
 
-Thesze repos are required to build:
+1) First, You need a GoLang 1.10+ enviroment setup.
+2) Then, These are the repos you should get that are required to build:
+
 ```
 go get -u github.com/NlaakStudios/gowaf
 go get -u github.com/gorilla/schema
