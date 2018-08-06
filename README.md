@@ -16,6 +16,12 @@ Feel free to join our [telegram](https://t.me/nlaakstudios) channel.
 * [x] Lightweight. Only MVC
 * [x] Multiple configuration files support (currently json, yaml, toml and hcl)
 
+# Planned Features
+* [x] Blockchain backed data using mutual confirmations
+* [x] Concurrency across multiple systems
+* [x] 100% uptime for Webapp, RESTful APi and Blockchain
+* [x] Mobile Application for iOS and Android
+
 # Overview
 `gowaf` is a Modern Responsive MVC framework in Go ([Golang](https://golang.org)) for building fast, scalable and robust database-driven web applications.It uses ([Auto-Jigger](https://github.com/NlaakStudios/auto-jigger)) A ultra light API that automatically handles the inclusion of Modernizr, jQuery, Bootstrap and Font-Awesome as well as ([Start Bootstrap - SB Admin 2](https://github.com/BlackrockDigital/startbootstrap-sb-admin-2)) to get you up and running fast right out of the box.
 
@@ -35,29 +41,32 @@ So, `gowaf` is my reimagining of lightweight MVC, that maintains the golang spir
 
 `gowaf` works with Go 1.9+
 
-     go get -u github.com/NlaakStudios/gowaf
-     go get -u github.com/gorilla/schema
-     go get -u github.com/asaskevich/govalidator
-     go get -u github.com/justinas/alice
-     go get -u github.com/gernest/ita
-     go get -u github.com/gernest/qlstore
-     go get -u github.com/cznic/ql/driver
-
-
-# Tutorials
-
-- [create a todo list application with gowaf](https://github.com/gowafframework/tutorials/blob/master/create_todo_list_application_with_gowaf.md)
-- [use custom not found handler in gowaf](https://github.com/gowafframework/tutorials/blob/master/set_not_found_handler.md)
+Thesze repos are required to build:
+```
+go get -u github.com/NlaakStudios/gowaf
+go get -u github.com/gorilla/schema
+go get -u github.com/gorilla/context
+go get -u github.com/gorilla/mux
+go get -u github.com/gorilla/sessions     
+go get -u github.com/gorilla/securecookie
+go get -u github.com/asaskevich/govalidator
+go get -u github.com/justinas/alice
+go get -u github.com/gernest/ita
+go get -u github.com/gernest/qlstore
+go get -u github.com/cznic/ql/driver     
+go get -u github.com/BurntSushi/toml
+go get -u github.com/fatih/camelcase
+go get -u github.com/hashicorp/hcl
+go get -u gopkg.in/yaml.v2     
+```
 
 ## Sample application
 
-- [Todo list](https://github.com/gowafframework/todo)
-- [File Upload](https://github.com/gowafframework/upload)
-- [chat](https://github.com/gowafframework/chat)
-
+- [Demo](https://github.com/gowaf-templates/Demo)
 
 # Contributing
 
+### Public
 Start with clicking the star button to make the author and his neighbors happy. Then fork the repository and submit a pull request for whatever change you want to be added to this project.
 
 Please review these articles and use the views and practices when contributing.
@@ -66,6 +75,11 @@ Please review these articles and use the views and practices when contributing.
 * [Twelve Go Best Practices](https://talks.golang.org/2013/bestpractices.slide#1)
 
 If you have any questions, just open an issue.
+
+### Collaborators
+We work off the develop branch.
+* If you are going to fix an issue please create a new branch with issue-{issue#}
+* If you are working on something else feel free to name it what you want but include your github username like so nlaakstudios-doingsomething
 
 # Author
 Ultron original Author Geofrey Ernest
@@ -83,7 +97,6 @@ These amazing projects have made `gowaf` possible:
 * [gorm](https://github.com/jinzhu/gorm)
 * [alice](https://github.com/justinas/alice)
 * [golang](http://golang.org)
-* [Auto-Jigger](https://github.com/NlaakStudios/auto-jigger)
 * [Start Bootstrap - SB Admin 2](https://github.com/BlackrockDigital/startbootstrap-sb-admin-2)
 
 # Licence
