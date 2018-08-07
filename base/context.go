@@ -110,9 +110,11 @@ func (c *Context) CoreDataInit() {
 	c.Data["googleid"] = c.Cfg.GoogleID //NULL is disabled, set to enbed UA and Code
 
 	// Call these from your route handler if you need access to these libraries
-	c.Data["use_styles"] = false     //Set to true in your handler to enable user style switching
-	c.Data["use_sparkline"] = false  //Set to true in your handler to enable  sparkline graphs
-	c.Data["use_datatables"] = false //Set to true in your handler to enable datatables
+	c.Data["use_styles"] = false      //Set to true in your handler to enable user Style Switching
+	c.Data["use_sparkline"] = false   //Set to true in your handler to enable Sparkline graphs
+	c.Data["use_datatables"] = false  //Set to true in your handler to enable DataTables
+	c.Data["use_owlcarousel"] = false //Set to true in your handler to enable Owl Carousel
+	c.Data["use_recaptcha"] = false   //Set to true in your handler to enable Google Recaptcha v2
 
 	c.Data["flash_action"] = ""
 	c.Data["flash_message"] = ""
