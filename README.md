@@ -82,6 +82,13 @@ If you have any questions, just open an issue.
 We work off the develop branch.
 * If you are going to fix an issue please create a new branch with issue-{issue#}
 * If you are working on something else feel free to name it what you want but include your github username like so nlaakstudios-doingsomething
+* Either way the process is the same.
+
+1) If the Bug, Issue or Feature does not exist ... create it.
+2) If you created it, Assign it to a project. If not, go to the project
+3) When you go to start work on an issue, please move it to "In Progress" then create the branch.
+4) After you have completed the issue and it is verified/merged into develop .. then move to Done in project
+5) Make sure Issue is closed with a comment.
 
 # Author
 Ultron original Author Geofrey Ernest
