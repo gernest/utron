@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"fmt"
 	"github.com/NlaakStudios/gowaf/models"
 )
 
@@ -63,7 +64,8 @@ func (c *Gender) View() {
 	Gender := &models.Gender{ID: id}
 	rows := c.Ctx.DB.Find(Gender)
 
-	//Checking that this gender is exist
+
+	//Checking that this address is exist
 	if !c.isExist(rows.RowsAffected) {
 		return
 	}
@@ -89,11 +91,12 @@ func (c *Gender) Edit() {
 		return
 	}
 
+
 	req := c.Ctx.Request()
 	if !c.parseForm(req, GenderFromForm) {
 		return
 	}
-
+	fmt.Println(GenderFromForm)
 	//Checking that we got valid gender
 	if !c.validate(GenderFromForm) {
 		return
@@ -108,7 +111,7 @@ func (c *Gender) Edit() {
 	c.Ctx.Redirect("/gender", http.StatusFound)
 }
 
-//TODO
+//TODO if need Edit without View
 //func (c *Gender) ViewEdit() {
 //	c.Ctx.Template = "application/gender/update"
 //	GenderID := c.Ctx.Params["id"]

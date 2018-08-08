@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"time"
 )
@@ -53,4 +54,11 @@ func (m *Address) HTMLView() string {
 // HTMLForm returns a HTML5 code representing a form of the Model
 func (m *Address) HTMLForm() string {
 	return "<div id=\"AddressHTMLForm\">{Form Content}</div>"
+}
+
+func (m *Address) IsValid() error {
+	if m.Number <= 0 || m.Street == "" || m.City == "" || m.Zip == "" || m.County == "" || m.Country == "" || m.State == "" {
+		return errors.New("one of field is empty or number is negative")
+	}
+	return nil
 }

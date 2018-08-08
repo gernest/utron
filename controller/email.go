@@ -67,7 +67,6 @@ func (c *Email) View() {
 	if id == -1 {
 		return
 	}
-
 	Email := &models.Email{ID: id}
 	rows := c.Ctx.DB.Find(Email)
 
@@ -80,6 +79,7 @@ func (c *Email) View() {
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 }
 
+//TODO this is something to consider either  ViewEdit or View and Edit
 //func (c *Email) ViewEdit() {
 //	c.Ctx.Template = "application/email/update"
 //	EmailID := c.Ctx.Params["id"]

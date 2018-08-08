@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"time"
 )
@@ -44,4 +45,12 @@ func (m *Gender) BioSexToString(gender byte) string {
 	} else {
 		return "Unknown"
 	}
+}
+
+func (m *Gender) IsValid() error {
+	if (m.BioSex != 0 && m.BioSex != 1 && m.BioSex != 2) || len(m.ClaimedSex) == 0 {
+		return errors.New("invalid bio sex or empty claimed sex")
+	}
+
+	return nil
 }
