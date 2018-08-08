@@ -60,6 +60,7 @@ go get -u github.com/BurntSushi/toml
 go get -u github.com/fatih/camelcase
 go get -u github.com/hashicorp/hcl
 go get -u gopkg.in/yaml.v2     
+go get -u github.com/badoux/checkmail
 ```
 
 ## Sample application
