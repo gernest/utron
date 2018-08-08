@@ -1,0 +1,13 @@
+{
+  "app_name": "GoWAF WebApp",
+  "base_url": "http://localhost:8090",
+  "port": 8090,
+  "verbose": false,
+  "static_dir": "fixtures/static",
+  "view_dir": "fixtures/view",
+  "admin_template": 0,
+  "database": "mysql",
+  "database_conn": "root:test@tcp(localhost:3306)/gowaf?charset=utf8&parseTime=True&loc=Local",
+  "automigrate":true,
+  "no_model":false
+}

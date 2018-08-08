@@ -5,6 +5,8 @@ import (
 	"strconv"
 
 	"github.com/NlaakStudios/gowaf/models"
+	"github.com/badoux/checkmail"
+	"strings"
 )
 
 //Email is a controller for Email list
@@ -28,13 +30,17 @@ func (c *Email) Create() {
 	c.Ctx.Template = "application/email/index"
 	Email := &models.Email{}
 	req := c.Ctx.Request()
-	_ = req.ParseForm()
-	if err := Decoder.Decode(Email, req.PostForm); err != nil {
-		c.Ctx.Data["Message"] = err.Error()
-		c.Ctx.Template = "error"
-		c.HTML(http.StatusInternalServerError)
+	if !c.parseForm(req, Email) {
 		return
 	}
+
+	//Checking that we got valid mail
+	if !c.validate(Email) {
+		return
+	}
+
+	//Add username and host to email
+	emailFromAddress(Email)
 
 	c.Ctx.DB.Create(Email)
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
@@ -43,31 +49,104 @@ func (c *Email) Create() {
 
 //Delete deletes a Email item
 func (c *Email) View() {
+	c.Ctx.Template = "application/email/view"
+
 	EmailID := c.Ctx.Params["id"]
-	id, err := strconv.Atoi(EmailID)
-	if err != nil {
-		c.Ctx.Data["Message"] = err.Error()
-		c.Ctx.Template = "error"
-		c.HTML(http.StatusInternalServerError)
+	id := c.convertString(EmailID)
+	if id == -1 {
+		return
+	}
+	Email := &models.Email{ID: id}
+	rows := c.Ctx.DB.Find(Email)
+
+	//Checking that this email is exist
+	if !c.isExist(rows.RowsAffected) {
 		return
 	}
 
-	c.Ctx.DB.Find(&models.Email{ID: id})
+	c.Ctx.Data["Payload"] = Email
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+}
+
+//TODO this is something to consider either  ViewEdit or View and Edit
+//func (c *Email) ViewEdit() {
+//	c.Ctx.Template = "application/email/update"
+//	EmailID := c.Ctx.Params["id"]
+//	id, err := strconv.Atoi(EmailID)
+//	if err != nil {
+//		c.Ctx.Data["Message"] = err.Error()
+//		c.Ctx.Template = "error"
+//		c.HTML(http.StatusInternalServerError)
+//		return
+//	}
+//
+//	Email := &models.Email{ID: id}
+//	rows := c.Ctx.DB.Find(Email)
+//
+//	//Checking that this email is exist
+//	if rows.RowsAffected == 0 {
+//		c.Ctx.Data["Message"] = "Can't view non exist email"
+//		c.Ctx.Template = "error"
+//		c.HTML(http.StatusNotFound)
+//		return
+//	}
+//
+//	c.Ctx.Data["Payload"] = Email
+//	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+//}
+
+func (c *Email) Edit() {
+	EmailID := c.Ctx.Params["id"]
+	id := c.convertString(EmailID)
+
+	if id == -1 {
+		return
+	}
+
+	Email := &models.Email{ID: id}
+	rows := c.Ctx.DB.Find(Email)
+	EmailFromForm := &models.Email{}
+
+	//Checking that this email is exist
+	if !c.isExist(rows.RowsAffected) {
+		return
+	}
+
+	req := c.Ctx.Request()
+	if !c.parseForm(req, EmailFromForm) {
+		return
+	}
+
+	//Checking that we got valid mail
+	if !c.validate(EmailFromForm) {
+		return
+	}
+
+	//Add username and host to email
+	Email.Address = EmailFromForm.Address
+	emailFromAddress(Email)
+
+	c.Ctx.DB.Save(Email)
+	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+	c.Ctx.Redirect("/email", http.StatusFound)
 }
 
 //Delete deletes a Email item
 func (c *Email) Delete() {
 	EmailID := c.Ctx.Params["id"]
-	id, err := strconv.Atoi(EmailID)
-	if err != nil {
-		c.Ctx.Data["Message"] = err.Error()
-		c.Ctx.Template = "error"
-		c.HTML(http.StatusInternalServerError)
+	id := c.convertString(EmailID)
+
+	if id == -1 {
 		return
 	}
 
-	c.Ctx.DB.Delete(&models.Email{ID: id})
+	rows := c.Ctx.DB.Delete(&models.Email{ID: id})
+
+	//Checking that this email is exist
+	if !c.isExist(rows.RowsAffected) {
+		return
+	}
+
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.Ctx.Redirect("/email", http.StatusFound)
 }
@@ -81,6 +160,64 @@ func NewEmail() Controller {
 			"post;/email/create;Create",
 			"get;/email/view/{id};View",
 			"get;/email/delete/{id};Delete",
+			//"get;/email/update/{id};ViewEdit",
+			"post;/email/update/{id};Edit",
 		},
 	}
+}
+
+func emailFromAddress(email *models.Email) {
+	str := strings.Split(email.Address, "@")
+	email.Username = str[0]
+	email.Domain = str[1]
+}
+
+func (c *Email) validate(Email *models.Email) bool {
+	err := checkmail.ValidateFormat(Email.Address)
+
+	if err != nil {
+		c.Ctx.Data["Message"] = err.Error()
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusBadRequest)
+		return false
+	}
+
+	return true
+}
+
+func (c *Email) isExist(rows int64) bool {
+	if rows == 0 {
+		c.Ctx.Data["Message"] = "Can't manipulate with non exist address"
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusNotFound)
+		return false
+	}
+
+	return true
+}
+
+func (c *Email) parseForm(req *http.Request, email *models.Email) bool {
+	_ = req.ParseForm()
+
+	if err := Decoder.Decode(email, req.PostForm); err != nil {
+		c.Ctx.Data["Message"] = err.Error()
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusInternalServerError)
+		return false
+	}
+
+	return true
+}
+
+func (c *Email) convertString(id string) int {
+	res, err := strconv.Atoi(id)
+
+	if err != nil {
+		c.Ctx.Data["Message"] = err.Error()
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusInternalServerError)
+		return -1
+	}
+
+	return res
 }
