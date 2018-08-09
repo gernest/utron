@@ -1,9 +1,14 @@
 package controller
 
 import (
+	"database/sql"
+	"errors"
 	"github.com/NlaakStudios/gowaf/base"
 	"github.com/NlaakStudios/gowaf/logger"
 	"github.com/NlaakStudios/gowaf/models"
+	"github.com/jinzhu/gorm"
+	"gopkg.in/DATA-DOG/go-sqlmock.v1"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -11,12 +16,7 @@ import (
 	"strconv"
 	"testing"
 	"time"
-	"gopkg.in/DATA-DOG/go-sqlmock.v1"
-	"database/sql"
-	"log"
-	"github.com/jinzhu/gorm"
-	"errors"
-	)
+)
 
 var (
 	addressRoutes = []string{
@@ -36,12 +36,10 @@ var (
 	county  = "any county"
 	country = "any country"
 
-	findQueryAddresses     = "SELECT * FROM `addresses` WHERE `addresses`.`id` = ?"
-	deleteQueryAddresses   = "DELETE FROM `addresses` WHERE `addresses`.`id` = ?"
-	updateQueryAddresses   = "UPDATE `addresses` SET `created_at` = ?, `updated_at` = ?, `number` = ?, `street` = ?, `city` = ?, `state` = ?," +
+	findQueryAddresses   = "SELECT * FROM `addresses` WHERE `addresses`.`id` = ?"
+	deleteQueryAddresses = "DELETE FROM `addresses` WHERE `addresses`.`id` = ?"
+	updateQueryAddresses = "UPDATE `addresses` SET `created_at` = ?, `updated_at` = ?, `number` = ?, `street` = ?, `city` = ?, `state` = ?," +
 		" `zip` = ?, `county` = ?, `country` = ? WHERE `addresses`.`id` = ?"
-
-	//UPDATE `addresses` SET `created_at` = ?, `updated_at` = ?, `number` = ?, `street` = ?, `city` = ?, `state` = ?, `zip` = ?, `county` = ?, `country` = ? WHERE `addresses`.`id` =
 
 	addressesFields = []string{"id", "number", "street", "city", "state", "zip", "county", "country", "created_at", "updated_at"}
 )
@@ -186,7 +184,6 @@ func TestAddress_Edit(t *testing.T) {
 	}
 }
 
-
 //Try to update address without id in params
 func TestAddress_EditWithoutID(t *testing.T) {
 	req, rr = prepareReqAndRecorder("POST", "/address/update")
@@ -325,7 +322,6 @@ func prepareAddress(req *http.Request, rr *httptest.ResponseRecorder) (*Address,
 
 	model.DB = gormDB
 
-
 	ctx = base.NewContext(rr, req)
 	ctx.DB = model
 	ctx.Log = logger.NewDefaultLogger(os.Stdout)
@@ -362,4 +358,3 @@ func (c *Address) prepareMockRequest() {
 		city, state, zip, county, country).WillReturnResult(sqlmock.NewResult(-273, 1))
 	mock.ExpectCommit()
 }
-

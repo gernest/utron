@@ -307,7 +307,7 @@ func preparePersonType(req *http.Request, rr *httptest.ResponseRecorder) (*Perso
 	model.DB = gormDB
 
 
-	ctx := base.NewContext(rr, req)
+	ctx = base.NewContext(rr, req)
 	ctx.DB = model
 	ctx.Log = logger.NewDefaultLogger(os.Stdout)
 

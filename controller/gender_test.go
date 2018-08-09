@@ -309,7 +309,7 @@ func prepareGender(req *http.Request, rr *httptest.ResponseRecorder) (*Gender, *
 
 	model.DB = gormDB
 
-	ctx := base.NewContext(rr, req)
+	ctx = base.NewContext(rr, req)
 	ctx.DB = model
 	ctx.Log = logger.NewDefaultLogger(os.Stdout)
 

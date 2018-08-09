@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"fmt"
 	"github.com/NlaakStudios/gowaf/models"
 )
 
@@ -42,7 +41,7 @@ func (c *Gender) Create() {
 	rows := c.Ctx.DB.Create(Gender)
 
 	if rows.RowsAffected != 1 {
-		c.Ctx.Data["Message"] = "Can't save email in database"
+		c.Ctx.Data["Message"] = "Can't save gender in database"
 		c.Ctx.Template = "error"
 		c.HTML(http.StatusInternalServerError)
 		return
@@ -54,7 +53,7 @@ func (c *Gender) Create() {
 
 //Delete deletes a Gender item
 func (c *Gender) View() {
-	c.Ctx.Template = "application/email/view"
+	c.Ctx.Template = "application/gender/view"
 	GenderID := c.Ctx.Params["id"]
 	id := c.convertString(GenderID)
 	if id == -1 {
@@ -64,8 +63,7 @@ func (c *Gender) View() {
 	Gender := &models.Gender{ID: id}
 	rows := c.Ctx.DB.Find(Gender)
 
-
-	//Checking that this address is exist
+	//Checking that this gender is exist
 	if !c.isExist(rows.RowsAffected) {
 		return
 	}
@@ -96,7 +94,7 @@ func (c *Gender) Edit() {
 	if !c.parseForm(req, GenderFromForm) {
 		return
 	}
-	fmt.Println(GenderFromForm)
+
 	//Checking that we got valid gender
 	if !c.validate(GenderFromForm) {
 		return
@@ -111,7 +109,7 @@ func (c *Gender) Edit() {
 	c.Ctx.Redirect("/gender", http.StatusFound)
 }
 
-//TODO if need Edit without View
+//TODO
 //func (c *Gender) ViewEdit() {
 //	c.Ctx.Template = "application/gender/update"
 //	GenderID := c.Ctx.Params["id"]
@@ -120,7 +118,7 @@ func (c *Gender) Edit() {
 //		c.Ctx.Data["Message"] = err.Error()
 //		c.Ctx.Template = "error"
 //		c.HTML(http.StatusInternalServerError)
-//		return
+//		return"errors"
 //	}
 //
 //	Gender := &models.Gender{ID: id}
@@ -139,7 +137,6 @@ func (c *Gender) Edit() {
 //	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 //	c.Ctx.Redirect("/gender", http.StatusFound)
 //}
-
 
 //Delete deletes a Gender item
 func (c *Gender) Delete() {

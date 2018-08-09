@@ -1,9 +1,9 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"time"
-	"errors"
 )
 
 // PersonType provides a list of avilable "title" such as:

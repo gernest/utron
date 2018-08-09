@@ -156,7 +156,7 @@ func (c *PersonType) validate(personType *models.PersonType) bool {
 
 func (c *PersonType) isExist(rows int64) bool {
 	if rows == 0 {
-		c.Ctx.Data["Message"] = "Can't manipulate with non exist address"
+		c.Ctx.Data["Message"] = "Can't manipulate with non exist person type"
 		c.Ctx.Template = "error"
 		c.HTML(http.StatusNotFound)
 		return false

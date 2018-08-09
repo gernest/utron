@@ -67,6 +67,7 @@ func (c *Email) View() {
 	if id == -1 {
 		return
 	}
+
 	Email := &models.Email{ID: id}
 	rows := c.Ctx.DB.Find(Email)
 
@@ -79,7 +80,6 @@ func (c *Email) View() {
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 }
 
-//TODO this is something to consider either  ViewEdit or View and Edit
 //func (c *Email) ViewEdit() {
 //	c.Ctx.Template = "application/email/update"
 //	EmailID := c.Ctx.Params["id"]
@@ -198,7 +198,7 @@ func (c *Email) validate(Email *models.Email) bool {
 
 func (c *Email) isExist(rows int64) bool {
 	if rows == 0 {
-		c.Ctx.Data["Message"] = "Can't manipulate with non exist address"
+		c.Ctx.Data["Message"] = "Can't manipulate with non exist email"
 		c.Ctx.Template = "error"
 		c.HTML(http.StatusNotFound)
 		return false

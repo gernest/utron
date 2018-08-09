@@ -3,9 +3,8 @@ package controller
 import (
 	"database/sql"
 	"errors"
-	"fmt"
-	"github.com/NlaakStudios/gowaf/base"
-		"github.com/NlaakStudios/gowaf/logger"
+		"github.com/NlaakStudios/gowaf/base"
+	"github.com/NlaakStudios/gowaf/logger"
 	"github.com/NlaakStudios/gowaf/models"
 	"github.com/jinzhu/gorm"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
@@ -14,8 +13,7 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
-	"regexp"
-	"strconv"
+		"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -34,19 +32,12 @@ var (
 	emailAddress = username + "@" + domain
 	username     = "someadress"
 	domain       = "gmail.com"
-	req          *http.Request
-	rr           *httptest.ResponseRecorder
-	email        *Email
-	ctx          *base.Context
-	err          error
-	mock         sqlmock.Sqlmock
 
 	findQueryEmail   = "SELECT * FROM `emails` WHERE `emails`.`id` = ?"
 	deleteQueryEmail = "DELETE FROM `emails` WHERE `emails`.`id` = ?"
 	updateQueryEmail = "UPDATE `emails` SET `created_at` = ?, `updated_at` = ?, `address` = ?, `username` = ?, `domain` = ? WHERE `emails`.`id` = ?"
 
 	emailFields = []string{"id", "address", "username", "domain", "created_at", "updated_at"}
-	id          = -273
 )
 
 func TestEmail_Index(t *testing.T) {
@@ -301,17 +292,6 @@ func TestNewEmail(t *testing.T) {
 	_ = NewEmail()
 }
 
-//Create Request with method and url and ResponseRecorder
-func prepareReqAndRecorder(method, url string) (*http.Request, *httptest.ResponseRecorder) {
-	req, err = http.NewRequest(method, url, nil)
-	if err != nil {
-		panic(err)
-	}
-
-	rr = httptest.NewRecorder()
-
-	return req, rr
-}
 
 //Create *Email with BaseConroller(with DB) and emailRoutes
 func prepareControllerEmail(req *http.Request, rr *httptest.ResponseRecorder) (*Email, *base.Context) {
@@ -361,9 +341,6 @@ func (c *Email) prepareMockRequest() {
 	mock.ExpectCommit()
 }
 
-func fixedFullRe(s string) string {
-	return fmt.Sprintf("^%s$", regexp.QuoteMeta(s))
-}
 
 //func TestEmail_ViewEdit(t *testing.T) {
 //	//Create emailAddress with address: someadress@gmail.com

@@ -156,7 +156,6 @@ func NewAddress() Controller {
 			"post;/address/create;Create",
 			"get;/address/view/{id};View",
 			"get;/address/delete/{id};Delete",
-			"get;/address/update/{id};ViewEdit",
 			"post;/address/update/{id};Edit",
 		},
 	}

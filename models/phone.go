@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"time"
 )
@@ -66,4 +67,12 @@ func (m *Phone) PhoneTypeToString(pt byte) string {
 		return "Fax"
 	}
 	return ""
+}
+
+func (m *Phone) IsValid() error {
+	if m.CountryCode == "" || m.Number == "" {
+		return errors.New("country code and number can't be empty")
+	}
+
+	return nil
 }
