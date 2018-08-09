@@ -29,10 +29,25 @@ func (c *Address) Create() {
 	Address := &models.Address{}
 	req := c.Ctx.Request()
 	if !c.parseForm(req, Address) {
+		c.Ctx.Template = "error/400"
+		c.Ctx.Data["Message"] = "Error parsing form."
+		c.Ctx.Log.Errors(c.Ctx.Data["Message"])
 		return
 	}
+	if err := Decoder.Decode(Address, req.PostForm); err != nil {
+		c.Ctx.Data["Message"] = err.Error()
+		c.Ctx.Template = "error/400"
+		c.Ctx.Log.Errors(c.Ctx.Data["Message"])
+		c.HTML(http.StatusInternalServerError)
+		return
+	}
+
 	//Checking that we got valid address
 	if !c.validate(Address) {
+		c.Ctx.Data["Message"] = "Error validating form"
+		c.Ctx.Template = "error/400"
+		c.Ctx.Log.Errors(c.Ctx.Data["Message"])
+		c.HTML(http.StatusInternalServerError)
 		return
 	}
 
