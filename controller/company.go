@@ -30,8 +30,7 @@ func (c *Company) Create() {
 	req := c.Ctx.Request()
 	_ = req.ParseForm()
 	if err := Decoder.Decode(Company, req.PostForm); err != nil {
-		c.Ctx.Data["Message"] = err.Error()
-		c.Ctx.Template = "error"
+		c.Ctx.SetError(400, "Internal Server Errror", err.Error())
 		c.HTML(http.StatusInternalServerError)
 		return
 	}
@@ -46,8 +45,7 @@ func (c *Company) View() {
 	CompanyID := c.Ctx.Params["id"]
 	id, err := strconv.Atoi(CompanyID)
 	if err != nil {
-		c.Ctx.Data["Message"] = err.Error()
-		c.Ctx.Template = "error"
+		c.Ctx.SetError(400, "Internal Server Errror", err.Error())
 		c.HTML(http.StatusInternalServerError)
 		return
 	}
@@ -61,8 +59,7 @@ func (c *Company) Delete() {
 	CompanyID := c.Ctx.Params["id"]
 	id, err := strconv.Atoi(CompanyID)
 	if err != nil {
-		c.Ctx.Data["Message"] = err.Error()
-		c.Ctx.Template = "error"
+		c.Ctx.SetError(400, "Internal Server Errror", err.Error())
 		c.HTML(http.StatusInternalServerError)
 		return
 	}
