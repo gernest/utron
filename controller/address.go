@@ -26,28 +26,32 @@ func (c *Address) Index() {
 //Create creates a Address  item
 func (c *Address) Create() {
 	c.Ctx.Template = "application/address/index"
-
 	Address := &models.Address{}
-
 	req := c.Ctx.Request()
 	if !c.parseForm(req, Address) {
+		c.Ctx.Template = "error/400"
+		c.Ctx.Data["Message"] = "Error parsing form."
+		c.Ctx.Log.Errors(c.Ctx.Data["Message"])
+		return
+	}
+	if err := Decoder.Decode(Address, req.PostForm); err != nil {
+		c.Ctx.Data["Message"] = err.Error()
+		c.Ctx.Template = "error/400"
+		c.Ctx.Log.Errors(c.Ctx.Data["Message"])
+		c.HTML(http.StatusInternalServerError)
 		return
 	}
 
 	//Checking that we got valid address
 	if !c.validate(Address) {
-		return
-	}
-
-	rows := c.Ctx.DB.Create(Address)
-
-	if rows.RowsAffected != 1 {
-		c.Ctx.Data["Message"] = "Can't save addresses in database"
-		c.Ctx.Template = "error"
+		c.Ctx.Data["Message"] = "Error validating form"
+		c.Ctx.Template = "error/400"
+		c.Ctx.Log.Errors(c.Ctx.Data["Message"])
 		c.HTML(http.StatusInternalServerError)
 		return
 	}
 
+	c.Ctx.DB.Create(Address)
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.Ctx.Redirect("/address", http.StatusFound)
 }
@@ -156,6 +160,7 @@ func NewAddress() Controller {
 			"post;/address/create;Create",
 			"get;/address/view/{id};View",
 			"get;/address/delete/{id};Delete",
+			//"get;/address/update/{id};ViewEdit",
 			"post;/address/update/{id};Edit",
 		},
 	}

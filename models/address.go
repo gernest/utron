@@ -11,8 +11,8 @@ type Address struct {
 	ID        int       `schema:"id"`
 	CreatedAt time.Time `schema:"created"`
 	UpdatedAt time.Time `schema:"updated"`
-	Number    int       `valid:"required" schema:"number"`
-	Street    string    `valid:"required" schema:"street"`
+	Address1  string    `valid:"required" schema:"address1"`
+	Address2  string    `valid:"required" schema:"address2"`
 	City      string    `valid:"required" schema:"city"`
 	State     string    `valid:"required" schema:"state"`
 	Zip       string    `valid:"required" schema:"zip"`
@@ -22,9 +22,9 @@ type Address struct {
 
 // SingleLine returns a formatted single line text representing the Model
 func (m *Address) SingleLine() string {
-	return fmt.Sprintf("%d %s, %s, %s %s, %s, %s",
-		m.Number,
-		m.Street,
+	return fmt.Sprintf("%s %s, %s, %s %s, %s, %s",
+		m.Address1,
+		m.Address2,
 		m.City,
 		m.State,
 		m.Zip,
@@ -35,9 +35,9 @@ func (m *Address) SingleLine() string {
 
 // MultiLine returns a formatted multi-line text representing the Model
 func (m *Address) MultiLine() string {
-	return fmt.Sprintf("%d %s\n%s, %s %s\n%s\n%s",
-		m.Number,
-		m.Street,
+	return fmt.Sprintf("%s %s\n%s, %s %s\n%s\n%s",
+		m.Address1,
+		m.Address2,
 		m.City,
 		m.State,
 		m.Zip,
@@ -56,11 +56,10 @@ func (m *Address) HTMLForm() string {
 	return "<div id=\"AddressHTMLForm\">{Form Content}</div>"
 }
 
-//TODO Rewrite
+//IsValid returns error if address is not complete
 func (m *Address) IsValid() error {
-	if m.Number <= 0 || m.Street == "" || m.City == "" || m.Zip == "" || m.County == "" || m.Country == "" || m.State == "" {
-		return errors.New("one of field is empty or number is negative")
+	if m.Address1 == "" || m.City == "" || m.Zip == "" || m.State == "" {
+		return errors.New("Please fill in all required fields")
 	}
-
 	return nil
 }
