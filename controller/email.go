@@ -28,13 +28,15 @@ func (c *Email) Index() {
 //Create creates a Email  item
 func (c *Email) Create() {
 	c.Ctx.Template = "application/email/index"
+
 	Email := &models.Email{}
+
 	req := c.Ctx.Request()
 	if !c.parseForm(req, Email) {
 		return
 	}
 
-	//Checking that we got valid mail
+	//Checking that we got valid emailAddress
 	if !c.validate(Email) {
 		return
 	}
@@ -42,7 +44,15 @@ func (c *Email) Create() {
 	//Add username and host to email
 	emailFromAddress(Email)
 
-	c.Ctx.DB.Create(Email)
+	rows := c.Ctx.DB.Create(Email)
+
+	if rows.RowsAffected != 1 {
+		c.Ctx.Data["Message"] = "Can't save email in database"
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusInternalServerError)
+		return
+	}
+
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.Ctx.Redirect("/email", http.StatusFound)
 }
@@ -53,9 +63,11 @@ func (c *Email) View() {
 
 	EmailID := c.Ctx.Params["id"]
 	id := c.convertString(EmailID)
+
 	if id == -1 {
 		return
 	}
+
 	Email := &models.Email{ID: id}
 	rows := c.Ctx.DB.Find(Email)
 
@@ -68,7 +80,6 @@ func (c *Email) View() {
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 }
 
-//TODO this is something to consider either  ViewEdit or View and Edit
 //func (c *Email) ViewEdit() {
 //	c.Ctx.Template = "application/email/update"
 //	EmailID := c.Ctx.Params["id"]
@@ -117,7 +128,7 @@ func (c *Email) Edit() {
 		return
 	}
 
-	//Checking that we got valid mail
+	//Checking that we got valid emailAddress
 	if !c.validate(EmailFromForm) {
 		return
 	}
@@ -187,7 +198,7 @@ func (c *Email) validate(Email *models.Email) bool {
 
 func (c *Email) isExist(rows int64) bool {
 	if rows == 0 {
-		c.Ctx.Data["Message"] = "Can't manipulate with non exist address"
+		c.Ctx.Data["Message"] = "Can't manipulate with non exist email"
 		c.Ctx.Template = "error"
 		c.HTML(http.StatusNotFound)
 		return false

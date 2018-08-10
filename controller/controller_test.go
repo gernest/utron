@@ -4,16 +4,29 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"regexp"
+	"fmt"
 
 	"github.com/NlaakStudios/gowaf/base"
 	"github.com/NlaakStudios/gowaf/config"
+
+	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
+var (
+	req          *http.Request
+	rr           *httptest.ResponseRecorder
+	email        *Email
+	ctx          *base.Context
+	err          error
+	mock         sqlmock.Sqlmock
+	id          = -273
+)
 func TestBaseController(t *testing.T) {
-	req, _ := http.NewRequest("GET", "/", nil)
+	req, _ = http.NewRequest("GET", "/", nil)
 	w := httptest.NewRecorder()
 
-	ctx := base.NewContext(w, req)
+	ctx = base.NewContext(w, req)
 
 	ctrl := BaseController{}
 
@@ -49,7 +62,7 @@ func TestBaseController(t *testing.T) {
 		t.Errorf("expected %s got %s", base.Content.TextPlain, cTyp)
 	}
 
-	err := ctrl.Render()
+	err = ctrl.Render()
 	if err != nil {
 		t.Errorf("expected nil got %v", err)
 	}
@@ -59,4 +72,20 @@ func TestBaseController(t *testing.T) {
 		t.Error("expected error got nil")
 	}
 
+}
+
+//Create Request with method and url and ResponseRecorder
+func prepareReqAndRecorder(method, url string) (*http.Request, *httptest.ResponseRecorder) {
+	req, err = http.NewRequest(method, url, nil)
+	if err != nil {
+		panic(err)
+	}
+
+	rr = httptest.NewRecorder()
+
+	return req, rr
+}
+
+func fixedFullRe(s string) string {
+	return fmt.Sprintf("^%s$", regexp.QuoteMeta(s))
 }

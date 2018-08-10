@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"time"
 )
@@ -39,4 +40,12 @@ func (m *PersonType) HTMLView() string {
 // HTMLForm returns a HTML5 code representing a form of the Model
 func (m *PersonType) HTMLForm() string {
 	return "<div id=\"PersonTypeHTMLForm\">{Form Content}</div>"
+}
+
+func (m *PersonType) IsValid() error {
+	if m.Name == "" {
+		return errors.New("name can't be empty")
+	}
+
+	return nil
 }

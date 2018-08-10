@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"fmt"
 	"github.com/NlaakStudios/gowaf/models"
 )
 
@@ -27,7 +26,9 @@ func (c *Gender) Index() {
 //Create creates a Gender  item
 func (c *Gender) Create() {
 	c.Ctx.Template = "application/gender/index"
+
 	Gender := &models.Gender{}
+
 	req := c.Ctx.Request()
 	if !c.parseForm(req, Gender) {
 		return
@@ -37,14 +38,22 @@ func (c *Gender) Create() {
 		return
 	}
 
-	c.Ctx.DB.Create(Gender)
+	rows := c.Ctx.DB.Create(Gender)
+
+	if rows.RowsAffected != 1 {
+		c.Ctx.Data["Message"] = "Can't save gender in database"
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusInternalServerError)
+		return
+	}
+
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.Ctx.Redirect("/gender", http.StatusFound)
 }
 
 //Delete deletes a Gender item
 func (c *Gender) View() {
-	c.Ctx.Template = "application/email/view"
+	c.Ctx.Template = "application/gender/view"
 	GenderID := c.Ctx.Params["id"]
 	id := c.convertString(GenderID)
 	if id == -1 {
@@ -54,7 +63,7 @@ func (c *Gender) View() {
 	Gender := &models.Gender{ID: id}
 	rows := c.Ctx.DB.Find(Gender)
 
-	//Checking that this address is exist
+	//Checking that this gender is exist
 	if !c.isExist(rows.RowsAffected) {
 		return
 	}
@@ -74,16 +83,18 @@ func (c *Gender) Edit() {
 	Gender := &models.Gender{ID: id}
 	rows := c.Ctx.DB.Find(&Gender)
 	GenderFromForm := &models.Gender{}
+
 	//Checking that this gender is exist
 	if !c.isExist(rows.RowsAffected) {
 		return
 	}
 
+
 	req := c.Ctx.Request()
 	if !c.parseForm(req, GenderFromForm) {
 		return
 	}
-	fmt.Println(GenderFromForm)
+
 	//Checking that we got valid gender
 	if !c.validate(GenderFromForm) {
 		return
@@ -98,7 +109,7 @@ func (c *Gender) Edit() {
 	c.Ctx.Redirect("/gender", http.StatusFound)
 }
 
-//TODO if need Edit without View
+//TODO
 //func (c *Gender) ViewEdit() {
 //	c.Ctx.Template = "application/gender/update"
 //	GenderID := c.Ctx.Params["id"]
@@ -107,7 +118,7 @@ func (c *Gender) Edit() {
 //		c.Ctx.Data["Message"] = err.Error()
 //		c.Ctx.Template = "error"
 //		c.HTML(http.StatusInternalServerError)
-//		return
+//		return"errors"
 //	}
 //
 //	Gender := &models.Gender{ID: id}
@@ -127,7 +138,6 @@ func (c *Gender) Edit() {
 //	c.Ctx.Redirect("/gender", http.StatusFound)
 //}
 
-
 //Delete deletes a Gender item
 func (c *Gender) Delete() {
 	GenderID := c.Ctx.Params["id"]
@@ -143,7 +153,6 @@ func (c *Gender) Delete() {
 		return
 	}
 
-	c.Ctx.DB.Delete(&models.Gender{ID: id})
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.Ctx.Redirect("/gender", http.StatusFound)
 }
@@ -157,7 +166,7 @@ func NewGender() Controller {
 			"post;/gender/create;Create",
 			"get;/gender/view/{id};View",
 			"get;/gender/delete/{id};Delete",
-			//"post;/gender/update/{id};ViewEdit",
+			"post;/gender/update/{id};Edit",
 		},
 	}
 }
