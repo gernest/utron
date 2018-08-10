@@ -5,6 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch test package",
+            "type": "go",
+            "request": "launch",
+            "mode": "test",
+            "program": "${workspaceRoot}",
+            "args": ["startnode"],            
+            "showLog": true
+        },
+        {
             "name": "Launch",
             "type": "go",
             "request": "launch",

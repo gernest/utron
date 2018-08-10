@@ -352,28 +352,20 @@ func (a *App) printUsage() {
 	fmt.Println()
 }
 
-//validateArgs validates the parameters passsed in via commandline
-func (a *App) validateArgs() {
+// Run parses command line arguments and processes commands
+func (a *App) Run(f RegisterFunc) {
+
 	if len(os.Args) < 2 {
 		a.printUsage()
 		os.Exit(1)
 	}
-}
-
-// Run parses command line arguments and processes commands
-func (a *App) Run(f RegisterFunc) {
-
-	//Validate the command line arguments
-	a.validateArgs()
 
 	userFolderCmd := flag.NewFlagSet("userfolder", flag.ExitOnError)
 	migrateCmd := flag.NewFlagSet("migrate", flag.ExitOnError)
 	startNodeCmd := flag.NewFlagSet("startnode", flag.ExitOnError)
 	versionCmd := flag.NewFlagSet("version", flag.ExitOnError)
-
 	useFolder := userFolderCmd.String("path", "", "The path to the fixtures folder to use")
 	migrateFolder := migrateCmd.String("path", "", "The path to the csv inmport folder to use")
-	//startNode := startNodeCmd.String("", "", "Starts the application")
 
 	switch os.Args[1] {
 	case "userfolder":
@@ -440,6 +432,7 @@ func (a *App) Run(f RegisterFunc) {
 		port := fmt.Sprintf(":%d", a.Config.Port)
 		a.Log.Info("Starting server, listening on port", port)
 		log.Fatal(http.ListenAndServe(port, a))
+
 	}
 
 	if versionCmd.Parsed() {
