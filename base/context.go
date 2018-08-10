@@ -133,6 +133,14 @@ func (c *Context) Write(data []byte) (int, error) {
 	return c.out.Write(data)
 }
 
+//SetError defines template veriables for Template Error Page
+func (c *Context) SetError(number int, name, message string) {
+	c.Data["error_number"] = number
+	c.Data["error_name"] = name
+	c.Data["error_message"] = message
+	c.Template = "error"
+}
+
 // TextPlain renders text/plain response
 func (c *Context) TextPlain() {
 	c.SetHeader(Content.Type, Content.TextPlain)
