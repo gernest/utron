@@ -28,7 +28,7 @@ func (c *Address) Create() {
 	c.Ctx.Template = "application/address/index"
 	Address := &models.Address{}
 	req := c.Ctx.Request()
-	if !c.parseForm(req, Address) {
+	if !c.statusInternalServerError(req, Address) {
 		c.Ctx.Template = "error/400"
 		c.Ctx.Data["Message"] = "Error parsing form."
 		c.Ctx.Log.Errors(c.Ctx.Data["Message"])
@@ -43,7 +43,7 @@ func (c *Address) Create() {
 	}
 
 	//Checking that we got valid address
-	if !c.validate(Address) {
+	if !c.statusBadRequest(Address) {
 		c.Ctx.Data["Message"] = "Error validating form"
 		c.Ctx.Template = "error/400"
 		c.Ctx.Log.Errors(c.Ctx.Data["Message"])
@@ -70,7 +70,7 @@ func (c *Address) View() {
 	rows := c.Ctx.DB.Find(Address)
 
 	//Checking that this address is exist
-	if !c.isExist(rows.RowsAffected) {
+	if !c.statusNotFound(rows.RowsAffected) {
 		return
 	}
 
@@ -109,17 +109,17 @@ func (c *Address) Edit() {
 	rows := c.Ctx.DB.Find(&Address)
 	AddressFromForm := &models.Address{}
 	//Checking that this address is exist
-	if !c.isExist(rows.RowsAffected) {
+	if !c.statusNotFound(rows.RowsAffected) {
 		return
 	}
 
 	req := c.Ctx.Request()
-	if !c.parseForm(req, AddressFromForm) {
+	if !c.statusInternalServerError(req, AddressFromForm) {
 		return
 	}
 
 	//Checking that we got valid address
-	if !c.validate(AddressFromForm) {
+	if !c.statusBadRequest(AddressFromForm) {
 		return
 	}
 
@@ -143,7 +143,7 @@ func (c *Address) Delete() {
 	rows := c.Ctx.DB.Delete(&models.Address{ID: id})
 
 	//Checking that this address was deleted
-	if !c.isExist(rows.RowsAffected) {
+	if !c.statusNotFound(rows.RowsAffected) {
 		return
 	}
 
@@ -166,7 +166,7 @@ func NewAddress() Controller {
 	}
 }
 
-func (c *Address) validate(Address *models.Address) bool {
+func (c *Address) statusBadRequest(Address *models.Address) bool {
 	err := Address.IsValid()
 
 	if err != nil {
@@ -179,7 +179,7 @@ func (c *Address) validate(Address *models.Address) bool {
 	return true
 }
 
-func (c *Address) isExist(rows int64) bool {
+func (c *Address) statusNotFound(rows int64) bool {
 	if rows == 0 {
 		c.Ctx.Data["Message"] = "Can't manipulate with non exist address"
 		c.Ctx.Template = "error"
@@ -190,7 +190,7 @@ func (c *Address) isExist(rows int64) bool {
 	return true
 }
 
-func (c *Address) parseForm(req *http.Request, address *models.Address) bool {
+func (c *Address) statusInternalServerError(req *http.Request, address *models.Address) bool {
 	_ = req.ParseForm()
 
 	if err := Decoder.Decode(address, req.PostForm); err != nil {
