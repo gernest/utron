@@ -29,29 +29,23 @@ func (c *Address) Create() {
 	Address := &models.Address{}
 	req := c.Ctx.Request()
 	if !c.statusInternalServerError(req, Address) {
-		c.Ctx.Template = "error/400"
-		c.Ctx.Data["Message"] = "Error parsing form."
-		c.Ctx.Log.Errors(c.Ctx.Data["Message"])
-		return
-	}
-	if err := Decoder.Decode(Address, req.PostForm); err != nil {
-		c.Ctx.Data["Message"] = err.Error()
-		c.Ctx.Template = "error/400"
-		c.Ctx.Log.Errors(c.Ctx.Data["Message"])
-		c.HTML(http.StatusInternalServerError)
 		return
 	}
 
 	//Checking that we got valid address
 	if !c.statusBadRequest(Address) {
-		c.Ctx.Data["Message"] = "Error validating form"
-		c.Ctx.Template = "error/400"
-		c.Ctx.Log.Errors(c.Ctx.Data["Message"])
+		return
+	}
+
+	rows := c.Ctx.DB.Create(Address)
+
+	if rows.RowsAffected != 1 {
+		c.Ctx.Data["Message"] = "can't save Address into database"
+		c.Ctx.Template = "error"
 		c.HTML(http.StatusInternalServerError)
 		return
 	}
 
-	c.Ctx.DB.Create(Address)
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 	c.Ctx.Redirect("/address", http.StatusFound)
 }

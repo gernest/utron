@@ -28,7 +28,7 @@ var (
 		"post;/address/update/{id};Edit",
 	}
 	address *Address
-	number  = 10000000
+	number  = "10000000"
 	street  = "any street"
 	city    = "any city"
 	state   = "any state"
@@ -38,10 +38,10 @@ var (
 
 	findQueryAddresses   = "SELECT * FROM `addresses` WHERE `addresses`.`id` = ?"
 	deleteQueryAddresses = "DELETE FROM `addresses` WHERE `addresses`.`id` = ?"
-	updateQueryAddresses = "UPDATE `addresses` SET `created_at` = ?, `updated_at` = ?, `number` = ?, `street` = ?, `city` = ?, `state` = ?," +
+	updateQueryAddresses = "UPDATE `addresses` SET `created_at` = ?, `updated_at` = ?, `address1` = ?, `address2` = ?, `city` = ?, `state` = ?," +
 		" `zip` = ?, `county` = ?, `country` = ? WHERE `addresses`.`id` = ?"
 
-	addressesFields = []string{"id", "number", "street", "city", "state", "zip", "county", "country", "created_at", "updated_at"}
+	addressesFields = []string{"id", "address1", "address2", "city", "state", "zip", "county", "country", "created_at", "updated_at"}
 )
 
 func TestAddress_Index(t *testing.T) {
@@ -164,12 +164,12 @@ func TestAddress_Edit(t *testing.T) {
 	req, rr = prepareReqAndRecorder("POST", "/address/update")
 	address, ctx = prepareAddress(req, rr)
 
-	newNumber := 1
+	newNumber := "1"
 
 	ctx.Params = make(map[string]string)
 	ctx.Params["id"] = strconv.Itoa(id)
 	address.prepareValidRequest()
-	req.PostForm.Add("number", strconv.Itoa(newNumber))
+	req.PostForm.Add("address1", newNumber)
 
 	rows := sqlmock.NewRows(addressesFields)
 
@@ -227,8 +227,8 @@ func TestAddress_EditInvalidData(t *testing.T) {
 	ctx.Params["id"] = strconv.Itoa(id)
 
 	req.PostForm = url.Values{}
-	req.PostForm.Add("number", strconv.Itoa(111111))
-	req.PostForm.Add("street", "dafdsf")
+	req.PostForm.Add("address1", "111111")
+	req.PostForm.Add("address2", "dafdsf")
 
 	rows := sqlmock.NewRows(addressesFields)
 
@@ -341,8 +341,8 @@ func (c *Address) prepareValidRequest() {
 	created := time.Now().Format("2006-01-02T15:04:05Z07:00")
 
 	req.PostForm = url.Values{}
-	req.PostForm.Add("number", strconv.Itoa(number))
-	req.PostForm.Add("street", street)
+	req.PostForm.Add("address1", number)
+	req.PostForm.Add("address2", street)
 	req.PostForm.Add("state", state)
 	req.PostForm.Add("city", city)
 	req.PostForm.Add("zip", zip)
