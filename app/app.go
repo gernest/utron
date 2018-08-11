@@ -16,11 +16,9 @@ import (
 	"github.com/NlaakStudios/gowaf/models"
 	"github.com/NlaakStudios/gowaf/router"
 	"github.com/NlaakStudios/gowaf/view"
+	_ "github.com/cznic/ql/driver"
 	"github.com/gernest/qlstore"
 	"github.com/gorilla/sessions"
-
-	// load ql driver
-	_ "github.com/cznic/ql/driver"
 )
 
 //StaticServerFunc is a function that returns the static assetsfiles server.
@@ -39,7 +37,10 @@ type App struct {
 	Log           logger.Logger
 	Model         *models.Model
 	FixtureFolder string
-	ConfigPath    string
+	ConfigName    string
+	ConfigFolder  string
+	ViewFolder    string
+	StaticFolder  string
 	StaticServer  StaticServerFunc
 	SessionStore  sessions.Store
 	isInit        bool
@@ -67,16 +68,25 @@ func NewApp() *App {
 
 // NewMVC creates a new MVC gowaf app. If dir is passed, it should be a directory to look for
 // all project folders (config, static, views, models, controllers, etc). The App returned is initialized.
-func NewMVC(ver string, dir ...string) (*App, error) {
+func NewMVC(ver, cfgDir, cfgName string) (*App, error) {
 	app := NewApp()
 	app.Version = ver
-	if len(dir) > 0 {
-		app.SetFixturePath(dir[0])
+
+	//Prepare Config Folder
+	if len(cfgDir) > 0 {
+		app.SetFixturePath(cfgDir)
 	} else {
 		app.SetFixturePath("./fixtures")
 	}
 
-	app.SetConfigPath(fmt.Sprintf("%s/config", app.FixtureFolder))
+	//Prepare Config Name (without extension)
+	if len(cfgName) > 0 {
+		app.ConfigName = cfgName
+	} else {
+		app.ConfigName = "webapp"
+	}
+
+	app.SetConfigFolder(fmt.Sprintf("%s/config", app.FixtureFolder))
 
 	if err := app.Init(); err != nil {
 		return nil, err
@@ -116,8 +126,8 @@ func (a *App) options() *router.Options {
 
 // Init initializes the MVC App.
 func (a *App) Init() error {
-	if a.ConfigPath == "" {
-		a.SetConfigPath("config")
+	if a.ConfigFolder == "" {
+		a.SetConfigFolder("config")
 	}
 	return a.init()
 }
@@ -127,9 +137,9 @@ func (a *App) SetFixturePath(dir string) {
 	a.FixtureFolder = dir
 }
 
-// SetConfigPath sets the directory path to search for the config files.
-func (a *App) SetConfigPath(dir string) {
-	a.ConfigPath = dir
+// SetConfigFolder sets the directory path to search for the config files.
+func (a *App) SetConfigFolder(dir string) {
+	a.ConfigFolder = dir
 }
 
 // SetViewPath sets the directory path to search for the view files.
@@ -137,7 +147,7 @@ func (a *App) SetViewPath(dir string) {
 	if dir == "" {
 		dir = "views"
 	}
-	a.Config.ViewsDir = fmt.Sprintf("%s/%s", a.Config.FixturesDir, dir)
+	a.ViewFolder = fmt.Sprintf("%s/%s", a.FixtureFolder, dir)
 }
 
 // SetStaticPath sets the directory path to search for the static asset files being served
@@ -145,7 +155,7 @@ func (a *App) SetStaticPath(dir string) {
 	if dir == "" {
 		dir = "assets"
 	}
-	a.Config.StaticDir = fmt.Sprintf("%s/%s", a.Config.FixturesDir, dir)
+	a.StaticFolder = fmt.Sprintf("%s/%s", a.FixtureFolder, dir)
 }
 
 // SetNoModel sets the Config.NoModel value manually in the config.
@@ -155,24 +165,24 @@ func (a *App) SetNoModel(no bool) {
 
 // init initializes values to the app components.
 func (a *App) init() error {
-	appConfig, err := loadConfig(a.ConfigPath)
+	appConfig, err := loadConfig(a.ConfigName, a.ConfigFolder)
 	if err != nil {
 		return err
 	}
 	a.Config = appConfig
 
-	a.SetViewPath(a.Config.ViewsDir)
-	viewsabs, _ := getAbsolutePath(appConfig.ViewsDir)
+	a.SetViewPath("views")
+	viewsabs, _ := getAbsolutePath(a.ViewFolder)
 	if viewsabs == "" {
 		return err
 	}
-	a.Config.ViewsDir = viewsabs
-	if _, err := os.Stat(appConfig.ViewsDir); os.IsNotExist(err) {
+	a.ViewFolder = viewsabs
+	if _, err := os.Stat(a.ViewFolder); os.IsNotExist(err) {
 		// path/to/view folder does not exist use default fixtures/view
-		a.Config.FixturesDir = fmt.Sprintf("%s/%s", a.Config.FixturesDir, "/views")
+		a.ViewFolder = fmt.Sprintf("%s/%s", a.FixtureFolder, "/views")
 	}
 
-	views, err := view.NewSimpleView(a.Config.ViewsDir)
+	views, err := view.NewSimpleView(a.ViewFolder)
 	if err != nil {
 		//TODO: Coverage - Need Failure here
 		return err
@@ -199,14 +209,14 @@ func (a *App) init() error {
 	}
 
 	a.Router.Options = a.options()
-	a.Router.LoadRoutes(a.ConfigPath) // Load a routes file if available.
+	a.Router.LoadRoutes(a.ConfigFolder) // Load a routes file if available.
 	a.isInit = true
 
 	// In case the StaticDir is specified in the Config file, register
 	// a handler serving contents of that directory under the PathPrefix /static/.
 	//if appConfig.StaticDir != "" {
-	a.SetStaticPath(a.Config.StaticDir)
-	static, _ := getAbsolutePath(appConfig.StaticDir)
+	a.SetStaticPath("assets")
+	static, _ := getAbsolutePath(a.StaticFolder)
 	if static != "" {
 		//TODO: Coverage -  Need to hit here
 		a.SetStaticPath(static)
@@ -283,14 +293,14 @@ func getAbsolutePath(dir string) (string, error) {
 // loadConfig loads the configuration file. If cfg is provided, then it is used as the directory
 // for searching the configuration files. It defaults to the directory named config in the current
 // working directory.
-func loadConfig(cfg ...string) (*config.Config, error) {
+func loadConfig(name string, cfg ...string) (*config.Config, error) {
 	cfgDir := "config"
 	if len(cfg) > 0 {
 		cfgDir = cfg[0]
 	}
 
 	// Load configurations.
-	cfgFile, err := findConfigFile(cfgDir, "app")
+	cfgFile, err := findConfigFile(cfgDir, name)
 	if err != nil {
 		return nil, err
 	}
@@ -346,7 +356,6 @@ func (a *App) printUsage() {
 	fmt.Println()
 	fmt.Println("Usage:")
 	fmt.Println("	usefolder -path/to/fixtures/folder - Defines the target fixture folder to use")
-	fmt.Println("	migrate -path/to/csv/folder - Defines the target csv import folder to use")
 	fmt.Println("	startnode - Start a node")
 	fmt.Println("	version - Display version")
 	fmt.Println()
@@ -361,20 +370,13 @@ func (a *App) Run(f RegisterFunc) {
 	}
 
 	userFolderCmd := flag.NewFlagSet("userfolder", flag.ExitOnError)
-	migrateCmd := flag.NewFlagSet("migrate", flag.ExitOnError)
 	startNodeCmd := flag.NewFlagSet("startnode", flag.ExitOnError)
 	versionCmd := flag.NewFlagSet("version", flag.ExitOnError)
 	useFolder := userFolderCmd.String("path", "", "The path to the fixtures folder to use")
-	migrateFolder := migrateCmd.String("path", "", "The path to the csv inmport folder to use")
 
 	switch os.Args[1] {
 	case "userfolder":
 		err := userFolderCmd.Parse(os.Args[2:])
-		if err != nil {
-			log.Panic(err)
-		}
-	case "migrate":
-		err := migrateCmd.Parse(os.Args[2:])
 		if err != nil {
 			log.Panic(err)
 		}
@@ -401,19 +403,11 @@ func (a *App) Run(f RegisterFunc) {
 		a.FixtureFolder = *useFolder
 	}
 
-	if migrateCmd.Parsed() {
-		if *migrateFolder == "" {
-			migrateCmd.Usage()
-			os.Exit(1)
-		}
-
-	}
-
 	if startNodeCmd.Parsed() {
 		if a.Config.Verbose {
 			a.Log.Info("Using base fixture folder at ", a.FixtureFolder)
 			a.Log.Info("Using static assets at ", a.Config.StaticDir)
-			a.Log.Info("Using views at ", a.Config.ViewsDir)
+			a.Log.Info("Using views at ", a.ViewFolder)
 
 			if a.Config.LoadTestData {
 				a.Log.Warn("Load Test Data is enabled in config, please turn off for production.")

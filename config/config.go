@@ -38,15 +38,15 @@ var errCfgUnsupported = errors.New("gowaf: config file format not supported")
 
 // Config stores configurations values
 type Config struct {
-	AppName      string `json:"app_name" yaml:"app_name" toml:"app_name" hcl:"app_name"`
-	Domain       string `json:"domain" yaml:"domain" toml:"domain" hcl:"domain"`
-	CompanyName  string `json:"company_name" yaml:"company_name" toml:"company_name" hcl:"company_name"`
-	BaseURL      string `json:"base_url" yaml:"base_url" toml:"base_url" hcl:"base_url"`
-	Port         int    `json:"port" yaml:"port" toml:"port" hcl:"port"`
-	Verbose      bool   `json:"verbose" yaml:"verbose" toml:"verbose" hcl:"verbose"`
-	FixturesDir  string `json:"fixtures_dir" yaml:"fixtures_dir" toml:"fixtures_dir" hcl:"fixtures_dir"`
-	StaticDir    string `json:"static_dir" yaml:"static_dir" toml:"static_dir" hcl:"static_dir"`
-	ViewsDir     string `json:"view_dir" yaml:"view_dir" toml:"view_dir" hcl:"view_dir"`
+	AppName     string `json:"app_name" yaml:"app_name" toml:"app_name" hcl:"app_name"`
+	Domain      string `json:"domain" yaml:"domain" toml:"domain" hcl:"domain"`
+	CompanyName string `json:"company_name" yaml:"company_name" toml:"company_name" hcl:"company_name"`
+	BaseURL     string `json:"base_url" yaml:"base_url" toml:"base_url" hcl:"base_url"`
+	Port        int    `json:"port" yaml:"port" toml:"port" hcl:"port"`
+	Verbose     bool   `json:"verbose" yaml:"verbose" toml:"verbose" hcl:"verbose"`
+	//FixturesDir  string `json:"fixtures_dir" yaml:"fixtures_dir" toml:"fixtures_dir" hcl:"fixtures_dir"`
+	StaticDir string `json:"static_dir" yaml:"static_dir" toml:"static_dir" hcl:"static_dir"`
+	//ViewsDir     string `json:"view_dir" yaml:"view_dir" toml:"view_dir" hcl:"view_dir"`
 	Database     string `json:"database" yaml:"database" toml:"database" hcl:"database"`
 	DatabaseConn string `json:"database_conn" yaml:"database_conn" toml:"database_conn" hcl:"database_conn"`
 	Automigrate  bool   `json:"automigrate" yaml:"automigrate" toml:"automigrate" hcl:"automigrate"`
@@ -97,9 +97,6 @@ func DefaultConfig() *Config {
 		ThemeColor:    "blue",
 		GoogleID:      "",
 		Verbose:       false,
-		FixturesDir:   "./fixtures",
-		StaticDir:     "static",
-		ViewsDir:      "views",
 		Database:      "",
 		DatabaseConn:  "",
 		Automigrate:   true,
