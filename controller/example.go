@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -26,6 +27,7 @@ func (c *Example) Index() {
 // Create creates a Example  item
 func (c *Example) Create() {
 	c.Ctx.Template = "application/example/create"
+	c.Ctx.Data["action"] = "/example/create"
 	Example := &models.Example{}
 	req := c.Ctx.Request()
 
@@ -81,6 +83,35 @@ func (c *Example) View() {
 
 // Edit allows editing a Example item
 func (c *Example) Edit() {
+	req := c.Ctx.Request()
+
+	ExampleID := c.Ctx.Params["id"]
+	id := c.convertString(ExampleID)
+	if id == -1 {
+		return
+	}
+
+	Example := &models.Example{ID: id}
+	rows := c.Ctx.DB.Find(&Example)
+
+	//Checking that this Example is exist
+	if !c.statusNotFound(rows.RowsAffected) {
+		return
+	}
+	if req.Method == "GET" {
+		c.Ctx.Template = "application/example/create"
+		c.Ctx.Data["title"] = "Edit Example"
+		c.Ctx.Data["action"] = fmt.Sprintf("/example/update/%d", Example.ID)
+		c.Ctx.Data["Payload"] = Example
+		c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+		return
+	}
+}
+
+// Update allows editing a Example item
+func (c *Example) Update() {
+	req := c.Ctx.Request()
+
 	ExampleID := c.Ctx.Params["id"]
 	id := c.convertString(ExampleID)
 	if id == -1 {
@@ -95,7 +126,6 @@ func (c *Example) Edit() {
 		return
 	}
 
-	req := c.Ctx.Request()
 	if !c.statusInternalServerError(req, ExampleFromForm) {
 		return
 	}
@@ -142,7 +172,8 @@ func NewExample() Controller {
 			"get,post;/example/create;Create",
 			"get;/example/view/{id};View",
 			"get;/example/delete/{id};Delete",
-			"post;/example/update/{id};Edit",
+			"get;/example/edit/{id};Edit",
+			"post;/example/update/{id};Update",
 		},
 	}
 }
