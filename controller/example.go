@@ -46,10 +46,6 @@ func (a *Example) Create() {
 	a.Ctx.Redirect("/example", http.StatusFound)
 }
 
-// Edit edits an existing model in the database with correct access level
-func (a *Example) ViewEdit() {
-
-}
 
 // Delete deletes a model in the database with correct access level
 func (a *Example) Delete() {
