@@ -362,75 +362,83 @@ func (a *App) printUsage() {
 }
 
 // Run parses command line arguments and processes commands
-func (a *App) Run(f RegisterFunc) {
+func (a *App) Run(f RegisterFunc, noCmdArgs bool) {
 
-	if len(os.Args) < 2 {
-		a.printUsage()
-		os.Exit(1)
-	}
-
-	userFolderCmd := flag.NewFlagSet("userfolder", flag.ExitOnError)
-	startNodeCmd := flag.NewFlagSet("startnode", flag.ExitOnError)
-	versionCmd := flag.NewFlagSet("version", flag.ExitOnError)
-	useFolder := userFolderCmd.String("path", "", "The path to the fixtures folder to use")
-
-	switch os.Args[1] {
-	case "userfolder":
-		err := userFolderCmd.Parse(os.Args[2:])
-		if err != nil {
-			log.Panic(err)
-		}
-	case "startnode":
-		err := startNodeCmd.Parse(os.Args[2:])
-		if err != nil {
-			log.Panic(err)
-		}
-	case "version":
-		err := versionCmd.Parse(os.Args[1:])
-		if err != nil {
-			log.Panic(err)
-		}
-	default:
-		a.printUsage()
-		os.Exit(1)
-	}
-
-	if userFolderCmd.Parsed() {
-		if *useFolder == "" {
-			userFolderCmd.Usage()
+	if noCmdArgs == false {
+		if len(os.Args) < 2 {
+			a.printUsage()
 			os.Exit(1)
 		}
-		a.FixtureFolder = *useFolder
-	}
 
-	if startNodeCmd.Parsed() {
-		if a.Config.Verbose {
-			a.Log.Info("Using base fixture folder at ", a.FixtureFolder)
-			a.Log.Info("Using static assets at ", a.Config.StaticDir)
-			a.Log.Info("Using views at ", a.ViewFolder)
+		userFolderCmd := flag.NewFlagSet("userfolder", flag.ExitOnError)
+		startNodeCmd := flag.NewFlagSet("startnode", flag.ExitOnError)
+		versionCmd := flag.NewFlagSet("version", flag.ExitOnError)
+		useFolder := userFolderCmd.String("path", "", "The path to the fixtures folder to use")
 
-			if a.Config.LoadTestData {
-				a.Log.Warn("Load Test Data is enabled in config, please turn off for production.")
+		switch os.Args[1] {
+		case "userfolder":
+			err := userFolderCmd.Parse(os.Args[2:])
+			if err != nil {
+				log.Panic(err)
 			}
-
-			if a.Config.GoogleID != "" {
-				a.Log.Success("Google Analytics enabled with ID: ", a.Config.GoogleID)
+		case "startnode":
+			err := startNodeCmd.Parse(os.Args[2:])
+			if err != nil {
+				log.Panic(err)
 			}
+		case "version":
+			err := versionCmd.Parse(os.Args[1:])
+			if err != nil {
+				log.Panic(err)
+			}
+		default:
+			a.printUsage()
+			os.Exit(1)
 		}
 
+		if userFolderCmd.Parsed() {
+			if *useFolder == "" {
+				userFolderCmd.Usage()
+				os.Exit(1)
+			}
+			a.FixtureFolder = *useFolder
+		}
+
+		if startNodeCmd.Parsed() {
+			if a.Config.Verbose {
+				a.Log.Info("Using base fixture folder at ", a.FixtureFolder)
+				a.Log.Info("Using static assets at ", a.Config.StaticDir)
+				a.Log.Info("Using views at ", a.ViewFolder)
+
+				if a.Config.LoadTestData {
+					a.Log.Warn("Load Test Data is enabled in config, please turn off for production.")
+				}
+
+				if a.Config.GoogleID != "" {
+					a.Log.Success("Google Analytics enabled with ID: ", a.Config.GoogleID)
+				}
+			}
+
+			// Call the users Register Function
+			a.Log.Info("Registering Models & Controllers...")
+			f(a)
+			a.Log.Success("Done. ", a.Model.Count(), " Models and ", a.Router.Count(), " Controllers registered.")
+
+			port := fmt.Sprintf(":%d", a.Config.Port)
+			a.Log.Info("Starting server, listening on port", port)
+			log.Fatal(http.ListenAndServe(port, a))
+			return
+		}
+
+		if versionCmd.Parsed() {
+			fmt.Println(a.Version)
+			return
+		}
+	} else {
 		// Call the users Register Function
 		a.Log.Info("Registering Models & Controllers...")
 		f(a)
 		a.Log.Success("Done. ", a.Model.Count(), " Models and ", a.Router.Count(), " Controllers registered.")
-
-		port := fmt.Sprintf(":%d", a.Config.Port)
-		a.Log.Info("Starting server, listening on port", port)
-		log.Fatal(http.ListenAndServe(port, a))
-
-	}
-
-	if versionCmd.Parsed() {
-		fmt.Println(a.Version)
 	}
 
 }
