@@ -13,7 +13,7 @@ type Address struct {
 	Routes []string
 }
 
-//Home renders a Address list
+// Index renders a Address list
 func (c *Address) Index() {
 	Addresss := []*models.Address{}
 	c.Ctx.DB.Order("created_at desc").Find(&Addresss)
@@ -23,7 +23,7 @@ func (c *Address) Index() {
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 }
 
-//Create creates a Address  item
+// Create creates a Address  item
 func (c *Address) Create() {
 	c.Ctx.Template = "application/address/index"
 	Address := &models.Address{}
@@ -50,7 +50,7 @@ func (c *Address) Create() {
 	c.Ctx.Redirect("/address", http.StatusFound)
 }
 
-//Delete deletes a Address item
+// View a Address item
 func (c *Address) View() {
 	c.Ctx.Template = "application/address/view"
 
@@ -72,26 +72,7 @@ func (c *Address) View() {
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 }
 
-//Now this method is useless
-//func (c *Address) ViewEdit() {
-//	c.Ctx.Template = "application/address/update"
-//	AddressID := c.Ctx.Params["id"]
-//	id, err := strconv.Atoi(AddressID)
-//	if err != nil {
-//		c.Ctx.Data["Message"] = err.Error()
-//		c.Ctx.Template = "error"
-//		c.HTML(http.StatusInternalServerError)
-//		return
-//	}
-//
-//	Address := &models.Address{ID: id}
-//
-//	c.Ctx.DB.Find(&Address)
-//	c.Ctx.Data["Payload"] = Address
-//
-//	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
-//}
-
+// Edit allows editing a Address item
 func (c *Address) Edit() {
 	AddressID := c.Ctx.Params["id"]
 	id := c.convertString(AddressID)
@@ -126,7 +107,7 @@ func (c *Address) Edit() {
 	c.Ctx.Redirect("/address", http.StatusFound)
 }
 
-//Delete deletes a Address item
+// Delete deletes a Address item
 func (c *Address) Delete() {
 	AddressID := c.Ctx.Params["id"]
 	id := c.convertString(AddressID)
@@ -145,7 +126,7 @@ func (c *Address) Delete() {
 	c.Ctx.Redirect("/address", http.StatusFound)
 }
 
-//NewAddress returns a new  Address list controller
+// NewAddress returns a new  Address controller
 func NewAddress() Controller {
 	return &Address{
 		Routes: []string{
@@ -154,7 +135,6 @@ func NewAddress() Controller {
 			"post;/address/create;Create",
 			"get;/address/view/{id};View",
 			"get;/address/delete/{id};Delete",
-			//"get;/address/update/{id};ViewEdit",
 			"post;/address/update/{id};Edit",
 		},
 	}
