@@ -22,12 +22,41 @@ func ParseBool(str string) (bool, error) {
 	return false, fmt.Errorf("ParseBool: cannot convert %s to boolean", str)
 }
 
-// FormatBool returns "true" or "false" according to the value of b
-func FormatBool(b bool) string {
-	if b {
-		return "true"
+const (
+	// FormatBoolTrueFalse used to define out to convert bool to string
+	FormatBoolTrueFalse = 0
+	// FormatBoolTrueFalse used to define out to convert bool to string
+	FormatBoolYesNo = 1
+	// FormatBoolTrueFalse used to define out to convert bool to string
+	FormatBoolEnabledDisabled = 2
+)
+
+// FormatBool expands on the default version and allows returns of "True/False", "Yes/No" and "Enabled/Disabled" according to the value of b
+func FormatBool(b bool, t int) string {
+	result := ""
+
+	switch t {
+	case FormatBoolTrueFalse:
+		if b {
+			result = "True"
+		} else {
+			result = "False"
+		}
+	case FormatBoolYesNo:
+		if b {
+			result = "Yes"
+		} else {
+			result = "No"
+		}
+	case FormatBoolEnabledDisabled:
+		if b {
+			result = "Enabled"
+		} else {
+			result = "Disabled"
+		}
 	}
-	return "false"
+
+	return result
 }
 
 // AppendBool appends "true" or "false", according to the value of b,
