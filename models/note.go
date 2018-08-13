@@ -17,12 +17,12 @@ type Note struct {
 
 // SingleLine returns a formatted single line text representing the Model
 func (m *Note) SingleLine() string {
-	return fmt.Sprintf("%s, (%s)", m.Body, m.Person.PersonName.SingleLine())
+	return fmt.Sprintf("%s, (%s)", m.Body, m.Person.PrimaryName.SingleLine())
 }
 
 // MultiLine returns a formatted multi-line text representing the Model
 func (m *Note) MultiLine() string {
-	return fmt.Sprintf("%s:\n%s", m.Person.PersonName.SingleLine(), m.Body)
+	return fmt.Sprintf("%s:\n%s", m.Person.PrimaryName.SingleLine(), m.Body)
 }
 
 // HTMLView returns a HTML5 code representing a view of the Model

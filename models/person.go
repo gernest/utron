@@ -17,8 +17,12 @@ type Person struct {
 	Gender   Gender `gorm:"foreignkey:GenderID"`
 
 	//NameID is the UID of the Person's name as found in the person_name table
-	NameID     int        `schema:"name_id"`
-	PersonName PersonName `gorm:"foreignkey:NameID"`
+	NameID      int        `schema:"name_id"`
+	PrimaryName PersonName `gorm:"foreignkey:NameID"`
+
+	//SpouseNameID is the UID of the Person's name as found in the person_name table
+	SpouseNameID int        `schema:"spouse_name_id"`
+	SpouseName   PersonName `gorm:"foreignkey:SpouseNameID"`
 
 	//EmailID is the UID of the Person's email as found in the email table
 	EmailID int   `schema:"email_id"`
@@ -35,7 +39,7 @@ type Person struct {
 
 // SingleLine returns a formatted single line text representing a Person Model
 func (m *Person) SingleLine() string {
-	pn := m.PersonName.SingleLine()
+	pn := m.PrimaryName.SingleLine()
 	return fmt.Sprintf("%s [%s], %s, %s",
 		pn,
 		m.PersonType.SingleLine(),
@@ -46,7 +50,7 @@ func (m *Person) SingleLine() string {
 
 // MultiLine returns a formatted multi-line text representing a Person Model
 func (m *Person) MultiLine() string {
-	pn := m.PersonName.SingleLine()
+	pn := m.PrimaryName.SingleLine()
 	return fmt.Sprintf("%s\n%s\n%s\n%s\n",
 		pn,
 		m.PersonType.Name,
