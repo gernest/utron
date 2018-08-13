@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"strings"
 	"time"
 )
@@ -13,7 +14,6 @@ type Email struct {
 	ID        int       `schema:"id"`
 	CreatedAt time.Time `schema:"created"`
 	UpdatedAt time.Time `schema:"updated"`
-	Address   string    `schema:"address"`  //bob1234@gmail.com
 	Username  string    `schema:"username"` //bob1234
 	Domain    string    `schema:"domain"`   //gmail.com
 	Friendly  string    `schema:"friendly"`
@@ -21,7 +21,7 @@ type Email struct {
 
 // SingleLine returns a formatted single line text representing the Model
 func (m *Email) SingleLine() string {
-	return m.Address
+	return fmt.Sprintf("%s,%s", m.Username, m.Domain)
 }
 
 // MultiLine returns a formatted multi-line text representing the Model
@@ -46,6 +46,5 @@ func (m *Email) Parse(e string) {
 	if atIdx != -1 && dotIdx != -1 {
 		m.Username = e[0:atIdx]
 		m.Domain = e[atIdx+1 : len(e)]
-		m.Address = e
 	}
 }
