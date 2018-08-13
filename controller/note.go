@@ -25,9 +25,16 @@ func (c *Note) Index() {
 //Create creates a Note  item
 func (c *Note) Create() {
 	c.Ctx.Template = "application/note/index"
-	c.Ctx.Data["action"] = "/note/create"
 	Note := &models.Note{}
 	req := c.Ctx.Request()
+
+	if req.Method == "GET" {
+		c.Ctx.Template = "application/note/create"
+		c.Ctx.Data["title"] = "New Note"
+		c.Ctx.Data["action"] = "/note/create"
+		c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+		return
+	}
 	_ = req.ParseForm()
 	if err := Decoder.Decode(Note, req.PostForm); err != nil {
 		c.Ctx.Data["Message"] = err.Error()
@@ -59,7 +66,7 @@ func NewNote() Controller {
 	return &Note{
 		Routes: []string{
 			"get;/note;Index",
-			"post;/note/create;Create",
+			"get,post;/note/create;Create",
 			"get;/note/view/{id};View",
 			"get;/note/delete/{id};Delete",
 		},

@@ -26,11 +26,17 @@ func (c *Gender) Index() {
 //Create creates a Gender  item
 func (c *Gender) Create() {
 	c.Ctx.Template = "application/gender/index"
-	c.Ctx.Data["action"] = "/gender/create"
-
 	Gender := &models.Gender{}
-
 	req := c.Ctx.Request()
+
+	if req.Method == "GET" {
+		c.Ctx.Template = "application/gender/create"
+		c.Ctx.Data["title"] = "New Gender"
+		c.Ctx.Data["action"] = "/gender/create"
+		c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+		return
+	}
+
 	if !c.parseForm(req, Gender) {
 		return
 	}
@@ -109,35 +115,6 @@ func (c *Gender) Edit() {
 	c.Ctx.Redirect("/gender", http.StatusFound)
 }
 
-//TODO
-//func (c *Gender) ViewEdit() {
-//	c.Ctx.Template = "application/gender/update"
-//	GenderID := c.Ctx.Params["id"]
-//	id, err := strconv.Atoi(GenderID)
-//	if err != nil {
-//		c.Ctx.Data["Message"] = err.Error()
-//		c.Ctx.Template = "error"
-//		c.HTML(http.StatusInternalServerError)
-//		return"errors"
-//	}
-//
-//	Gender := &models.Gender{ID: id}
-//	c.Ctx.DB.Find(&Gender)
-//
-//	req := c.Ctx.Request()
-//	_ = req.ParseForm()
-//	if err := Decoder.Decode(Gender, req.PostForm); err != nil {
-//		c.Ctx.Data["Message"] = err.Error()
-//		c.Ctx.Template = "error"
-//		c.HTML(http.StatusInternalServerError)
-//		return
-//	}
-//
-//	c.Ctx.DB.Save(Gender)
-//	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
-//	c.Ctx.Redirect("/gender", http.StatusFound)
-//}
-
 //Delete deletes a Gender item
 func (c *Gender) Delete() {
 	GenderID := c.Ctx.Params["id"]
@@ -163,7 +140,7 @@ func NewGender() Controller {
 		Routes: []string{
 			//method;route;handler
 			"get;/gender;Index",
-			"post;/gender/create;Create",
+			"get,post;/gender/create;Create",
 			"get;/gender/view/{id};View",
 			"get;/gender/delete/{id};Delete",
 			"post;/gender/update/{id};Edit",

@@ -26,9 +26,16 @@ func (c *Company) Index() {
 //Create creates a Company  item
 func (c *Company) Create() {
 	c.Ctx.Template = "application/company/index"
-	c.Ctx.Data["action"] = "/company/create"
 	Company := &models.Company{}
 	req := c.Ctx.Request()
+
+	if req.Method == "GET" {
+		c.Ctx.Template = "application/company/create"
+		c.Ctx.Data["title"] = "New Company"
+		c.Ctx.Data["action"] = "/company/create"
+		c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+		return
+	}
 	_ = req.ParseForm()
 	if err := Decoder.Decode(Company, req.PostForm); err != nil {
 		c.Ctx.SetError(400, "Internal Server Errror", err.Error())
@@ -76,7 +83,7 @@ func NewCompany() Controller {
 		Routes: []string{
 			//method;route;handler
 			"get;/company;Index",
-			"post;/company/create;Create",
+			"get,post;/company/create;Create",
 			"get;/company/view/{id};View",
 			"get;/company/delete/{id};Delete",
 		},

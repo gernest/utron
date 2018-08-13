@@ -26,10 +26,17 @@ func (c *Phone) Index() {
 //Create creates a Phone  item
 func (c *Phone) Create() {
 	c.Ctx.Template = "application/phone/index"
-	c.Ctx.Data["action"] = "/phone/create"
 	Phone := &models.Phone{}
-
 	req := c.Ctx.Request()
+
+	if req.Method == "GET" {
+		c.Ctx.Template = "application/phone/create"
+		c.Ctx.Data["title"] = "New Phone"
+		c.Ctx.Data["action"] = "/phone/create"
+		c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+		return
+	}
+
 	if !c.parseForm(req, Phone) {
 		return
 	}

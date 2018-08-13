@@ -26,10 +26,17 @@ func (c *PersonName) Index() {
 //Create creates a PersonName  item
 func (c *PersonName) Create() {
 	c.Ctx.Template = "application/personname/index"
-	c.Ctx.Data["action"] = "/personname/create"
 	PersonName := &models.PersonName{}
-
 	req := c.Ctx.Request()
+
+	if req.Method == "GET" {
+		c.Ctx.Template = "application/personname/create"
+		c.Ctx.Data["title"] = "New Person's Name"
+		c.Ctx.Data["action"] = "/personname/create"
+		c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+		return
+	}
+
 	if !c.parseForm(req, PersonName) {
 		return
 	}
@@ -134,7 +141,7 @@ func NewPersonName() Controller {
 		Routes: []string{
 			//method;route;handler
 			"get;/personname;Index",
-			"post;/personname/create;Create",
+			"get,post;/personname/create;Create",
 			"get;/personname/view/{id};View",
 			"get;/personname/delete/{id};Delete",
 			"post;/personname/update/{id};Edit",
