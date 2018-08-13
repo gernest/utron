@@ -32,6 +32,7 @@ type Phone struct {
 	Number      string    `schema:"number"`
 	Extension   string    `schema:"extention"`
 	PhoneType   byte      `schema:"phone_type"`
+	Friendly    string    `schema:"friendly"`
 }
 
 // SingleLine returns a formatted single line text representing the Model

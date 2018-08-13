@@ -17,6 +17,7 @@ type Company struct {
 	Phone     Phone     `gorm:"foreignkey:PhoneID"`
 	FaxID     int       `schema:"fax_id"`
 	Fax       Phone     `gorm:"foreignkey:FaxID"`
+	Friendly  string    `schema:"friendly"`
 }
 
 // SingleLine returns a formatted single line text representing the Model

@@ -17,6 +17,7 @@ type PersonName struct {
 	Last      string    `schema:"last"`    //Doe
 	Suffix    string    `schema:"suffix"`  //Sr
 	GoesBy    string    `schema:"goes_by"` //Bob
+	Friendly  string    `schema:"friendly"`
 }
 
 // SingleLine returns a formatted single line text representing the Model

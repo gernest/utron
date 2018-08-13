@@ -18,6 +18,7 @@ type PersonType struct {
 	CreatedAt time.Time `schema:"created"`
 	UpdatedAt time.Time `schema:"updated"`
 	Name      string    `schema:"name"`
+	Friendly  string    `schema:"friendly"`
 }
 
 // SingleLine returns a formatted single line text representing the Model

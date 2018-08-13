@@ -35,6 +35,7 @@ type Person struct {
 	//PhoneID is the UID of the Person's Phone info as found in the phone table
 	PhoneID int   `schema:"phone_id"`
 	Phone   Phone `gorm:"foreignkey:PhoneID"`
+	Friendly    string    `schema:"friendly"`
 }
 
 // SingleLine returns a formatted single line text representing a Person Model

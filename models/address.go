@@ -18,6 +18,7 @@ type Address struct {
 	Zip       string    `valid:"required" schema:"zip"`
 	County    string    `valid:"required" schema:"county"`
 	Country   string    `valid:"required" schema:"country"`
+	Friendly    string    `schema:"friendly"`
 }
 
 // SingleLine returns a formatted single line text representing the Model

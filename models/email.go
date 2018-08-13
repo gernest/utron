@@ -16,6 +16,7 @@ type Email struct {
 	Address   string    `schema:"address"`  //bob1234@gmail.com
 	Username  string    `schema:"username"` //bob1234
 	Domain    string    `schema:"domain"`   //gmail.com
+	Friendly  string    `schema:"friendly"`
 }
 
 // SingleLine returns a formatted single line text representing the Model

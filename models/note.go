@@ -13,6 +13,7 @@ type Note struct {
 	PersonID  int       `schema:"person_id"`
 	Person    Person    `gorm:"foreignkey:PersonID"`
 	Body      string    `schema:"body"`
+	Friendly  string    `schema:"friendly"`
 }
 
 // SingleLine returns a formatted single line text representing the Model

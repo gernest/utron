@@ -24,6 +24,7 @@ type Gender struct {
 	UpdatedAt  time.Time `schema:"updated"`
 	ClaimedSex string    `schema:"claimed_sex"` // what they claim -> male, female, gay, lesbian, transgender, etc
 	BioSex     byte      `schema:"legal_sex"`   //What is on birth certificate / under the hood? 0=Unknown, 1=Male, 2=Female
+	Friendly   string    `schema:"friendly"`
 }
 
 // SingleLine returns a formatted single line text representing the Model
