@@ -26,10 +26,17 @@ func (c *Address) Index() {
 // Create creates a Address  item
 func (c *Address) Create() {
 	c.Ctx.Template = "application/address/index"
-	c.Ctx.Data["action"] = "/address/create"
-
 	Address := &models.Address{}
 	req := c.Ctx.Request()
+
+	if req.Method == "GET" {
+		c.Ctx.Template = "application/address/create"
+		c.Ctx.Data["title"] = "New Address"
+		c.Ctx.Data["action"] = "/address/create"
+		c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+		return
+	}
+
 	if !c.statusInternalServerError(req, Address) {
 		return
 	}
@@ -134,7 +141,7 @@ func NewAddress() Controller {
 		Routes: []string{
 			//method;route;handler
 			"get;/address;Index",
-			"post;/address/create;Create",
+			"get,post;/address/create;Create",
 			"get;/address/view/{id};View",
 			"get;/address/delete/{id};Delete",
 			"post;/address/update/{id};Edit",

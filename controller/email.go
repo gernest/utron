@@ -29,11 +29,17 @@ func (c *Email) Index() {
 //Create creates a Email  item
 func (c *Email) Create() {
 	c.Ctx.Template = "application/email/index"
-	c.Ctx.Data["action"] = "/email/create"
-
 	Email := &models.Email{}
-
 	req := c.Ctx.Request()
+
+	if req.Method == "GET" {
+		c.Ctx.Template = "application/email/create"
+		c.Ctx.Data["title"] = "New Email"
+		c.Ctx.Data["action"] = "/email/create"
+		c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
+		return
+	}
+
 	if !c.parseForm(req, Email) {
 		return
 	}
@@ -144,10 +150,9 @@ func NewEmail() Controller {
 		Routes: []string{
 			//method;route;handler
 			"get;/email;Index",
-			"post;/email/create;Create",
+			"get,post;/email/create;Create",
 			"get;/email/view/{id};View",
 			"get;/email/delete/{id};Delete",
-			//"get;/email/update/{id};ViewEdit",
 			"post;/email/update/{id};Edit",
 		},
 	}
