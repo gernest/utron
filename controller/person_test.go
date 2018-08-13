@@ -33,7 +33,10 @@ var (
 	findQueryPerson   = "SELECT * FROM `people` WHERE `people`.`id` = ?"
 	deleteQueryPerson = "DELETE FROM `people` WHERE `people`.`id` = ?"
 	updateQueryPerson = "UPDATE `people` SET `created_at` = ?, `dob` = ?, `id` = ?, `updated_at` = ? WHERE `people`.`id` = ?"
-
+	pID = int64(1)
+	pEmail    = pUsername + "@" + pDomain
+	pUsername = "someaddress"
+	pDomain   = "gmail.com"
 	personFields = []string{"id", "dob", "created_at", "updated_at"}
 )
 
@@ -57,7 +60,10 @@ func TestPerson_Create(t *testing.T) {
 	person, ctx = preparePerson(req, rr)
 
 	person.prepareValidRequest()
+
+	mock.ExpectBegin()
 	person.prepareMockRequest()
+	mock.ExpectCommit()
 
 	person.Create()
 	if rr.Result().StatusCode != http.StatusFound {
@@ -92,7 +98,116 @@ func TestPerson_CreateWithNoValidForm(t *testing.T) {
 	}
 }
 
-func TestPerson_CreateWithNoValidMail(t *testing.T) {}
+func TestPerson_CreateWithNoValidName(t *testing.T) {
+	req, rr = prepareReqAndRecorder("POST", "/person/create")
+	person, ctx = preparePerson(req, rr)
+
+	mock.ExpectBegin()
+	mock.ExpectExec("INSERT INTO `person_names`").WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg(),
+		name, sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg()).WillReturnResult(
+		sqlmock.NewResult(pID, 1))
+	person.prepareValidRequest()
+	person.prepareMockRequest()
+	mock.ExpectCommit()
+
+	rows := sqlmock.NewRows(personNameFields)
+	mock.ExpectQuery(fixedFullRe(findQueryPersonName)).WithArgs(1).WillReturnRows(rows.AddRow(id, firstName, "", time.Now(), time.Now()))
+	mock.ExpectExec(fixedFullRe(deleteQueryPersonName)).WithArgs(id).WillReturnResult(sqlmock.NewResult(0, 1))
+	mock.ExpectExec(fixedFullRe(deleteQueryPerson)).WithArgs(1).WillReturnResult(sqlmock.NewResult(0, 1))
+
+	req.PostForm.Add("PersonName.first", name)
+
+	person.Create()
+	if rr.Result().StatusCode != http.StatusBadRequest {
+		t.Error("Expected http.StatusBadRequest, got: ", rr.Result().Status)
+	}
+}
+
+func TestPerson_CreateWithNoValidGender(t *testing.T) {
+	req, rr = prepareReqAndRecorder("POST", "/person/create")
+	person, ctx = preparePerson(req, rr)
+
+	person.prepareValidRequest()
+
+	mock.ExpectBegin()
+	mock.ExpectExec("INSERT INTO `genders`").WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg(), pID).WillReturnResult(sqlmock.NewResult(pID, 1))
+	person.prepareMockRequest()
+	mock.ExpectCommit()
+
+	rows := sqlmock.NewRows(genderFields)
+	mock.ExpectQuery(fixedFullRe(findQueryGender)).WithArgs(pID).WillReturnRows(rows.AddRow(pID, "", 1, time.Now(), time.Now()))
+	mock.ExpectExec(fixedFullRe(deleteQueryGender)).WithArgs(pID).WillReturnResult(sqlmock.NewResult(0, 1))
+	mock.ExpectExec(fixedFullRe(deleteQueryPerson)).WithArgs(pID).WillReturnResult(sqlmock.NewResult(0, 1))
+
+	req.PostForm.Add("Gender.legal_sex", "1")
+
+	person.Create()
+	if rr.Result().StatusCode != http.StatusBadRequest {
+		t.Error("Expected http.StatusBadRequest, got: ", rr.Result().Status)
+	}
+}
+
+func TestPerson_CreateWithNoValidPhone(t *testing.T) {
+	req, rr = prepareReqAndRecorder("POST", "/person/create")
+	person, ctx = preparePerson(req, rr)
+
+	person.prepareValidRequest()
+
+	mock.ExpectBegin()
+	formatTime()
+	mock.ExpectExec("INSERT INTO `emails`").WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg(), pEmail,
+		pUsername, pDomain).WillReturnResult(sqlmock.NewResult(pID, 1))
+	mock.ExpectExec("INSERT INTO `phones`").WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg(), "1", sqlmock.AnyArg(),
+		sqlmock.AnyArg(), sqlmock.AnyArg()).WillReturnResult(
+		sqlmock.NewResult(pID, 1))
+	mock.ExpectExec("INSERT INTO `people`").WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg(), parsed,
+		sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg()).WillReturnResult(
+		sqlmock.NewResult(pID, 1))
+	mock.ExpectCommit()
+
+	rows := sqlmock.NewRows(phoneFields)
+	mock.ExpectQuery(fixedFullRe(findQueryPhone)).WithArgs(pID).WillReturnRows(rows.AddRow(pID, 1, sqlmock.AnyArg(),
+		sqlmock.AnyArg(), 0, time.Now(), time.Now()))
+	mock.ExpectExec(fixedFullRe(deleteQueryPhone)).WithArgs(pID).WillReturnResult(sqlmock.NewResult(0, 1))
+	mock.ExpectExec(fixedFullRe(deleteQueryPerson)).WithArgs(pID).WillReturnResult(sqlmock.NewResult(0, 1))
+
+	req.PostForm.Add("Phone.code", "1")
+
+	person.Create()
+	if rr.Result().StatusCode != http.StatusBadRequest {
+		t.Error("Expected http.StatusBadRequest, got: ", rr.Result().Status)
+	}
+}
+
+func TestPerson_CreateWithNoValidType(t *testing.T) {
+	req, rr = prepareReqAndRecorder("POST", "/person/create")
+	person, ctx = preparePerson(req, rr)
+
+	person.prepareValidRequest()
+
+	mock.ExpectBegin()
+	formatTime()
+	mock.ExpectExec("INSERT INTO `emails`").WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg(), pEmail,
+		pUsername, pDomain).WillReturnResult(sqlmock.NewResult(pID, 1))
+	mock.ExpectExec("INSERT INTO `person_types`").WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg(), "name").WillReturnResult(
+		sqlmock.NewResult(pID, 1))
+	mock.ExpectExec("INSERT INTO `people`").WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg(), parsed,
+		sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg()).WillReturnResult(
+		sqlmock.NewResult(pID, 1))
+	mock.ExpectCommit()
+
+	rows := sqlmock.NewRows(personTypeFields)
+	mock.ExpectQuery(fixedFullRe(findQueryPersonType)).WithArgs(pID).WillReturnRows(rows.AddRow(pID, "", time.Now(), time.Now()))
+	mock.ExpectExec(fixedFullRe(deleteQueryPersonType)).WithArgs(pID).WillReturnResult(sqlmock.NewResult(0, 1))
+	mock.ExpectExec(fixedFullRe(deleteQueryPerson)).WithArgs(pID).WillReturnResult(sqlmock.NewResult(0, 1))
+
+	req.PostForm.Add("PersonType.name", "name")
+
+	person.Create()
+	if rr.Result().StatusCode != http.StatusBadRequest {
+		t.Error("Expected http.StatusBadRequest, got: ", rr.Result().Status)
+	}
+}
 
 //Try to create without connection to DB
 func TestPerson_CreateWithNoConnToDB(t *testing.T) {
@@ -345,17 +460,18 @@ func (c *Person) prepareValidRequest() {
 
 	req.PostForm = url.Values{}
 	req.PostForm.Add("dob", dateOfBirthday)
+	req.PostForm.Add("Email.address", pEmail)
 	req.PostForm.Add("created", created)
 	req.PostForm.Add("updated", created)
 }
 
 func (c *Person) prepareMockRequest() {
 	formatTime()
-	mock.ExpectBegin()
+	mock.ExpectExec("INSERT INTO `emails`").WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg(), pEmail,
+		pUsername, pDomain).WillReturnResult(sqlmock.NewResult(pID, 1))
 	mock.ExpectExec("INSERT INTO `people`").WithArgs(sqlmock.AnyArg(), sqlmock.AnyArg(), parsed,
 		sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg(), sqlmock.AnyArg()).WillReturnResult(
-		sqlmock.NewResult(-273, 1))
-	mock.ExpectCommit()
+		sqlmock.NewResult(pID, 1))
 }
 
 func formatTime() {
