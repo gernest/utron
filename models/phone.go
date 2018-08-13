@@ -3,7 +3,10 @@ package models
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
+
+	"github.com/nyaruka/phonenumbers"
 )
 
 const (
@@ -24,9 +27,10 @@ type Phone struct {
 	ID          int       `schema:"id"`
 	CreatedAt   time.Time `schema:"created"`
 	UpdatedAt   time.Time `schema:"updated"`
-	CountryCode string    `schema:"code"`
-	AreaCode    string    `schema:"area"`
+	CountryCode string    `schema:"country_code"`
+	AreaCode    string    `schema:"area_code"`
 	Number      string    `schema:"number"`
+	Extension   string    `schema:"extention"`
 	PhoneType   byte      `schema:"phone_type"`
 }
 
@@ -67,6 +71,21 @@ func (m *Phone) PhoneTypeToString(pt byte) string {
 		return "Fax"
 	}
 	return ""
+}
+
+// Parse takes a phone number as a string and parses it into the model
+func (m *Phone) Parse(p string) {
+	parsedPhone, err := phonenumbers.Parse(p, "US")
+	if err == nil {
+		m.PhoneType = PhoneTypeUnknown
+		m.CountryCode = strconv.FormatInt(int64(parsedPhone.GetCountryCode()), 10)
+		m.Number = strconv.FormatInt(int64(parsedPhone.GetNationalNumber()), 10)
+		m.Extension = parsedPhone.GetExtension()
+		if len(m.Number) == 10 {
+			m.AreaCode = m.Number[0:3]
+			m.Number = fmt.Sprintf("%s-%s", m.Number[3:6], m.Number[6:10])
+		}
+	}
 }
 
 func (m *Phone) IsValid() error {

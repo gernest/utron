@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 //TODO: Remove this from public repo
 
@@ -33,4 +36,15 @@ func (m *Email) HTMLView() string {
 // HTMLForm returns a HTML5 code representing a form of the Model
 func (m *Email) HTMLForm() string {
 	return "<div id=\"EmailHTMLForm\">{Form Content}</div>"
+}
+
+// Parse takes a email address as a string and parses it into the model
+func (m *Email) Parse(e string) {
+	atIdx := strings.Index(e, "@")
+	dotIdx := strings.LastIndex(e, ".")
+	if atIdx != -1 && dotIdx != -1 {
+		m.Username = e[0:atIdx]
+		m.Domain = e[atIdx+1 : len(e)]
+		m.Address = e
+	}
 }

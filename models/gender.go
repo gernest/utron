@@ -3,7 +3,17 @@ package models
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"time"
+)
+
+const (
+	// BioSexUnknown represents unknown biological sex
+	BioSexUnknown = 0
+	// BioSexMale represents biological male
+	BioSexMale = 1
+	// BioSexFemale represents biological Female
+	BioSexFemale = 2
 )
 
 // Gender aims to be LGBT+ compliant and is primarly used for referencing the 'Person'
@@ -53,4 +63,20 @@ func (m *Gender) IsValid() error {
 	}
 
 	return nil
+}
+
+// Parse takes a gender as a string and parses it into the model
+func (m *Gender) Parse(s string) {
+	if len(s) > 0 {
+		s = strings.ToLower(s)
+		switch s {
+		case "male", "m":
+			m.BioSex = BioSexMale
+		case "female", "f":
+			m.BioSex = BioSexFemale
+		default:
+			m.BioSex = BioSexUnknown
+		}
+		m.ClaimedSex = strings.Title(s)
+	}
 }
