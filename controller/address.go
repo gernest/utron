@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -46,13 +47,16 @@ func (c *Address) Create() {
 		return
 	}
 
-	rows := c.Ctx.DB.Create(Address)
-
-	if rows.RowsAffected != 1 {
-		c.Ctx.Data["Message"] = "can't save Address into database"
-		c.Ctx.Template = "error"
-		c.HTML(http.StatusInternalServerError)
-		return
+	rows := c.Ctx.DB.First(Address)
+	if rows.RowsAffected == 0 {
+		//Add New Address
+		rows = c.Ctx.DB.Create(Address)
+		if rows.RowsAffected != 1 {
+			c.Ctx.Data["Message"] = "can't save Address into database"
+			c.Ctx.Template = "error"
+			c.HTML(http.StatusInternalServerError)
+			return
+		}
 	}
 
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
@@ -83,6 +87,8 @@ func (c *Address) View() {
 
 // Edit allows editing a Address item
 func (c *Address) Edit() {
+	req := c.Ctx.Request()
+
 	AddressID := c.Ctx.Params["id"]
 	id := c.convertString(AddressID)
 	if id == -1 {
@@ -91,29 +97,19 @@ func (c *Address) Edit() {
 
 	Address := &models.Address{ID: id}
 	rows := c.Ctx.DB.Find(&Address)
-	AddressFromForm := &models.Address{}
-	//Checking that this address is exist
+
+	//Checking that this Address is exist
 	if !c.statusNotFound(rows.RowsAffected) {
 		return
 	}
-
-	req := c.Ctx.Request()
-	if !c.statusInternalServerError(req, AddressFromForm) {
+	if req.Method == "GET" {
+		c.Ctx.Template = "application/address/create"
+		c.Ctx.Data["title"] = "Edit Address"
+		c.Ctx.Data["action"] = fmt.Sprintf("/address/update/%d", Address.ID)
+		c.Ctx.Data["Payload"] = Address
+		c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 		return
 	}
-
-	//Checking that we got valid address
-	if !c.statusBadRequest(AddressFromForm) {
-		return
-	}
-
-	AddressFromForm.ID = Address.ID
-	AddressFromForm.CreatedAt = Address.CreatedAt
-	AddressFromForm.UpdatedAt = Address.UpdatedAt
-
-	c.Ctx.DB.Save(AddressFromForm)
-	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
-	c.Ctx.Redirect("/address", http.StatusFound)
 }
 
 // Delete deletes a Address item
@@ -144,7 +140,8 @@ func NewAddress() Controller {
 			"get,post;/address/create;Create",
 			"get;/address/view/{id};View",
 			"get;/address/delete/{id};Delete",
-			"post;/address/update/{id};Edit",
+			"get;/address/edit/{id};Edit",
+			"post;/address/update/{id};Update",
 		},
 	}
 }

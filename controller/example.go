@@ -59,7 +59,7 @@ func (c *Example) Create() {
 	c.Ctx.Redirect("/example", http.StatusFound)
 }
 
-// View a Example item
+// View model properies
 func (c *Example) View() {
 	c.Ctx.Template = "application/example/view"
 
