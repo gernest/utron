@@ -26,6 +26,7 @@ func (c *PersonType) Index() {
 //Create creates a PersonType  item
 func (c *PersonType) Create() {
 	c.Ctx.Template = "application/persontype/index"
+	c.Ctx.Data["action"] = "/persontype/create"
 
 	PersonType := &models.PersonType{}
 

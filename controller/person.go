@@ -31,7 +31,7 @@ func (c *Person) Index() {
 //Create creates a Person  item
 func (c *Person) Create() {
 	c.Ctx.Template = "application/person/index"
-
+	c.Ctx.Data["action"] = "/person/create"
 	Person := &models.Person{}
 
 	req := c.Ctx.Request()

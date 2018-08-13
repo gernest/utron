@@ -14,42 +14,44 @@ type Note struct {
 }
 
 //Home renders a Note list
-func (t *Note) Index() {
+func (c *Note) Index() {
 	Notes := []*models.Note{}
-	t.Ctx.DB.Order("created_at desc").Find(&Notes)
-	t.Ctx.Data["List"] = Notes
-	t.Ctx.Template = "application/note/index"
-	t.HTML(http.StatusOK)
+	c.Ctx.DB.Order("created_at desc").Find(&Notes)
+	c.Ctx.Data["List"] = Notes
+	c.Ctx.Template = "application/note/index"
+	c.HTML(http.StatusOK)
 }
 
 //Create creates a Note  item
-func (t *Note) Create() {
+func (c *Note) Create() {
+	c.Ctx.Template = "application/note/index"
+	c.Ctx.Data["action"] = "/note/create"
 	Note := &models.Note{}
-	req := t.Ctx.Request()
+	req := c.Ctx.Request()
 	_ = req.ParseForm()
 	if err := Decoder.Decode(Note, req.PostForm); err != nil {
-		t.Ctx.Data["Message"] = err.Error()
-		t.Ctx.Template = "error"
-		t.HTML(http.StatusInternalServerError)
+		c.Ctx.Data["Message"] = err.Error()
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusInternalServerError)
 		return
 	}
 
-	t.Ctx.DB.Create(Note)
-	t.Ctx.Redirect("/note", http.StatusFound)
+	c.Ctx.DB.Create(Note)
+	c.Ctx.Redirect("/note", http.StatusFound)
 }
 
 //Delete deletes a Note item
-func (t *Note) Delete() {
-	NoteID := t.Ctx.Params["id"]
+func (c *Note) Delete() {
+	NoteID := c.Ctx.Params["id"]
 	id, err := strconv.Atoi(NoteID)
 	if err != nil {
-		t.Ctx.Data["Message"] = err.Error()
-		t.Ctx.Template = "error"
-		t.HTML(http.StatusInternalServerError)
+		c.Ctx.Data["Message"] = err.Error()
+		c.Ctx.Template = "error"
+		c.HTML(http.StatusInternalServerError)
 		return
 	}
-	t.Ctx.DB.Delete(&models.Note{ID: id})
-	t.Ctx.Redirect("/note", http.StatusFound)
+	c.Ctx.DB.Delete(&models.Note{ID: id})
+	c.Ctx.Redirect("/note", http.StatusFound)
 }
 
 //NewNote returns a new  Note list controller

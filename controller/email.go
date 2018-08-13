@@ -29,6 +29,7 @@ func (c *Email) Index() {
 //Create creates a Email  item
 func (c *Email) Create() {
 	c.Ctx.Template = "application/email/index"
+	c.Ctx.Data["action"] = "/email/create"
 
 	Email := &models.Email{}
 

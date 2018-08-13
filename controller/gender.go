@@ -26,6 +26,7 @@ func (c *Gender) Index() {
 //Create creates a Gender  item
 func (c *Gender) Create() {
 	c.Ctx.Template = "application/gender/index"
+	c.Ctx.Data["action"] = "/gender/create"
 
 	Gender := &models.Gender{}
 
@@ -88,7 +89,6 @@ func (c *Gender) Edit() {
 	if !c.isExist(rows.RowsAffected) {
 		return
 	}
-
 
 	req := c.Ctx.Request()
 	if !c.parseForm(req, GenderFromForm) {

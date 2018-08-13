@@ -26,6 +26,8 @@ func (c *Address) Index() {
 // Create creates a Address  item
 func (c *Address) Create() {
 	c.Ctx.Template = "application/address/index"
+	c.Ctx.Data["action"] = "/address/create"
+
 	Address := &models.Address{}
 	req := c.Ctx.Request()
 	if !c.statusInternalServerError(req, Address) {

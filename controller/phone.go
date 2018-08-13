@@ -26,6 +26,7 @@ func (c *Phone) Index() {
 //Create creates a Phone  item
 func (c *Phone) Create() {
 	c.Ctx.Template = "application/phone/index"
+	c.Ctx.Data["action"] = "/phone/create"
 	Phone := &models.Phone{}
 
 	req := c.Ctx.Request()

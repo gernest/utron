@@ -26,6 +26,7 @@ func (c *Company) Index() {
 //Create creates a Company  item
 func (c *Company) Create() {
 	c.Ctx.Template = "application/company/index"
+	c.Ctx.Data["action"] = "/company/create"
 	Company := &models.Company{}
 	req := c.Ctx.Request()
 	_ = req.ParseForm()
