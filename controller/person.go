@@ -6,6 +6,7 @@ import (
 
 	"errors"
 	"fmt"
+
 	"github.com/NlaakStudios/gowaf/models"
 	"github.com/badoux/checkmail"
 )
@@ -43,7 +44,7 @@ func (c *Person) Create() {
 		return
 	}
 
-	if err := checkmail.ValidateFormat(Person.Email.Address); err == nil {
+	if err := checkmail.ValidateFormat(Person.Email.Friendly); err == nil {
 		emailFromAddress(&Person.Email)
 	}
 
@@ -119,7 +120,7 @@ func (c *Person) Edit() {
 	PersonFromForm.CreatedAt = Person.CreatedAt
 	PersonFromForm.UpdatedAt = Person.UpdatedAt
 
-	if err := checkmail.ValidateFormat(PersonFromForm.Email.Address); err == nil {
+	if err := checkmail.ValidateFormat(PersonFromForm.Email.Friendly); err == nil {
 		emailFromAddress(&PersonFromForm.Email)
 	}
 

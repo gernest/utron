@@ -4,9 +4,10 @@ import (
 	"net/http"
 	"strconv"
 
+	"strings"
+
 	"github.com/NlaakStudios/gowaf/models"
 	"github.com/badoux/checkmail"
-	"strings"
 )
 
 //Email is a controller for Email list
@@ -80,32 +81,6 @@ func (c *Email) View() {
 	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
 }
 
-//func (c *Email) ViewEdit() {
-//	c.Ctx.Template = "application/email/update"
-//	EmailID := c.Ctx.Params["id"]
-//	id, err := strconv.Atoi(EmailID)
-//	if err != nil {
-//		c.Ctx.Data["Message"] = err.Error()
-//		c.Ctx.Template = "error"
-//		c.HTML(http.StatusInternalServerError)
-//		return
-//	}
-//
-//	Email := &models.Email{ID: id}
-//	rows := c.Ctx.DB.Find(Email)
-//
-//	//Checking that this email is exist
-//	if rows.RowsAffected == 0 {
-//		c.Ctx.Data["Message"] = "Can't view non exist email"
-//		c.Ctx.Template = "error"
-//		c.HTML(http.StatusNotFound)
-//		return
-//	}
-//
-//	c.Ctx.Data["Payload"] = Email
-//	c.Ctx.Log.Success(c.Ctx.Request().Method, " : ", c.Ctx.Template)
-//}
-
 func (c *Email) Edit() {
 	EmailID := c.Ctx.Params["id"]
 	id := c.convertString(EmailID)
@@ -134,7 +109,7 @@ func (c *Email) Edit() {
 	}
 
 	//Add username and host to email
-	Email.Address = EmailFromForm.Address
+	Email.Friendly = EmailFromForm.Friendly
 	emailFromAddress(Email)
 
 	c.Ctx.DB.Save(Email)
@@ -178,13 +153,13 @@ func NewEmail() Controller {
 }
 
 func emailFromAddress(email *models.Email) {
-	str := strings.Split(email.Address, "@")
+	str := strings.Split(email.Friendly, "@")
 	email.Username = str[0]
 	email.Domain = str[1]
 }
 
 func (c *Email) validate(Email *models.Email) bool {
-	err := checkmail.ValidateFormat(Email.Address)
+	err := checkmail.ValidateFormat(Email.Friendly)
 
 	if err != nil {
 		c.Ctx.Data["Message"] = err.Error()
