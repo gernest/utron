@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -37,6 +38,14 @@ func (m *Email) HTMLView() string {
 // HTMLForm returns a HTML5 code representing a form of the Model
 func (m *Email) HTMLForm() string {
 	return "<div id=\"EmailHTMLForm\">{Form Content}</div>"
+}
+
+//IsValid returns error if model is not complete
+func (m *Email) IsValid() error {
+	if m.Username == "" || m.Domain == "" {
+		return errors.New("Please fill in all required fields")
+	}
+	return nil
 }
 
 // Parse takes a email address as a string and parses it into the model

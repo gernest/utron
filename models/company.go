@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"time"
 )
@@ -38,4 +39,12 @@ func (m *Company) HTMLView() string {
 // HTMLForm returns a HTML5 code representing a form of the Model
 func (m *Company) HTMLForm() string {
 	return "<div id=\"CompanyHTMLForm\">{Form Content}</div>"
+}
+
+//IsValid returns error if model is not complete
+func (m *Company) IsValid() error {
+	if m.Name == "" || m.ContactID < 1 || m.PhoneID < 1 {
+		return errors.New("Please fill in all required fields")
+	}
+	return nil
 }

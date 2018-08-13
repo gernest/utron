@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"time"
 )
@@ -68,4 +69,12 @@ func (m *Person) HTMLView() string {
 // HTMLForm returns a HTML5 code representing a form of a Person Model
 func (m *Person) HTMLForm() string {
 	return "<div id=\"PersonHTMLForm\">{Form Content}</div>"
+}
+
+//IsValid returns error if model is not complete
+func (m *Person) IsValid() error {
+	if m.NameID < 1 || m.EmailID < 1 || m.PhoneID < 1 {
+		return errors.New("Please fill in all required fields")
+	}
+	return nil
 }

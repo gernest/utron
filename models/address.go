@@ -57,7 +57,7 @@ func (m *Address) HTMLForm() string {
 	return "<div id=\"AddressHTMLForm\">{Form Content}</div>"
 }
 
-//IsValid returns error if address is not complete
+//IsValid returns error if model is not complete
 func (m *Address) IsValid() error {
 	if m.Address1 == "" || m.City == "" || m.Zip == "" || m.State == "" {
 		return errors.New("Please fill in all required fields")
