@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/nyaruka/phonenumbers"
@@ -89,6 +90,16 @@ func (m *Phone) Parse(p string) {
 	}
 }
 
+// Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
+func (m *Phone) Sanitize() {
+	m.CountryCode = strings.ToTitle(strings.TrimSpace(m.CountryCode))
+	m.AreaCode = strings.ToTitle(strings.TrimSpace(m.AreaCode))
+	m.Number = strings.ToTitle(strings.TrimSpace(m.Number))
+	m.Extension = strings.ToTitle(strings.TrimSpace(m.Extension))
+	m.Friendly = strings.ToTitle(strings.TrimSpace(m.Friendly))
+}
+
+//IsValid returns error if model is not complete
 func (m *Phone) IsValid() error {
 	if m.CountryCode == "" || m.Number == "" {
 		return errors.New("country code and number can't be empty")

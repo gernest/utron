@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -39,6 +40,12 @@ func (m *Company) HTMLView() string {
 // HTMLForm returns a HTML5 code representing a form of the Model
 func (m *Company) HTMLForm() string {
 	return "<div id=\"CompanyHTMLForm\">{Form Content}</div>"
+}
+
+// Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
+func (m *Company) Sanitize() {
+	m.Name = strings.ToTitle(strings.TrimSpace(m.Name))
+	m.Friendly = strings.ToTitle(strings.TrimSpace(m.Friendly))
 }
 
 //IsValid returns error if model is not complete

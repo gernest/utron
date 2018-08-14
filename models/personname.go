@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -44,6 +45,17 @@ func (m *PersonName) HTMLView() string {
 // HTMLForm returns a HTML5 code representing a form of the Model
 func (m *PersonName) HTMLForm() string {
 	return "<div id=\"PersonNameHTMLForm\">{Form Content}</div>"
+}
+
+// Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
+func (m *PersonName) Sanitize() {
+	m.Prefix = strings.ToTitle(strings.TrimSpace(m.Prefix))
+	m.First = strings.ToTitle(strings.TrimSpace(m.First))
+	m.Middle = strings.ToTitle(strings.TrimSpace(m.Middle))
+	m.Last = strings.ToTitle(strings.TrimSpace(m.Last))
+	m.Suffix = strings.ToTitle(strings.TrimSpace(m.Suffix))
+	m.GoesBy = strings.ToTitle(strings.TrimSpace(m.GoesBy))
+	m.Friendly = strings.ToTitle(strings.TrimSpace(m.Friendly))
 }
 
 func (m *PersonName) IsValid() error {

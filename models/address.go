@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -18,7 +19,7 @@ type Address struct {
 	Zip       string    `valid:"required" schema:"zip"`
 	County    string    `valid:"required" schema:"county"`
 	Country   string    `valid:"required" schema:"country"`
-	Friendly    string    `schema:"friendly"`
+	Friendly  string    `schema:"friendly"`
 }
 
 // SingleLine returns a formatted single line text representing the Model
@@ -55,6 +56,18 @@ func (m *Address) HTMLView() string {
 // HTMLForm returns a HTML5 code representing a form of the Model
 func (m *Address) HTMLForm() string {
 	return "<div id=\"AddressHTMLForm\">{Form Content}</div>"
+}
+
+// Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
+func (m *Address) Sanitize() {
+	m.Address1 = strings.ToTitle(strings.TrimSpace(m.Address1))
+	m.Address2 = strings.ToTitle(strings.TrimSpace(m.Address2))
+	m.City = strings.ToTitle(strings.TrimSpace(m.City))
+	m.State = strings.ToTitle(strings.TrimSpace(m.State))
+	m.Zip = strings.ToTitle(strings.TrimSpace(m.Zip))
+	m.County = strings.ToTitle(strings.TrimSpace(m.County))
+	m.Country = strings.ToTitle(strings.TrimSpace(m.Country))
+	m.Friendly = strings.ToTitle(strings.TrimSpace(m.Friendly))
 }
 
 //IsValid returns error if model is not complete

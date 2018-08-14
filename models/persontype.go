@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -43,6 +44,13 @@ func (m *PersonType) HTMLForm() string {
 	return "<div id=\"PersonTypeHTMLForm\">{Form Content}</div>"
 }
 
+// Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
+func (m *PersonType) Sanitize() {
+	m.Name = strings.ToTitle(strings.TrimSpace(m.Name))
+	m.Friendly = strings.ToTitle(strings.TrimSpace(m.Friendly))
+}
+
+//IsValid returns error if model is not complete
 func (m *PersonType) IsValid() error {
 	if m.Name == "" {
 		return errors.New("name can't be empty")
