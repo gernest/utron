@@ -24,7 +24,7 @@ type Email struct {
 
 // SingleLine returns a formatted single line text representing the Model
 func (m *Email) SingleLine() string {
-	return fmt.Sprintf("%s,%s", m.Username, m.Domain)
+	return fmt.Sprintf("%s@%s", m.Username, m.Domain)
 }
 
 // MultiLine returns a formatted multi-line text representing the Model

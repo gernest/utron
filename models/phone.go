@@ -39,12 +39,13 @@ type Phone struct {
 
 // SingleLine returns a formatted single line text representing the Model
 func (m *Phone) SingleLine() string {
-	return fmt.Sprintf("%s (%s) %s [%s]", m.CountryCode, m.AreaCode, m.Number, m.PhoneTypeToString(m.PhoneType))
+	hyphenNumber := fmt.Sprintf("%s-%s", m.Number[0:3], m.Number[4:len(m.Number)])
+	return fmt.Sprintf("%s (%s) %s Ext. %s", m.CountryCode, m.AreaCode, hyphenNumber, m.PhoneTypeToString(m.PhoneType))
 }
 
 // MultiLine returns a formatted multi-line text representing the Model
 func (m *Phone) MultiLine() string {
-	return fmt.Sprintf("%s\n%s (%s) %s\n", m.PhoneTypeToString(m.PhoneType), m.CountryCode, m.AreaCode, m.Number)
+	return fmt.Sprintf("%s\n%s\n", m.PhoneTypeToString(m.PhoneType), m.SingleLine())
 }
 
 // HTMLView returns a HTML5 code representing a view of the Model
