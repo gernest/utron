@@ -67,11 +67,15 @@ func (m *Address) Sanitize() {
 	m.Zip = strings.ToTitle(strings.TrimSpace(m.Zip))
 	m.County = strings.ToTitle(strings.TrimSpace(m.County))
 	m.Country = strings.ToTitle(strings.TrimSpace(m.Country))
-	m.Friendly = strings.ToTitle(strings.TrimSpace(m.Friendly))
+	m.Friendly = strings.ToTitle(strings.TrimSpace(m.SingleLine()))
 }
 
 //IsValid returns error if model is not complete
 func (m *Address) IsValid() error {
+	if m.Country == "" {
+		m.Country = "United States"
+	}
+
 	if m.Address1 == "" || m.City == "" || m.Zip == "" || m.State == "" {
 		return errors.New("Please fill in all required fields")
 	}

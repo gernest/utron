@@ -61,7 +61,7 @@ func (m *Gender) BioSexToString(gender byte) string {
 // Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
 func (m *Gender) Sanitize() {
 	m.ClaimedSex = strings.ToTitle(strings.TrimSpace(m.ClaimedSex))
-	m.Friendly = strings.ToTitle(strings.TrimSpace(m.Friendly))
+	m.Friendly = strings.ToTitle(strings.TrimSpace(m.SingleLine()))
 }
 
 //IsValid returns error if model is not complete

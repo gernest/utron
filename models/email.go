@@ -44,7 +44,7 @@ func (m *Email) HTMLForm() string {
 func (m *Email) Sanitize() {
 	m.Username = strings.ToTitle(strings.TrimSpace(m.Username))
 	m.Domain = strings.ToTitle(strings.TrimSpace(m.Domain))
-	m.Friendly = strings.ToTitle(strings.TrimSpace(m.Friendly))
+	m.Friendly = strings.ToTitle(strings.TrimSpace(m.SingleLine()))
 }
 
 //IsValid returns error if model is not complete
