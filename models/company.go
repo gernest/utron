@@ -51,8 +51,8 @@ func (m *Company) Sanitize() {
 }
 
 //IsValid returns error if model is not complete
-func (m *Company) IsValid() error {
-	if m.Name == "" || m.ContactID < 1 || m.PhoneID < 1 {
+func (m *Company) IsValid(NameOnly bool) error {
+	if (NameOnly && m.Name == "") || (!NameOnly && (m.Name == "" || m.ContactID < 1 || m.PhoneID < 1)) {
 		return errors.New("Please fill in all required fields")
 	}
 	return nil
