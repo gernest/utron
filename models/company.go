@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	nsmisc "github.com/NlaakStudios/gowaf/utils/misc"
 )
 
 //Company stores information about the company
@@ -44,7 +46,7 @@ func (m *Company) HTMLForm() string {
 
 // Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
 func (m *Company) Sanitize() {
-	m.Name = strings.Title(strings.TrimSpace(m.Name))
+	m.Name = strings.Title(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Name)))
 	m.Friendly = strings.TrimSpace(m.SingleLine())
 }
 

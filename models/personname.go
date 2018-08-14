@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	nsmisc "github.com/NlaakStudios/gowaf/utils/misc"
 )
 
 //PersonName hold the complete name of a person
@@ -23,7 +25,7 @@ type PersonName struct {
 
 // SingleLine returns a formatted single line text representing the Model
 func (m *PersonName) SingleLine() string {
-	return fmt.Sprintf("%s %s %s %s %s\n",
+	return fmt.Sprintf("%s %s %s %s %s",
 		m.Prefix,
 		m.First,
 		m.Middle,
@@ -49,15 +51,16 @@ func (m *PersonName) HTMLForm() string {
 
 // Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
 func (m *PersonName) Sanitize() {
-	m.Prefix = strings.ToTitle(strings.TrimSpace(m.Prefix))
-	m.First = strings.ToTitle(strings.TrimSpace(m.First))
-	m.Middle = strings.ToTitle(strings.TrimSpace(m.Middle))
-	m.Last = strings.ToTitle(strings.TrimSpace(m.Last))
-	m.Suffix = strings.ToTitle(strings.TrimSpace(m.Suffix))
-	m.GoesBy = strings.ToTitle(strings.TrimSpace(m.GoesBy))
+	m.Prefix = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Prefix)))
+	m.First = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.First)))
+	m.Middle = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Middle)))
+	m.Last = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Last)))
+	m.Suffix = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Suffix)))
+	m.GoesBy = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.GoesBy)))
 	m.Friendly = strings.TrimSpace(m.SingleLine())
 }
 
+//IsValid returns error if model is not complete
 func (m *PersonName) IsValid() error {
 	if m.First == "" || m.Last == "" {
 		return errors.New("first or last name can't be empty")

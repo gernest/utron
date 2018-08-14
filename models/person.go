@@ -46,8 +46,8 @@ func (m *Person) SingleLine() string {
 	return fmt.Sprintf("%s [%s], %s, %s",
 		pn,
 		m.PersonType.SingleLine(),
-		m.Email.Friendly,
-		m.Phone.Number,
+		m.Email.SingleLine(),
+		m.Phone.SingleLine(),
 	)
 }
 

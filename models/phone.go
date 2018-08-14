@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	nsmisc "github.com/NlaakStudios/gowaf/utils/misc"
 	"github.com/nyaruka/phonenumbers"
 )
 
@@ -92,10 +93,10 @@ func (m *Phone) Parse(p string) {
 
 // Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
 func (m *Phone) Sanitize() {
-	m.CountryCode = strings.ToTitle(strings.TrimSpace(m.CountryCode))
-	m.AreaCode = strings.ToTitle(strings.TrimSpace(m.AreaCode))
-	m.Number = strings.ToTitle(strings.TrimSpace(m.Number))
-	m.Extension = strings.ToTitle(strings.TrimSpace(m.Extension))
+	m.CountryCode = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.CountryCode)))
+	m.AreaCode = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.AreaCode)))
+	m.Number = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Number)))
+	m.Extension = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Extension)))
 	m.Friendly = strings.TrimSpace(m.SingleLine())
 }
 

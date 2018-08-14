@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	nsmisc "github.com/NlaakStudios/gowaf/utils/misc"
 )
 
 // Address contains general Address
@@ -63,13 +65,13 @@ func (m *Address) Sanitize() {
 	if m.Country == "" {
 		m.Country = "United States"
 	}
-	m.Address1 = strings.ToTitle(strings.TrimSpace(m.Address1))
-	m.Address2 = strings.ToTitle(strings.TrimSpace(m.Address2))
-	m.City = strings.ToTitle(strings.TrimSpace(m.City))
-	m.State = strings.ToTitle(strings.TrimSpace(m.State))
-	m.Zip = strings.ToTitle(strings.TrimSpace(m.Zip))
-	m.County = strings.ToTitle(strings.TrimSpace(m.County))
-	m.Country = strings.ToTitle(strings.TrimSpace(m.Country))
+	m.Address1 = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Address1)))
+	m.Address2 = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Address2)))
+	m.City = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.City)))
+	m.State = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.State)))
+	m.Zip = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Zip)))
+	m.County = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.County)))
+	m.Country = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Country)))
 	m.Friendly = strings.TrimSpace(m.SingleLine())
 }
 

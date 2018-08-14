@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	nsmisc "github.com/NlaakStudios/gowaf/utils/misc"
 )
 
 // PersonType provides a list of avilable "title" such as:
@@ -24,9 +26,7 @@ type PersonType struct {
 
 // SingleLine returns a formatted single line text representing the Model
 func (m *PersonType) SingleLine() string {
-	return fmt.Sprintf("%s",
-		m.Name,
-	)
+	return fmt.Sprintf("%s", m.Name)
 }
 
 // MultiLine returns a formatted multi-line text representing the Model
@@ -46,7 +46,7 @@ func (m *PersonType) HTMLForm() string {
 
 // Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
 func (m *PersonType) Sanitize() {
-	m.Name = strings.ToTitle(strings.TrimSpace(m.Name))
+	m.Name = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Name)))
 	m.Friendly = strings.TrimSpace(m.SingleLine())
 }
 

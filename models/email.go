@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	nsmisc "github.com/NlaakStudios/gowaf/utils/misc"
 )
 
 //TODO: Remove this from public repo
@@ -42,8 +44,8 @@ func (m *Email) HTMLForm() string {
 
 // Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
 func (m *Email) Sanitize() {
-	m.Username = strings.ToLower(strings.TrimSpace(m.Username))
-	m.Domain = strings.ToLower(strings.TrimSpace(m.Domain))
+	m.Username = strings.ToLower(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Username)))
+	m.Domain = strings.ToLower(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Domain)))
 	m.Friendly = strings.TrimSpace(m.SingleLine())
 }
 

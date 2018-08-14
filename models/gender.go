@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	nsmisc "github.com/NlaakStudios/gowaf/utils/misc"
 )
 
 const (
@@ -60,7 +62,7 @@ func (m *Gender) BioSexToString(gender byte) string {
 
 // Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
 func (m *Gender) Sanitize() {
-	m.ClaimedSex = strings.Title(strings.TrimSpace(m.ClaimedSex))
+	m.ClaimedSex = strings.Title(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.ClaimedSex)))
 	m.Friendly = strings.TrimSpace(m.SingleLine())
 }
 
