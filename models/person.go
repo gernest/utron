@@ -16,27 +16,27 @@ type Person struct {
 
 	//GenderID is the UID of the Person's Gender as found in the gender table
 	GenderID int    `schema:"gender_id"`
-	Gender   Gender `gorm:"foreignkey:GenderID"`
+	Gender   Gender `gorm:"foreignkey:GenderID" gorm:"auto_preload"`
 
 	//NameID is the UID of the Person's name as found in the person_name table
 	NameID      int        `schema:"name_id"`
-	PrimaryName PersonName `gorm:"foreignkey:NameID"`
+	PrimaryName PersonName `gorm:"foreignkey:NameID" gorm:"auto_preload"`
 
 	//SpouseNameID is the UID of the Person's name as found in the person_name table
 	SpouseNameID int        `schema:"spouse_name_id"`
-	SpouseName   PersonName `gorm:"foreignkey:SpouseNameID"`
+	SpouseName   PersonName `gorm:"foreignkey:SpouseNameID" gorm:"auto_preload"`
 
 	//EmailID is the UID of the Person's email as found in the email table
 	EmailID int   `schema:"email_id"`
-	Email   Email `gorm:"foreignkey:EmailID"`
+	Email   Email `gorm:"foreignkey:EmailID" gorm:"auto_preload"`
 
 	//TypeID is the UID of the Person's Type as found in the person_type table
 	TypeID     int        `schema:"type_id"`
-	PersonType PersonType `gorm:"foreignkey:TypeID"`
+	PersonType PersonType `gorm:"foreignkey:TypeID" gorm:"auto_preload"`
 
 	//PhoneID is the UID of the Person's Phone info as found in the phone table
 	PhoneID  int    `schema:"phone_id"`
-	Phone    Phone  `gorm:"foreignkey:PhoneID"`
+	Phone    Phone  `gorm:"foreignkey:PhoneID" gorm:"auto_preload"`
 	Friendly string `schema:"friendly"`
 }
 

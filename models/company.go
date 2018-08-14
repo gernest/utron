@@ -16,11 +16,11 @@ type Company struct {
 	UpdatedAt time.Time `schema:"updated"`
 	Name      string    `schema:"name"`
 	ContactID int       `schema:"contact_id"`
-	Person    Person    `gorm:"foreignkey:ContactID"`
+	Person    Person    `gorm:"foreignkey:ContactID" gorm:"auto_preload"`
 	PhoneID   int       `schema:"phone_id"`
-	Phone     Phone     `gorm:"foreignkey:PhoneID"`
+	Phone     Phone     `gorm:"foreignkey:PhoneID" gorm:"auto_preload"`
 	FaxID     int       `schema:"fax_id"`
-	Fax       Phone     `gorm:"foreignkey:FaxID"`
+	Fax       Phone     `gorm:"foreignkey:FaxID" gorm:"auto_preload"`
 	Friendly  string    `schema:"friendly"`
 }
 
