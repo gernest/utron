@@ -51,12 +51,12 @@ func (m *PersonName) HTMLForm() string {
 
 // Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
 func (m *PersonName) Sanitize() {
-	m.Prefix = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Prefix)))
-	m.First = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.First)))
-	m.Middle = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Middle)))
-	m.Last = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Last)))
-	m.Suffix = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Suffix)))
-	m.GoesBy = strings.ToTitle(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.GoesBy)))
+	m.Prefix = strings.Title(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Prefix)))
+	m.First = strings.Title(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.First)))
+	m.Middle = strings.Title(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Middle)))
+	m.Last = strings.Title(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Last)))
+	m.Suffix = strings.Title(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Suffix)))
+	m.GoesBy = strings.Title(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.GoesBy)))
 	m.Friendly = strings.TrimSpace(m.SingleLine())
 }
 

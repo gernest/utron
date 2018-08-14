@@ -147,7 +147,7 @@ func NewCompany() Controller {
 }
 
 func (c *Company) statusBadRequest(Company *models.Company) bool {
-	err := Company.IsValid()
+	err := Company.IsValid(true)
 
 	if err != nil {
 		c.Ctx.Data["Message"] = err.Error()
