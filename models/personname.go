@@ -55,7 +55,7 @@ func (m *PersonName) Sanitize() {
 	m.Last = strings.ToTitle(strings.TrimSpace(m.Last))
 	m.Suffix = strings.ToTitle(strings.TrimSpace(m.Suffix))
 	m.GoesBy = strings.ToTitle(strings.TrimSpace(m.GoesBy))
-	m.Friendly = strings.ToTitle(strings.TrimSpace(m.SingleLine()))
+	m.Friendly = strings.TrimSpace(m.SingleLine())
 }
 
 func (m *PersonName) IsValid() error {

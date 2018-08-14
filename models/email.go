@@ -42,9 +42,9 @@ func (m *Email) HTMLForm() string {
 
 // Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
 func (m *Email) Sanitize() {
-	m.Username = strings.ToTitle(strings.TrimSpace(m.Username))
-	m.Domain = strings.ToTitle(strings.TrimSpace(m.Domain))
-	m.Friendly = strings.ToTitle(strings.TrimSpace(m.SingleLine()))
+	m.Username = strings.ToLower(strings.TrimSpace(m.Username))
+	m.Domain = strings.ToLower(strings.TrimSpace(m.Domain))
+	m.Friendly = strings.TrimSpace(m.SingleLine())
 }
 
 //IsValid returns error if model is not complete

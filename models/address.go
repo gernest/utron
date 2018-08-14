@@ -60,6 +60,9 @@ func (m *Address) HTMLForm() string {
 
 // Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
 func (m *Address) Sanitize() {
+	if m.Country == "" {
+		m.Country = "United States"
+	}
 	m.Address1 = strings.ToTitle(strings.TrimSpace(m.Address1))
 	m.Address2 = strings.ToTitle(strings.TrimSpace(m.Address2))
 	m.City = strings.ToTitle(strings.TrimSpace(m.City))
@@ -67,15 +70,11 @@ func (m *Address) Sanitize() {
 	m.Zip = strings.ToTitle(strings.TrimSpace(m.Zip))
 	m.County = strings.ToTitle(strings.TrimSpace(m.County))
 	m.Country = strings.ToTitle(strings.TrimSpace(m.Country))
-	m.Friendly = strings.ToTitle(strings.TrimSpace(m.SingleLine()))
+	m.Friendly = strings.TrimSpace(m.SingleLine())
 }
 
 //IsValid returns error if model is not complete
 func (m *Address) IsValid() error {
-	if m.Country == "" {
-		m.Country = "United States"
-	}
-
 	if m.Address1 == "" || m.City == "" || m.Zip == "" || m.State == "" {
 		return errors.New("Please fill in all required fields")
 	}

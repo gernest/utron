@@ -96,7 +96,7 @@ func (m *Phone) Sanitize() {
 	m.AreaCode = strings.ToTitle(strings.TrimSpace(m.AreaCode))
 	m.Number = strings.ToTitle(strings.TrimSpace(m.Number))
 	m.Extension = strings.ToTitle(strings.TrimSpace(m.Extension))
-	m.Friendly = strings.ToTitle(strings.TrimSpace(m.SingleLine()))
+	m.Friendly = strings.TrimSpace(m.SingleLine())
 }
 
 //IsValid returns error if model is not complete
