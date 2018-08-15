@@ -8,6 +8,7 @@ import (
 
 	"github.com/NlaakStudios/gowaf/models"
 	"gopkg.in/gomail.v2"
+
 )
 
 // Account is the controller for the Account Model
@@ -25,6 +26,11 @@ func (a *Account) Index() {
 
 // Register displays registration page for GET and processes form data on POST
 func (a *Account) Register() {
+	sess, serr := a.Ctx.SessionStore.New(a.Ctx.Request(), a.Ctx.Cfg.SessionName)
+	if serr != nil || sess == nil {
+		a.Ctx.Log.Errors("Unable to create new session")
+	}
+
 	r := a.Ctx.Request()
 	r.ParseForm()
 	if r.Method == "GET" {
@@ -33,19 +39,12 @@ func (a *Account) Register() {
 		a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
 		return
 	}
-	/*
-		sess, err := a.Ctx.SessionStore.New(r, "state")
-		if err == nil && sess != nil {
-			a.Ctx.Log.Info("Session Store Active")
-			//a.Ctx.SessionStore.
-		}
-	*/
 
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
 	u := &models.Account{}
 	err := Decoder.Decode(u, r.PostForm)
 	if err != nil {
-		// set flash messages
+		//sess.AddFlash("The form was incorrect")
 		a.Ctx.Log.Errors(err)
 		return
 	}
@@ -53,85 +52,114 @@ func (a *Account) Register() {
 	// Make sure both passwords match
 	err = u.Validate()
 	if err != nil {
-		// set flash messages
+		//sess.AddFlash("The password does not match")
 		a.Ctx.Log.Errors(err)
 		return
 	}
 
 	// Add to database
 	u.HashedPassword = u.SetPassword(u.Password)
-	u.State = models.UserStateSignedIn
+	u.State = models.UserStateVerifyEmailSent
 	a.Ctx.DB.Create(u)
-
-	sess, serr := a.Ctx.NewSession(a.Ctx.Cfg.SessionName)
-	if serr != nil {
-		a.Ctx.Log.Errors("Unable to create new session")
-	}
 
 	sess.ID = uuid.New().String()
 	sess.Values["uid"] = u.ID
 	sess.Values["state"] = u.State
+	sess.Values["role"] = u.Access
+
+	//Save session
+	errS := a.Ctx.SessionStore.Save(a.Ctx.Request(), a.Ctx.Response(), sess)
+	if errS != nil {
+		a.Ctx.Log.Errors(errS)
+	}
 
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
-
 	a.Ctx.Redirect("/account", http.StatusFound)
 }
 
 // Login displays login page for GET and processes on POST
 func (a *Account) Login() {
+	sess, errS := a.Ctx.SessionStore.Get(a.Ctx.Request(), a.Ctx.Cfg.SessionName)
+	if errS != nil {
+		a.Ctx.Log.Errors("err", errS)
+	}
+
 	r := a.Ctx.Request()
 	r.ParseForm()
 	a.Ctx.Template = "application/account/login"
+
 	if r.Method == "GET" {
 		//TODO: Check cookie/session for valid login (ipaddress authroized, etc.) If so use the session to login...
 		//else redirect to login page
-
-		a.Ctx.Data["title"] = "User Login"
-		a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
+		if sess.Values["state"] != nil {
+			a.Ctx.Data["title"] = "User Login"
+			a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
+			return
+		}
 		return
 	}
 
-	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
 	u := &models.Account{}
 	err := Decoder.Decode(u, r.PostForm)
 	if err != nil {
-		// set flash messages
+		//sess.AddFlash("The form was incorrect")
 		a.Ctx.Log.Errors(err)
 		return
 	}
 
 	var acct models.Account
-	a.Ctx.DB.First(&acct, "Username = ?", u.Username) // find username with code form username
+	db := a.Ctx.DB.First(&acct, "Username = ?", u.Username) // find username with code form username
 	//Did we load a a user?
 	if acct.ID == 0 {
 		a.Ctx.Log.Errors(err)
-		a.Ctx.Redirect("/account/register", http.StatusFound)
+		//sess.AddFlash("User not found")
+		a.Ctx.Redirect("/account/login", http.StatusUnauthorized)
 		return
 	}
 
 	if acct.CheckPassword(acct.HashedPassword, u.Password) {
 		//Login Success - Passwords match
 		acct.State = models.UserStateSignedIn
-		//TODO: Set Session
-		//TODO: Flash Login Success Message (Frontend)
+		db.Update(acct)
+
+		sess.ID = uuid.New().String()
+		sess.Values["uid"] = u.ID
+		sess.Values["state"] = u.State
+		sess.Values["role"] = u.Access
+		a.Ctx.SessionStore.Save(a.Ctx.Request(), a.Ctx.Response(), sess)
+		sess.AddFlash("Login Accepted")
 		a.Ctx.Data["loggedin"] = true
 		a.Ctx.Template = "application/account/dashboard"
 		a.Ctx.Log.Success("Login Accepted")
 	} else {
 		//Login Success - Passwords match
-		acct.State = models.UserStateSignedOut
 		a.Ctx.Template = "application/account/login"
 		a.Ctx.Log.Errors("Invalid Password")
+		a.Ctx.Redirect("/example", http.StatusBadRequest)
+		return
 	}
 
-	a.Ctx.DB.Update(acct)
+	a.Ctx.DB.Model(&models.Account{}).Update(acct)
 	a.HTML(http.StatusOK)
 }
 
 // Logout logs the user out of they are logged in
 func (a *Account) Logout() {
+	sess, _ := a.Ctx.SessionStore.Get(a.Ctx.Request(),a.Ctx.Cfg.SessionName)
+
 	r := a.Ctx.Request()
 	r.ParseForm()
+	uid := sess.Values["uid"]
+	if uid == nil {
+		a.Ctx.Redirect("/", http.StatusUnauthorized)
+	}
+	sess.Options.MaxAge = -1
+	sess.Save(a.Ctx.Request(), a.Ctx.Response())
+
+	var acct models.Account
+	a.Ctx.DB.First(&acct, "ID = ?", uid)
+	acct.State = models.UserStateSignedOut
+	a.Ctx.DB.Save(acct)
 	a.Ctx.Data["loggedin"] = false
 	a.Ctx.Template = "application/account/index"
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
@@ -154,7 +182,7 @@ func (a *Account) SendEmailVerification(acct models.Account) {
 
 	//Update the account state to Email Verification Sent
 	acct.State = models.UserStateVerifyEmailSent
-	a.Ctx.DB.Update(acct)
+	a.Ctx.DB.Model(&models.Account{}).Update(acct)
 	a.HTML(http.StatusOK)
 }
 

@@ -227,12 +227,12 @@ func (a *App) init() error {
 }
 
 func getSesionStore(cfg *config.Config) (sessions.Store, error) {
+	//
 	opts := &sessions.Options{
-		Path:     cfg.SessionPath,
-		Domain:   cfg.SessionDomain,
-		MaxAge:   cfg.SessionMaxAge,
-		Secure:   cfg.SessionSecure,
-		HttpOnly: cfg.SessionSecure,
+		Path:     "/",
+		MaxAge:   60 * 15,
+		HttpOnly: true,
+
 	}
 
 	db, err := sql.Open("ql-mem", "session.db")
