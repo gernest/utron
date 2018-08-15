@@ -34,6 +34,9 @@ type Person struct {
 	TypeID     int        `schema:"type_id"`
 	PersonType PersonType `gorm:"foreignkey:TypeID" gorm:"auto_preload"`
 
+	AddressID int     `schema:"address_id"`
+	Address   Address `gorm:"foreignkey:AddressID" gorm:"auto_preload"`
+
 	//PhoneID is the UID of the Person's Phone info as found in the phone table
 	PhoneID  int    `schema:"phone_id"`
 	Phone    Phone  `gorm:"foreignkey:PhoneID" gorm:"auto_preload"`
