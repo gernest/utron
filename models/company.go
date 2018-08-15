@@ -6,27 +6,26 @@ import (
 	"strings"
 	"time"
 
-	"github.com/NlaakStudios/WebApp/models"
 	nsmisc "github.com/NlaakStudios/gowaf/utils/misc"
 )
 
 //Company stores information about the company
 type Company struct {
-	ID        int            `schema:"id"`
-	CreatedAt time.Time      `schema:"created"`
-	UpdatedAt time.Time      `schema:"updated"`
-	Name      string         `schema:"name"`
-	ContactID int            `schema:"contact_id"`
-	Person    Person         `gorm:"foreignkey:ContactID" gorm:"auto_preload"`
-	AddressID int            `schema:"address_id"`
-	Address   models.Address `gorm:"foreignkey:AddressID" gorm:"auto_preload"`
-	EmailID   int            `schema:"email_id"`
-	Email     Email          `gorm:"foreignkey:EmailID" gorm:"auto_preload"`
-	PhoneID   int            `schema:"phone_id"`
-	Phone     Phone          `gorm:"foreignkey:PhoneID" gorm:"auto_preload"`
-	FaxID     int            `schema:"fax_id"`
-	Fax       Phone          `gorm:"foreignkey:FaxID" gorm:"auto_preload"`
-	Friendly  string         `schema:"friendly"`
+	ID        int       `schema:"id"`
+	CreatedAt time.Time `schema:"created"`
+	UpdatedAt time.Time `schema:"updated"`
+	Name      string    `schema:"name"`
+	ContactID int       `schema:"contact_id"`
+	Person    Person    `gorm:"foreignkey:ContactID" gorm:"auto_preload"`
+	AddressID int       `schema:"address_id"`
+	Address   Address   `gorm:"foreignkey:AddressID" gorm:"auto_preload"`
+	EmailID   int       `schema:"email_id"`
+	Email     Email     `gorm:"foreignkey:EmailID" gorm:"auto_preload"`
+	PhoneID   int       `schema:"phone_id"`
+	Phone     Phone     `gorm:"foreignkey:PhoneID" gorm:"auto_preload"`
+	FaxID     int       `schema:"fax_id"`
+	Fax       Phone     `gorm:"foreignkey:FaxID" gorm:"auto_preload"`
+	Friendly  string    `schema:"friendly"`
 }
 
 // SingleLine returns a formatted single line text representing the Model
