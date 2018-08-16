@@ -9,18 +9,19 @@ import (
 	nsmisc "github.com/NlaakStudios/gowaf/utils/misc"
 )
 
+//TODO I've deleted valid:required, because of using govalidator for account
 // Address contains general Address
 type Address struct {
 	ID        int       `schema:"id"`
 	CreatedAt time.Time `schema:"created"`
 	UpdatedAt time.Time `schema:"updated"`
-	Address1  string    `valid:"required" schema:"address1"`
-	Address2  string    `valid:"required" schema:"address2"`
-	City      string    `valid:"required" schema:"city"`
-	State     string    `valid:"required" schema:"state"`
-	Zip       string    `valid:"required" schema:"zip"`
-	County    string    `valid:"required" schema:"county"`
-	Country   string    `valid:"required" schema:"country"`
+	Address1  string    `schema:"address1"`
+	Address2  string    `schema:"address2"`
+	City      string    `schema:"city"`
+	State     string    `schema:"state"`
+	Zip       string    `schema:"zip"`
+	County    string    `schema:"county"`
+	Country   string    `schema:"country"`
 	Friendly  string    `schema:"friendly"`
 }
 

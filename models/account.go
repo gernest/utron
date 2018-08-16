@@ -50,20 +50,20 @@ type Account struct {
 	CreatedAt      time.Time `schema:"created"`
 	UpdatedAt      time.Time `schema:"updated"`
 	Username       string    `valid:"required,length(6|16)" schema:"username"`
-	Email          string    `valid:"required,length(6|16)" schema:"email"`
+	EmailAccount   string    `valid:"required,length(6|16), email" schema:"email"`
 	Password       string    `gorm:"-" valid:"required,length(6|24)" schema:"password"`
 	VerifyPassword string    `gorm:"-" valid:"required,length(6|24)" schema:"verify_password"`
 	HashedPassword string    `schema:"hashed_password"`
 	State          byte      `schema:"state"`
 	Access         byte      `schema:"access"`
 
-	//EmailID        int       `schema:"email_id"`
-	//Email          Email     `gorm:"foreignkey:EmailID"`
-	//VerifyPass     string    `gorm:"-" schema:"verifypass"`
-	//CompanyID      int       `schema:"company_id"`
-	//Company        Company   `gorm:"foreignkey:CompanyID"`
-	//PersonID       int       `schema:"person_id"`
-	//Person         Person    `gorm:"foreignkey:PersonID"`
+	EmailID    int     `schema:"email_id"`
+	Email      Email   `gorm:"foreignkey:EmailID"`
+	VerifyPass string  `gorm:"-" schema:"verifypass"`
+	CompanyID  int     `schema:"company_id"`
+	Company    Company `gorm:"foreignkey:CompanyID"`
+	PersonID   int     `schema:"person_id"`
+	Person     Person  `gorm:"foreignkey:PersonID"`
 }
 
 // SingleLine returns a formatted single line text representing the Model
@@ -71,10 +71,10 @@ type Account struct {
 func (m *Account) SingleLine() string {
 	return fmt.Sprintf("%s: %s [%d, %d, %d]",
 		m.Username,
-		m.Email,
+		m.EmailAccount,
 		m.ID,
-		//m.CompanyID,
-		//m.PersonID,
+		m.CompanyID,
+		m.PersonID,
 	)
 }
 
@@ -85,9 +85,9 @@ func (m *Account) SingleLine() string {
 func (m *Account) MultiLine() string {
 	return fmt.Sprintf("%s: %s\n%s\n%s\n",
 		m.Username,
-		//m.Person.PersonName.SingleLine(),
-		//m.Email.Address,
-		//m.Company.SingleLine(),
+		m.Person.PrimaryName.SingleLine(),
+		m.EmailAccount,
+		m.Company.SingleLine(),
 	)
 }
 
@@ -110,6 +110,15 @@ func (m *Account) Validate() error {
 	if m.Password != m.VerifyPassword {
 		return errors.New("Model.Account: Password missmatch")
 	}
+	//er := checkmail.ValidateFormat(m.EmailAccount)
+	//
+	//if er != nil {
+	//	return er
+	//}
+
+	m.Email = Email{}
+	m.Email.Parse(m.EmailAccount)
+
 	return err
 
 }
@@ -132,4 +141,14 @@ func (m *Account) CheckPassword(dbHash, givenPW string) bool {
 		return false
 	}
 	return true
+}
+
+func (m *Account) IsValid() error {
+	errPers := m.Person.IsValid()
+	errComp := m.Company.IsValid(true)
+	if (errPers != nil && errComp != nil) || (errPers == nil && errComp == nil) {
+		return errors.New("account can't have company and person")
+	}
+
+	return nil
 }

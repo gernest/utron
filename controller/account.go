@@ -8,8 +8,12 @@ import (
 
 	"github.com/NlaakStudios/gowaf/models"
 	"gopkg.in/gomail.v2"
-
+	"strconv"
 )
+
+const incorrectID  = -1
+const pathToAccount = "application/account/"
+const routeToAccount = "/account"
 
 // Account is the controller for the Account Model
 type Account struct {
@@ -19,8 +23,9 @@ type Account struct {
 
 // Index displays the account landing (index) page
 func (a *Account) Index() {
-	a.Ctx.Template = "application/account/index"
+	a.Ctx.Template = pathToAccount + "index"
 	a.Ctx.Data["title"] = "Home"
+	a.HTML(http.StatusOK)
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
 }
 
@@ -34,7 +39,7 @@ func (a *Account) Register() {
 	r := a.Ctx.Request()
 	r.ParseForm()
 	if r.Method == "GET" {
-		a.Ctx.Template = "application/account/register"
+		a.Ctx.Template = pathToAccount + "register"
 		a.Ctx.Data["title"] = "Register"
 		a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
 		return
@@ -44,16 +49,22 @@ func (a *Account) Register() {
 	u := &models.Account{}
 	err := Decoder.Decode(u, r.PostForm)
 	if err != nil {
-		//sess.AddFlash("The form was incorrect")
+		sess.AddFlash("The form was incorrect")
 		a.Ctx.Log.Errors(err)
+		a.Ctx.Data["Message"] = err.Error()
+		a.Ctx.Template = "error"
+		a.HTML(http.StatusInternalServerError)
 		return
 	}
 
 	// Make sure both passwords match
 	err = u.Validate()
 	if err != nil {
-		//sess.AddFlash("The password does not match")
+		sess.AddFlash("The passwords mismatch or email not valid")
 		a.Ctx.Log.Errors(err)
+		a.Ctx.Data["Message"] = err.Error()
+		a.Ctx.Template = "error"
+		a.HTML(http.StatusBadRequest)
 		return
 	}
 
@@ -71,6 +82,9 @@ func (a *Account) Register() {
 	errS := a.Ctx.SessionStore.Save(a.Ctx.Request(), a.Ctx.Response(), sess)
 	if errS != nil {
 		a.Ctx.Log.Errors(errS)
+		a.Ctx.Data["Message"] = err.Error()
+		a.Ctx.Template = "error"
+		a.HTML(http.StatusInternalServerError)
 	}
 
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
@@ -86,7 +100,7 @@ func (a *Account) Login() {
 
 	r := a.Ctx.Request()
 	r.ParseForm()
-	a.Ctx.Template = "application/account/login"
+	a.Ctx.Template = pathToAccount + "login"
 
 	if r.Method == "GET" {
 		//TODO: Check cookie/session for valid login (ipaddress authroized, etc.) If so use the session to login...
@@ -102,17 +116,20 @@ func (a *Account) Login() {
 	u := &models.Account{}
 	err := Decoder.Decode(u, r.PostForm)
 	if err != nil {
-		//sess.AddFlash("The form was incorrect")
+		sess.AddFlash("The form was incorrect")
 		a.Ctx.Log.Errors(err)
+		a.Ctx.Data["Message"] = err.Error()
+		a.Ctx.Template = "error"
+		a.HTML(http.StatusInternalServerError)
 		return
 	}
 
 	var acct models.Account
-	db := a.Ctx.DB.First(&acct, "Username = ?", u.Username) // find username with code form username
+	a.Ctx.DB.First(&acct, "Username = ?", u.Username) // find username with code form username
 	//Did we load a a user?
 	if acct.ID == 0 {
 		a.Ctx.Log.Errors(err)
-		//sess.AddFlash("User not found")
+		sess.AddFlash("User not found")
 		a.Ctx.Redirect("/account/login", http.StatusUnauthorized)
 		return
 	}
@@ -120,7 +137,6 @@ func (a *Account) Login() {
 	if acct.CheckPassword(acct.HashedPassword, u.Password) {
 		//Login Success - Passwords match
 		acct.State = models.UserStateSignedIn
-		db.Update(acct)
 
 		sess.ID = uuid.New().String()
 		sess.Values["uid"] = u.ID
@@ -129,11 +145,11 @@ func (a *Account) Login() {
 		a.Ctx.SessionStore.Save(a.Ctx.Request(), a.Ctx.Response(), sess)
 		sess.AddFlash("Login Accepted")
 		a.Ctx.Data["loggedin"] = true
-		a.Ctx.Template = "application/account/dashboard"
+		a.Ctx.Template = pathToAccount + "dashboard"
 		a.Ctx.Log.Success("Login Accepted")
 	} else {
 		//Login Success - Passwords match
-		a.Ctx.Template = "application/account/login"
+		a.Ctx.Template = pathToAccount + "login"
 		a.Ctx.Log.Errors("Invalid Password")
 		a.Ctx.Redirect("/example", http.StatusBadRequest)
 		return
@@ -145,13 +161,14 @@ func (a *Account) Login() {
 
 // Logout logs the user out of they are logged in
 func (a *Account) Logout() {
-	sess, _ := a.Ctx.SessionStore.Get(a.Ctx.Request(),a.Ctx.Cfg.SessionName)
+	sess, _ := a.Ctx.SessionStore.Get(a.Ctx.Request(), a.Ctx.Cfg.SessionName)
 
 	r := a.Ctx.Request()
 	r.ParseForm()
 	uid := sess.Values["uid"]
 	if uid == nil {
 		a.Ctx.Redirect("/", http.StatusUnauthorized)
+		return
 	}
 	sess.Options.MaxAge = -1
 	sess.Save(a.Ctx.Request(), a.Ctx.Response())
@@ -161,7 +178,7 @@ func (a *Account) Logout() {
 	acct.State = models.UserStateSignedOut
 	a.Ctx.DB.Save(acct)
 	a.Ctx.Data["loggedin"] = false
-	a.Ctx.Template = "application/account/index"
+	a.Ctx.Template = pathToAccount + "index"
 	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
 }
 
@@ -169,7 +186,7 @@ func (a *Account) Logout() {
 func (a *Account) SendEmailVerification(acct models.Account) {
 	m := gomail.NewMessage()
 	m.SetHeader("From", fmt.Sprintf("noreply@%s", a.Ctx.Cfg.Domain))
-	m.SetHeader("To", acct.Email)
+	m.SetHeader("To", acct.EmailAccount)
 	m.SetHeader("Subject", fmt.Sprintf("%s email verification", a.Ctx.Cfg.AppName))
 	m.SetBody("text/html", fmt.Sprintf("Hello <b>%s</b>, please verify your email address by clicking <a href=\"%s\">here</a>.", acct.Username, a.Ctx.Cfg.BaseURL))
 
@@ -186,6 +203,65 @@ func (a *Account) SendEmailVerification(acct models.Account) {
 	a.HTML(http.StatusOK)
 }
 
+func (a *Account) Edit() {
+	req := a.Ctx.Request()
+
+	id := a.getId()
+	if id == incorrectID {
+		return
+	}
+
+	Account := &models.Account{ID: id}
+	rows := a.Ctx.DB.Find(&Account)
+
+	//Checking that this Example is exist
+	if !a.statusNotFound(rows.RowsAffected) {
+		return
+	}
+	if req.Method == "GET" {
+		a.Ctx.Template = pathToAccount + "create"
+		a.Ctx.Data["title"] = "Edit Account"
+		a.Ctx.Data["action"] = fmt.Sprintf(routeToAccount+"/edit/%d", Account.ID)
+		a.Ctx.Data["Payload"] = Account
+		a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
+		return
+	}
+}
+
+func (a *Account) Update() {
+	req := a.Ctx.Request()
+
+	id := a.getId()
+	if id == incorrectID {
+		return
+	}
+
+	Account := &models.Account{ID: id}
+	rows := a.Ctx.DB.Find(&Account)
+	AccountFromForm := &models.Account{}
+	//Checking that this Account is exist
+	if !a.statusNotFound(rows.RowsAffected) {
+		return
+	}
+
+	if !a.statusInternalServerError(req, AccountFromForm) {
+		return
+	}
+
+	//Checking that we got valid Account
+	if !a.statusBadRequest(AccountFromForm) {
+		return
+	}
+
+	AccountFromForm.ID = Account.ID
+	AccountFromForm.CreatedAt = Account.CreatedAt
+	AccountFromForm.UpdatedAt = Account.UpdatedAt
+
+	a.Ctx.DB.Model(&models.Account{}).Update(AccountFromForm)
+	a.Ctx.Log.Success(a.Ctx.Request().Method, " : ", a.Ctx.Template)
+	a.Ctx.Redirect(routeToAccount, http.StatusFound)
+}
+
 // NewAccount returns a new account controller object
 func NewAccount() Controller {
 	return &Account{
@@ -194,6 +270,80 @@ func NewAccount() Controller {
 			"get,post;/account/register;Register",
 			"get,post;/account/login;Login",
 			"get;/account/logout;Logout",
+			"get;/account/edit/{id};Edit",
+			"post;/account/update/{id};Update",
 		},
 	}
+}
+
+func (a *Account) convertString(id string) int {
+	res, err := strconv.Atoi(id)
+
+	if err != nil {
+		a.Ctx.Data["Message"] = err.Error()
+		a.Ctx.Template = "error"
+		a.HTML(http.StatusInternalServerError)
+		return incorrectID
+	}
+
+	return res
+}
+
+func (a *Account) statusNotFound(rows int64) bool {
+	if rows == 0 {
+		a.Ctx.Data["Message"] = "Can't manipulate with non exist account"
+		a.Ctx.Template = "error"
+		a.HTML(http.StatusNotFound)
+		return false
+	}
+
+	return true
+}
+
+func (a *Account) statusInternalServerError(req *http.Request, account *models.Account) bool {
+	err := req.ParseForm()
+
+	if err != nil {
+		a.Ctx.Log.Errors(err)
+		return false
+	}
+
+	if err := Decoder.Decode(account, req.PostForm); err != nil {
+		a.Ctx.Data["Message"] = err.Error()
+		a.Ctx.Template = "error"
+		a.HTML(http.StatusInternalServerError)
+		return false
+	}
+
+	return true
+}
+
+func (a *Account) statusBadRequest(Account *models.Account) bool {
+	err := Account.IsValid()
+
+	if err != nil {
+		a.Ctx.Data["Message"] = err.Error()
+		a.Ctx.Template = "error"
+		a.HTML(http.StatusBadRequest)
+		return false
+	}
+
+	return true
+}
+
+func (a *Account) getId() int {
+	session, err := a.Ctx.GetSession(a.Ctx.Cfg.SessionName)
+
+	if err != nil {
+		a.Ctx.Log.Errors(err.Error())
+		return incorrectID
+	}
+
+	accountID := session.Values["uid"].(int)
+
+	if accountID <= 0 {
+		return incorrectID
+	}
+
+	return accountID
 }
