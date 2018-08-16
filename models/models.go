@@ -5,10 +5,10 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/gernest/utron/config"
+	"github.com/NlaakStudios/gowaf/config"
 	"github.com/jinzhu/gorm"
 
-	// support mysql, sqlite3 and postgresql
+	// support none, mysql, sqlite3 and postgresql
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	_ "github.com/lib/pq"
@@ -28,6 +28,11 @@ func NewModel() *Model {
 	}
 }
 
+// Count returns the number of registered models
+func (m *Model) Count() int {
+	return len(m.models)
+}
+
 // IsOpen returns true if the Model has already established connection
 // to the database
 func (m *Model) IsOpen() bool {
@@ -36,12 +41,23 @@ func (m *Model) IsOpen() bool {
 
 // OpenWithConfig opens database connection with the settings found in cfg
 func (m *Model) OpenWithConfig(cfg *config.Config) error {
+
+	//See if a dabatase was defined in the config
+	if len(cfg.DatabaseConn) < 5 {
+		// Not using a database
+		return nil
+	}
+
+	//try and open a connection to the database defined in the config
 	db, err := gorm.Open(cfg.Database, cfg.DatabaseConn)
 	if err != nil {
 		return err
 	}
+
+	//Success we have a database connection
 	m.DB = db
 	m.isOpen = true
+
 	return nil
 }
 
@@ -61,13 +77,15 @@ func (m *Model) Register(values ...interface{}) error {
 			case reflect.Struct:
 				models[getTypName(rVal.Type())] = reflect.New(rVal.Type())
 			default:
-				return errors.New("utron: models must be structs")
+				return errors.New("gowaf: models must be structs")
 			}
 		}
 	}
+
 	for k, v := range models {
 		m.models[k] = v
 	}
+
 	return nil
 }
 
@@ -77,6 +95,7 @@ func (m *Model) AutoMigrateAll() {
 		m.AutoMigrate(v.Interface())
 	}
 }
+
 func getTypName(typ reflect.Type) string {
 	if typ.Name() != "" {
 		return typ.Name()

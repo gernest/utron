@@ -1,0 +1,63 @@
+package models
+
+import (
+	"errors"
+	"fmt"
+	"strings"
+	"time"
+
+	nsmisc "github.com/NlaakStudios/gowaf/utils/misc"
+)
+
+//Company stores information about the company
+type Company struct {
+	ID        int       `schema:"id"`
+	CreatedAt time.Time `schema:"created"`
+	UpdatedAt time.Time `schema:"updated"`
+	Name      string    `schema:"name"`
+	ContactID int       `schema:"contact_id"`
+	Person    Person    `gorm:"foreignkey:ContactID" gorm:"auto_preload"`
+	AddressID int       `schema:"address_id"`
+	Address   Address   `gorm:"foreignkey:AddressID" gorm:"auto_preload"`
+	EmailID   int       `schema:"email_id"`
+	Email     Email     `gorm:"foreignkey:EmailID" gorm:"auto_preload"`
+	PhoneID   int       `schema:"phone_id"`
+	Phone     Phone     `gorm:"foreignkey:PhoneID" gorm:"auto_preload"`
+	FaxID     int       `schema:"fax_id"`
+	Fax       Phone     `gorm:"foreignkey:FaxID" gorm:"auto_preload"`
+	Friendly  string    `schema:"friendly"`
+}
+
+// SingleLine returns a formatted single line text representing the Model
+func (m *Company) SingleLine() string {
+	return fmt.Sprintf("%s", m.Name)
+}
+
+// MultiLine returns a formatted multi-line text representing the Model
+func (m *Company) MultiLine() string {
+	return m.SingleLine()
+}
+
+// HTMLView returns a HTML5 code representing a view of the Model
+func (m *Company) HTMLView() string {
+	return "<div id=\"CompanyHTMLView\">{View Content}</div>"
+}
+
+// HTMLForm returns a HTML5 code representing a form of the Model
+func (m *Company) HTMLForm() string {
+	return "<div id=\"CompanyHTMLForm\">{Form Content}</div>"
+}
+
+// Sanitize strips all leading and trailing whitespace from strings as well as test normalization all model string properties.
+func (m *Company) Sanitize() {
+	m.Name = strings.Title(strings.TrimSpace(nsmisc.StripCtlAndExtFromUTF8(m.Name)))
+	m.Friendly = strings.TrimSpace(m.SingleLine())
+}
+
+//IsValid returns error if model is not complete
+func (m *Company) IsValid(NameOnly bool) error {
+	if (NameOnly && m.Name == "") || (!NameOnly && (m.Name == "" || m.ContactID < 1 || m.PhoneID < 1)) {
+		return errors.New("Please fill in all required fields")
+	}
+	return nil
+}

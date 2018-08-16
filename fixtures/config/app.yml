@@ -1,9 +1,23 @@
-app_name: utron web app
+app_name: GoWAF Test
+domain: nlaak.com
 base_url: http://localhost:8090
 port: 8090
-verbose: false
-static_dir: fixtures/static
-view_dir: fixtures/view
-database: ""
-database_conn: ""
-automigrate: true 
+fixtures_dir: ./fixtures 
+database: "postgres"
+database_conn: "postgres://postgres@localhost/gowaf-test?sslmode=disable"
+automigrate: true
+no_model: false
+load_test_data: true
+verbose: true
+googleid: ""   #Empty = not enabled
+session_name: "gowaf_test_webapp"
+flash_time: 3500   #time in milliseconds to show the message before hiding (default is 3500)
+flash_stack: 5   #how many message to display at once (default is 6)
+notifications: false
+mail: false
+profile: false
+themecolor: megna  
+mail_server: ""
+mail.port: 587
+mail_user: ""
+mail.password: "" 

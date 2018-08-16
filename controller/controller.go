@@ -4,10 +4,14 @@ import (
 	"encoding/json"
 	"reflect"
 
-	"github.com/gernest/utron/base"
+	"github.com/NlaakStudios/gowaf/base"
+	"github.com/gorilla/schema"
 )
 
-// Controller is an interface for utron controllers
+// Decoder is use to decode the schema
+var Decoder = schema.NewDecoder()
+
+// Controller is an interface for gowaf controllers
 type Controller interface {
 	New(*base.Context)
 	Render() error
@@ -16,6 +20,7 @@ type Controller interface {
 // BaseController implements the Controller interface, It is recommended all
 // user defined Controllers should embed *BaseController.
 type BaseController struct {
+	//Stats  *models.ModelStats
 	Ctx    *base.Context
 	Routes []string
 }

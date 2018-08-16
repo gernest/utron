@@ -1,0 +1,24 @@
+{{template "dochead" .}}
+
+<h1>Register:</h1>
+
+<form action="" method="POST">
+    <p class="">
+      <strong>Username:</strong>
+      <input type="text" name="username" size="16" value=""> *
+    </p>
+    <p class="">
+      <strong>Email :</strong> <input type="email" name="email" size="16" value=""> *
+    </p>
+    <p class="">
+      <strong>Password:</strong> <input type="password" name="password" size="16" value=""> *
+    </p>
+    <p class="">
+      <strong>Verify password:</strong> <input type="password" name="verifypass" size="16" value=""> *
+    </p>
+  <p class="buttons">
+    <input type="submit" value="Register"> <a href="/">Cancel</a>
+  </p>
+</form>
+
+{{template "docfoot" .}}
