@@ -143,15 +143,15 @@ func (c *Context) SetData(key, value interface{}) {
 //	 * view by passing View
 //	 * response status code by passing an int
 func (c *Context) Set(value interface{}) {
-	switch value.(type) {
+	switch value := value.(type) {
 	case view.View:
-		c.view = value.(view.View)
+		c.view = value
 	case *http.Request:
-		c.request = value.(*http.Request)
+		c.request = value
 	case http.ResponseWriter:
-		c.response = value.(http.ResponseWriter)
+		c.response = value
 	case int:
-		c.response.WriteHeader(value.(int))
+		c.response.WriteHeader(value)
 	}
 }
 
@@ -171,7 +171,7 @@ func (c *Context) Commit() error {
 		return errors.New("already committed")
 	}
 	if c.Template != "" && c.view != nil {
-		out := &bytes.Buffer{}		
+		out := &bytes.Buffer{}
 		err := c.view.Render(out, c.Template, c.Data)
 		if err != nil {
 			return err
