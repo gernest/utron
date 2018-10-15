@@ -38,7 +38,7 @@ func ctxHandler(t *testing.T, name string, w http.ResponseWriter, r *http.Reques
 	ctx.Init()
 	pname := ctx.Params["name"]
 	if pname != name {
-		t.Error("expected %s got %s", name, pname)
+		t.Errorf("expected %s got %s", name, pname)
 	}
 
 	ctx.SetData("name", pname)
