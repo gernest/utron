@@ -22,7 +22,7 @@ func (ctx *Context) NewSession(name string) (*sessions.Session, error) {
 //GetSession retrieves session with a given name.
 func (ctx *Context) GetSession(name string) (*sessions.Session, error) {
 	if ctx.SessionStore != nil {
-		return ctx.SessionStore.New(ctx.Request(), name)
+		return ctx.SessionStore.Get(ctx.Request(), name)
 	}
 	return nil, errNoStore
 }
