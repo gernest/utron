@@ -5,11 +5,20 @@ go:
  - 1.11.x
  - tip
 services:
-  -postgresql
+  - postgresql
+  - redis-server
+  - memcached
 before_script:
   - psql -c 'create database utron;' -U postgres
 before_install:
  - go get -t -v
  - go get github.com/mattn/goveralls
+
+matrix:
+  allow_failures:
+    - go: 1.5.x
+    - go: 1.6.x
+    - go: tip
+
 script:
  - $HOME/gopath/bin/goveralls -v -service=travis-ci -repotoken=$COVERALLS
