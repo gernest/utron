@@ -1,6 +1,6 @@
 package utron
 
-import "github.com/gernest/utron/app"
+import "utron/app"
 
 // NewApp creates a new bare-bone utron application. To use the MVC components, you should call
 // the Init method before serving requests.

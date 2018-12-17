@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gernest/utron/config"
-	"github.com/gernest/utron/controller"
+	"github.com/joesteel2010/utron/config"
+	"github.com/joesteel2010/utron/controller"
 )
 
 const notFoundMsg = "nothing"

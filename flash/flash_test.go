@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gernest/utron/controller"
-	"github.com/gernest/utron/logger"
-	"github.com/gernest/utron/router"
+	"github.com/joesteel2010/utron/controller"
+	"github.com/joesteel2010/utron/logger"
+	"github.com/joesteel2010/utron/router"
 	"github.com/gorilla/sessions"
 )
 

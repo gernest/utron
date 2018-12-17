@@ -10,15 +10,30 @@ import (
 	"strings"
 )
 
+var viewFactory ViewFactoryFunc = func(viewDir string) (View, error) {
+	return NewSimpleView(viewDir)
+}
+
 // View is an interface for rendering templates.
 type View interface {
 	Render(out io.Writer, name string, data interface{}) error
 }
 
+// Type to allow is to override the default view implementation
+type ViewFactoryFunc func(viewDir string) (View, error)
+
 // SimpleView implements View interface, but based on golang templates.
 type SimpleView struct {
 	viewDir string
 	tmpl    *template.Template
+}
+
+func SetViewFactory(viewFactoryImpl ViewFactoryFunc) {
+	viewFactory = viewFactoryImpl
+}
+
+func GetView(viewDir string) (View, error) {
+	return viewFactory(viewDir)
 }
 
 //NewSimpleView returns a SimpleView with templates loaded from viewDir
@@ -43,7 +58,6 @@ func NewSimpleView(viewDir string) (View, error) {
 // should be relative to the dir. That is, if  dir is foo, you don't have to refer to
 // foo/bar.tpl, instead just use bar.tpl
 func (s *SimpleView) load(dir string) (View, error) {
-
 	// supported is the list of file extensions that will be parsed as templates
 	supported := map[string]bool{".tpl": true, ".html": true, ".tmpl": true}
 
@@ -80,7 +94,7 @@ func (s *SimpleView) load(dir string) (View, error) {
 		name = strings.TrimSuffix(name, extension) // remove extension
 
 		t := s.tmpl.New(name)
-		
+
 		if _, err = t.Parse(string(data)); err != nil {
 			return err
 		}

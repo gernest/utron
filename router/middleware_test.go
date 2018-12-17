@@ -6,8 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gernest/utron/base"
-	"github.com/gernest/utron/controller"
+	"github.com/joesteel2010/utron/base"
+	"github.com/joesteel2010/utron/controller"
 	"github.com/gorilla/context"
 )
 
